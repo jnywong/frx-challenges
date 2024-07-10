@@ -1,26 +1,79 @@
 {% extends "page.html" %}
 
 {% block head %}
-    <meta http-equiv="refresh" content="5" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+
+
+{% endblock %}
+
+{% block navbar_action %}
+    {% if user.is_authenticated %}
+    <a class="btn btn-primary" href="/upload">Submit your binary model</a>
+    {% else %}
+    <a class="btn btn-primary" href="/accounts/github/login/">Login with GitHub</a>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
-<div class="container">
-<table class="table">
+
+<h1>Explanatory Headline</h1>
+
+<p>Explanatory text, explanatory text explanatory text</p>
+
+<table class="table" id="results">
     <thead>
-    <tr>
-        {% for h in headers %}
-        <td>{{h}}</td>
-        {% endfor %}
-    </tr>
-</thead>
-{% for row in results %}
-<tr>
-    {% for c in row %}
-    <td>{{c}}</td>
-    {% endfor %}
-</tr>
-{% endfor %}
+    </thead>
+    <tbody></tbody>
 </table>
-</div>
+
+<script>
+    dayjs.extend(window.dayjs_plugin_relativeTime)
+    // FIXME: This should be configurable and returned from the API
+    const RESULT_KEYS = ["chars", "lines"];
+    async function main() {
+        const resp = await fetch("/results");
+        const {resultKeys, evaluations} = await resp.json();
+
+        const columns = [
+            {data: "username", title: "username"},
+            {data: "status", title: "status"},
+            {data: "last_updated", name: "last_updated", title: "last updated", type: "date", render: data => {
+                return dayjs(data).fromNow();
+            }}
+        ].concat(RESULT_KEYS.map(r => {return { title: r, data: row => {
+            if (row.result) {
+                return row.result[r]
+            } else {
+                return null;
+            }
+        }}}));
+
+        let table = new DataTable('#results', {
+            ajax: {
+                url: '/results',
+                dataSrc: function(json) {
+                    console.log(json)
+                    return json.evaluations
+                }
+            },
+            columns: columns,
+            order: {
+                name: "last_updated",
+                dir: "desc"
+            }
+        });
+
+        setInterval(() => {
+            table.ajax.reload()
+        }, 5 * 1000);
+    }
+
+    main()
+
+</script>
 {% endblock %}

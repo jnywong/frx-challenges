@@ -37,9 +37,9 @@ class LocalProcessEvaluator:
 
 class Command(BaseCommand):
     def evaluations_to_process(self):
-        return Evaluation.objects.filter(
+        return Evaluation.objects.select_related("submission").filter(
             status=Evaluation.Status.NOT_STARTED
-        ).prefetch_related("submission")
+        )
 
     async def evaluate(self, evaluation: Evaluation):
         ev = LocalProcessEvaluator(evaluation.submission.data_uri)

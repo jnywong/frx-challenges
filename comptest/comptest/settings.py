@@ -176,3 +176,9 @@ SOCIALACCOUNT_PROVIDERS = {
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_ONLY = True
+
+# Only use GitHub for login
+LOGIN_URL = "/accounts/github/login/"
+# Match JupyterHub behavior
+# FIXME: Understand the security implications?
+SOCIALACCOUNT_LOGIN_ON_GET = True

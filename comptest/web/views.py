@@ -1,7 +1,7 @@
 import os
 import tempfile
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django import forms
 from django.contrib.auth.decorators import login_required
 from .models import Submission, Evaluation
@@ -29,28 +29,33 @@ def upload(request: HttpRequest) -> HttpResponse:
                 status=Submission.Status.UPLOADED,
                 data_uri=f"file:///{filepath}"
             )
+            # FIXME: Figure out transactions
             s.save()
             e = Evaluation(
                 submission=s,
             )
             e.save()
-            return HttpResponseRedirect("results")
+            return HttpResponseRedirect("/")
     else:
         form = UploadForm()
     return render(request, "upload.html", {"form": form})
 
 def results(request: HttpRequest) -> HttpResponse:
     evaluations = Evaluation.objects.all()
-    # FIXME: This should be configurable
-    RESULT_KEYS = ["lines", "chars"]
-    HEADERS = ["username", "status", "last updated"] + RESULT_KEYS
-    results = []
+
+    evaluations_resp = []
 
     for ev in evaluations:
-        row = [ev.submission.user.username, ev.status, ev.last_updated.isoformat()]
-        if ev.result:
-            for r in RESULT_KEYS:
-                row.append(ev.result.get(r, ""))
+        evaluations_resp.append({
+            "username": ev.submission.user.username,
+            "status": ev.status,
+            "last_updated": ev.last_updated.isoformat(),
+            "result": ev.result
+        })
 
-        results.append(row)
-    return render(request, "results.html", {"results": results, "headers": HEADERS})
+    return JsonResponse({
+        "evaluations": evaluations_resp
+    })
+
+def home(request: HttpRequest) -> HttpResponse:
+    return render(request, "results.html")
