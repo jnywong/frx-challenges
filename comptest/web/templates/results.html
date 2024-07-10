@@ -1,0 +1,26 @@
+{% extends "page.html" %}
+
+{% block head %}
+    <meta http-equiv="refresh" content="5" />
+{% endblock %}
+
+{% block body %}
+<div class="container">
+<table class="table">
+    <thead>
+    <tr>
+        {% for h in headers %}
+        <td>{{h}}</td>
+        {% endfor %}
+    </tr>
+</thead>
+{% for row in results %}
+<tr>
+    {% for c in row %}
+    <td>{{c}}</td>
+    {% endfor %}
+</tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "page.html" %}
+
+
+{% block body %}
+<div class="container">
+
+<h1>Upload your submission</h1>
+<p>Select a text file, and upload it. You will be graded on the quality of the text you upload</p>
+
+<form class="form" action="/upload" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <input class="form-control" type="submit" value="Submit">
+</form>
+
+</div>
+{% endblock %}
