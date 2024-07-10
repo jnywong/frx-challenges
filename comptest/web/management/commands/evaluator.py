@@ -1,7 +1,10 @@
 import os
+import aiodocker.containers
 import fsspec
 import json
+import aiodocker
 import asyncio
+from urllib.parse import urlparse
 import tempfile
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q, Exists, OuterRef
@@ -35,6 +38,55 @@ class LocalProcessEvaluator:
         return result
 
 
+
+
+class DockerEvaluator:
+    # Locally built
+    image = "quay.io/yuvipanda/evaluator-harness:latest"
+
+    def __init__(self, data_uri: str):
+        self.data_uri = data_uri
+        self.docker = aiodocker.Docker()
+
+        # Make a local directory for containing outputs if needed
+        # FIXME: Move this somewhere else or make this configurable
+        # This *must* be bind mountable into the docker container
+        out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "outputs/"))
+        if  not out_dir.endswith("/"):
+            out_dir += "/"
+        os.makedirs(out_dir, exist_ok=True)
+
+        self.results_dir = tempfile.mkdtemp(prefix=out_dir)
+        self.results_file = os.path.join(self.results_dir, "output.json")
+        self.results_uri = f'file://{self.results_file}'
+
+    async def start_evaluation(self):
+        url_parts = urlparse(self.data_uri)
+        assert url_parts.scheme == "file"
+        input_container_path = "/input"
+        output_container_path = "/output"
+        self.container = await self.docker.containers.create(config={
+            "Image": self.image,
+            "Cmd": [f"file://{input_container_path}", f"file://{output_container_path}/output.json"],
+            "HostConfig": {
+                "Binds": [
+                    # FIXME: This is security critical code, pay attention and
+                    # carefully reason about this before deploying to 'production'
+                    f"{url_parts.path}:{input_container_path}:ro",
+                    f"{self.results_dir}:{output_container_path}:rw"
+                ]
+            }
+        })
+        await self.container.start()
+
+    async def wait_for_result(self) -> dict:
+        await self.container.wait()
+        with fsspec.open(self.results_uri) as f:
+            result = json.load(f)
+        os.remove(self.results_file)
+        return result
+
+
 class Command(BaseCommand):
     def evaluations_to_process(self):
         return Evaluation.objects.select_related("submission").filter(
@@ -42,7 +94,7 @@ class Command(BaseCommand):
         )
 
     async def evaluate(self, evaluation: Evaluation):
-        ev = LocalProcessEvaluator(evaluation.submission.data_uri)
+        ev = DockerEvaluator(evaluation.submission.data_uri)
         await ev.start_evaluation()
         evaluation.status = Evaluation.Status.EVALUATING
         await evaluation.asave()
