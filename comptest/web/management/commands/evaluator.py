@@ -11,61 +11,32 @@ from django.db.models import Q, Exists, OuterRef
 from ...models import Evaluation, Submission
 
 
-class LocalProcessEvaluator:
-    harnass_process = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "../../../../harness/longest.py")
-        )
-    def __init__(self, data_uri: str):
-        self.data_uri = data_uri
-        _, self.results_file = tempfile.mkstemp()
-        self.results_uri = f'file:///{self.results_file}'
-
-    async def start_evaluation(self):
-        self.proc = await asyncio.create_subprocess_exec(
-            self.harnass_process,
-            self.data_uri,
-            self.results_uri
-        )
-
-    async def wait_for_result(self) -> dict:
-        await self.proc.wait()
-        if self.proc.returncode != 0:
-            # FIXME: Signal failure better
-            return None
-        with fsspec.open(self.results_uri) as f:
-            result = json.load(f)
-        os.remove(self.results_file)
-        return result
-
-
-
-
 class DockerEvaluator:
     # Locally built
     image = "quay.io/yuvipanda/evaluator-harness:latest"
 
-    def __init__(self, data_uri: str):
-        self.data_uri = data_uri
+    def __init__(self):
         self.docker = aiodocker.Docker()
 
         # Make a local directory for containing outputs if needed
         # FIXME: Move this somewhere else or make this configurable
         # This *must* be bind mountable into the docker container
-        out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "outputs/"))
-        if  not out_dir.endswith("/"):
-            out_dir += "/"
-        os.makedirs(out_dir, exist_ok=True)
+        self.out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "outputs/"))
+        if  not self.out_dir.endswith("/"):
+            self.out_dir += "/"
+        os.makedirs(self.out_dir, exist_ok=True)
 
-        self.results_dir = tempfile.mkdtemp(prefix=out_dir)
-        self.results_file = os.path.join(self.results_dir, "output.json")
-        self.results_uri = f'file://{self.results_file}'
 
-    async def start_evaluation(self):
-        url_parts = urlparse(self.data_uri)
+    async def start_evaluation(self, input_uri):
+        results_dir = tempfile.mkdtemp(prefix=self.out_dir)
+        results_file = os.path.join(results_dir, "output.json")
+        results_uri = f'file://{results_file}'
+
+        url_parts = urlparse(input_uri)
         assert url_parts.scheme == "file"
         input_container_path = "/input"
         output_container_path = "/output"
-        self.container = await self.docker.containers.create(config={
+        container = await self.docker.containers.create(config={
             "Image": self.image,
             "Cmd": [f"file://{input_container_path}", f"file://{output_container_path}/output.json"],
             "HostConfig": {
@@ -73,46 +44,71 @@ class DockerEvaluator:
                     # FIXME: This is security critical code, pay attention and
                     # carefully reason about this before deploying to 'production'
                     f"{url_parts.path}:{input_container_path}:ro",
-                    f"{self.results_dir}:{output_container_path}:rw"
+                    f"{results_dir}:{output_container_path}:rw"
                 ]
             }
         })
-        await self.container.start()
+        await container.start()
+        return {
+            "container_id": container.id,
+            "results_uri": results_uri,
+        }
 
-    async def wait_for_result(self) -> dict:
-        await self.container.wait()
-        with fsspec.open(self.results_uri) as f:
+    async def is_still_running(self, state: dict) -> bool:
+        container = await self.docker.containers.get(container_id=state['container_id'])
+        return container["State"].get("Status") == "running"
+
+    async def get_result(self, state: dict) -> dict:
+        container = await self.docker.containers.get(container_id=state['container_id'])
+        success = container["State"]["Status"] == "exited" and container["State"]["ExitCode"] == 0
+        if not success:
+            return None
+        with fsspec.open(state['results_uri']) as f:
             result = json.load(f)
-        os.remove(self.results_file)
+        # FIXME: Remove the results file here somehow
+        # os.remove(results_file)
         return result
 
 
 class Command(BaseCommand):
-    def evaluations_to_process(self):
-        return Evaluation.objects.select_related("submission").filter(
-            status=Evaluation.Status.NOT_STARTED
-        )
-
-    async def evaluate(self, evaluation: Evaluation):
-        ev = DockerEvaluator(evaluation.submission.data_uri)
-        await ev.start_evaluation()
+    async def start_evaluation(self, evaluator: DockerEvaluator, evaluation: Evaluation):
+        print(f"starting evaluation of {evaluation.submission.data_uri}")
+        new_state = await evaluator.start_evaluation(evaluation.submission.data_uri)
+        evaluation.evaluator_state = new_state
         evaluation.status = Evaluation.Status.EVALUATING
         await evaluation.asave()
-        print(f"starting evaluation of {evaluation.submission.data_uri}")
-        result = await ev.wait_for_result()
-        if result is None:
-            evaluation.status = Evaluation.Status.FAILED
-        else:
-            evaluation.result = result
-            evaluation.status = Evaluation.Status.EVALUATED
-        await evaluation.asave()
-        print(f'Result is {result}')
 
+    async def process_running_evaluation(self, evaluator: DockerEvaluator, evaluation: Evaluation):
+        state = evaluation.evaluator_state
+        is_still_running = await evaluator.is_still_running(state)
+        if not is_still_running:
+            print(f"{evaluation} is completed")
+            result = await evaluator.get_result(state)
+            if result is None:
+                evaluation.status = Evaluation.Status.FAILED
+            else:
+                evaluation.status = Evaluation.Status.EVALUATED
+                evaluation.result = result
+            await evaluation.asave()
+        else:
+            print(f"{evaluation} is still running")
 
     async def ahandle(self):
+        evaluator = DockerEvaluator()
         while True:
-            async for e in self.evaluations_to_process():
-                await self.evaluate(e)
+            unstarted_evaluations = Evaluation.objects.select_related("submission").filter(
+                status=Evaluation.Status.NOT_STARTED
+            )
+
+            async for e in unstarted_evaluations:
+                await self.start_evaluation(evaluator, e)
+
+            running_evaluations = Evaluation.objects.select_related("submission").filter(
+                status=Evaluation.Status.EVALUATING
+            )
+
+            async for e in running_evaluations:
+                await self.process_running_evaluation(evaluator, e)
 
             await asyncio.sleep(10)
 
