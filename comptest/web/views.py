@@ -5,23 +5,18 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonRes
 from django import forms
 from django.contrib.auth.decorators import login_required
 from .models import Submission, Evaluation
+from django.conf import settings
 
-# Create your views here.
 
 class UploadForm(forms.Form):
     file = forms.FileField()
-
-out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "uploads/"))
-if  not out_dir.endswith("/"):
-    out_dir += "/"
-os.makedirs(out_dir, exist_ok=True)
 
 @login_required
 def upload(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
-            _, filepath = tempfile.mkstemp(prefix=out_dir)
+            _, filepath = tempfile.mkstemp(prefix=settings.UNNAMED_THINGY_UPLOADS_DIR)
             with open(filepath, "wb") as f:
                 f.write(request.FILES["file"].read())
             s = Submission(

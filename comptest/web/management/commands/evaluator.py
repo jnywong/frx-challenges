@@ -9,6 +9,7 @@ import tempfile
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q, Exists, OuterRef
 from ...models import Evaluation, Submission
+from django.conf import settings
 
 
 class DockerEvaluator:
@@ -18,17 +19,9 @@ class DockerEvaluator:
     def __init__(self):
         self.docker = aiodocker.Docker()
 
-        # Make a local directory for containing outputs if needed
-        # FIXME: Move this somewhere else or make this configurable
-        # This *must* be bind mountable into the docker container
-        self.out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "outputs/"))
-        if  not self.out_dir.endswith("/"):
-            self.out_dir += "/"
-        os.makedirs(self.out_dir, exist_ok=True)
-
 
     async def start_evaluation(self, input_uri):
-        results_dir = tempfile.mkdtemp(prefix=self.out_dir)
+        results_dir = tempfile.mkdtemp(prefix=settings.UNNAMED_THINGY_EVALUATOR_OUTPUTS_TEMPDIR)
         results_file = os.path.join(results_dir, "output.json")
         results_uri = f'file://{results_file}'
 
