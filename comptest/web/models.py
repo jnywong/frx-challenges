@@ -38,3 +38,14 @@ class Evaluation(models.Model):
 
     def __str__(self):
         return f"({self.status}) {self.result} {self.submission.data_uri}"
+
+
+
+class Team(models.Model):
+    name = models.CharField(max_length=1024)
+    members = models.ManyToManyField(User, through='TeamMembership', related_name='teams')
+
+class TeamMembership(models.Model):
+    is_admin = models.BooleanField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)

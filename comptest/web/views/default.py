@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django import forms
 from django.contrib.auth.decorators import login_required
-from .models import Submission, Evaluation
+from ..models import Submission, Evaluation
 from django.conf import settings
 
 
@@ -24,12 +24,7 @@ def upload(request: HttpRequest) -> HttpResponse:
                 status=Submission.Status.UPLOADED,
                 data_uri=f"file:///{filepath}"
             )
-            # FIXME: Figure out transactions
             s.save()
-            e = Evaluation(
-                submission=s,
-            )
-            e.save()
             return HttpResponseRedirect("/")
     else:
         form = UploadForm()

@@ -1,0 +1,16 @@
+{% extends "page.html" %}
+
+{% block body %}
+
+<h2>{{ team.name }}</h2>
+
+<h3>Members</h3>
+<a href="{% url 'teams-add-member' team.id %}" class="btn btn-secondary">Add users to this team</a>
+
+<ul>
+{% for u in team.members.all %}
+<li>{{ u.username }}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

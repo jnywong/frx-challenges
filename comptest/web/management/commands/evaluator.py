@@ -89,6 +89,20 @@ class Command(BaseCommand):
     async def ahandle(self):
         evaluator = DockerEvaluator()
         while True:
+            # Create evaluation objects when they do not exist
+            submissions_without_evaluations = Submission.objects.filter(
+                Q(status=Submission.Status.UPLOADED),
+                ~Exists(
+                    Evaluation.objects.filter(
+                        submission=OuterRef("pk")
+                    )
+                )
+            )
+            async for s in submissions_without_evaluations:
+                e = Evaluation(submission=s)
+                await e.asave()
+
+            # Start Evaluations when they have not been started yet
             unstarted_evaluations = Evaluation.objects.select_related("submission").filter(
                 status=Evaluation.Status.NOT_STARTED
             )
@@ -96,6 +110,7 @@ class Command(BaseCommand):
             async for e in unstarted_evaluations:
                 await self.start_evaluation(evaluator, e)
 
+            # Check running evaluations
             running_evaluations = Evaluation.objects.select_related("submission").filter(
                 status=Evaluation.Status.EVALUATING
             )
