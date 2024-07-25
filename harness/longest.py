@@ -5,16 +5,26 @@ it is. This harness will take as input any utf-8 encoded text, and
 return as result a json object with the following keys:
 1. lines - Number of lines in the text
 2. chars - Number of characters (as broadly defined) in the text
+3. lower-case-char - Number of times this particular character appeared in the text (case insensitive)
 """
 import json
 import fsspec
 import argparse
+import string
 
 def evaluate(text: str) -> dict:
+    char_counts = {}
+    casefolded_chars = [c.casefold() for c in string.ascii_lowercase]
+
+    for c in text:
+        cf = c.casefold()
+        if cf in casefolded_chars:
+            char_counts[cf] = char_counts.get(cf, 0) + 1
+
     return {
         "lines": len(text.splitlines()),
         "chars": len(text)
-    }
+    } | char_counts
 
 
 def harnass(input_uri: str, result_uri: str):
