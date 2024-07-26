@@ -10,9 +10,11 @@ from ..models import Team, TeamMembership
 
 @login_required
 def list(request: HttpRequest) -> HttpResponse:
-    teams = request.user.teams.all()
-
-    return render(request, "teams/list.html", {"teams": teams})
+    """
+    List all teams the current user is a member of
+    """
+    memberships = TeamMembership.objects.filter(user=request.user)
+    return render(request, "teams/list.html", {"memberships": memberships})
 
 
 class TeamForm(forms.Form):
@@ -21,6 +23,9 @@ class TeamForm(forms.Form):
 
 @login_required
 def create(request: HttpRequest) -> HttpResponse:
+    """
+    Create a new team with current user as admin
+    """
     if request.method == "POST":
         form = TeamForm(request.POST)
         if form.is_valid():
@@ -41,6 +46,9 @@ def create(request: HttpRequest) -> HttpResponse:
 
 # Intentionally not authenticated, as anyone should be able to view team membership
 def view(request: HttpRequest, id: int) -> HttpResponse:
+    """
+    Display information about a particular team
+    """
     try:
         team = Team.objects.filter(id=id).get()
     except Team.DoesNotExist:

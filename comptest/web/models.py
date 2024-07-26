@@ -50,5 +50,5 @@ class Team(models.Model):
 
 class TeamMembership(models.Model):
     is_admin = models.BooleanField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="memberships")

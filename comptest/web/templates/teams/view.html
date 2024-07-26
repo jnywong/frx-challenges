@@ -8,8 +8,9 @@
 >
 
 <ul>
-  {% for u in team.members.all %}
-  <li>{{ u.username }}</li>
+  {% for m in team.memberships.all %}
+  <li>{{ m.user.username }}</li>
+  {% if m.is_admin %}<span>admin</span>{% endif %}
   {% endfor %}
 </ul>
 

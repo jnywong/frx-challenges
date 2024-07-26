@@ -6,8 +6,11 @@
 >
 
 <ul>
-  {% for t in teams %}
-  <li><a href="{% url 'teams-view' t.id %}">{{ t.name }}</a></li>
+  {% for m in memberships %}
+  <li>
+    <a href="{% url 'teams-view' m.team.id %}">{{ m.team.name }}</a>
+    {% if m.is_admin %}<span>admin</span>{% endif %}
+  </li>
   {% endfor %}
 </ul>
 
