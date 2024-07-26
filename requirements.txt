@@ -2,3 +2,4 @@ aiodocker
 django
 django-allauth[socialaccount]
 markdown-it-py[plugins]
+django-reversion
