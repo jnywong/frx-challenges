@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+
 
 # Create your models here.
 class Submission(models.Model):
@@ -27,6 +28,7 @@ class Evaluation(models.Model):
         EVALUATED = "EVALUATED"
         HIDDEN = "HIDDEN"
         FAILED = "FAILED"
+
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     evaluator_state = models.JSONField(default=dict)
     result = models.JSONField(blank=True, null=True)
@@ -35,15 +37,16 @@ class Evaluation(models.Model):
 
     last_updated = models.DateTimeField(auto_now=True)
 
-
     def __str__(self):
         return f"({self.status}) {self.result} {self.submission.data_uri}"
 
 
-
 class Team(models.Model):
     name = models.CharField(max_length=1024)
-    members = models.ManyToManyField(User, through='TeamMembership', related_name='teams')
+    members = models.ManyToManyField(
+        User, through="TeamMembership", related_name="teams"
+    )
+
 
 class TeamMembership(models.Model):
     is_admin = models.BooleanField()

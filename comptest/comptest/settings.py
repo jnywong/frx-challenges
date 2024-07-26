@@ -38,11 +38,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.github'
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.github",
 ]
 
 MIDDLEWARE = [
@@ -53,7 +52,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-
     "allauth.account.middleware.AccountMiddleware",
 ]
 
@@ -132,45 +130,44 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
-
+    "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by email
-    'allauth.account.auth_backends.AuthenticationBackend',
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 LOGGING = {
-    'version': 1,
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
+    "version": 1,
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
         }
     },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'filters': ['require_debug_true'],
-            'class': 'logging.StreamHandler',
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "filters": ["require_debug_true"],
+            "class": "logging.StreamHandler",
         }
     },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
+    "loggers": {
+        "django.db.backends": {
+            "level": "DEBUG",
+            "handlers": ["console"],
         }
-    }
+    },
 }
 
 # Provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
-    'github': {
+    "github": {
         # For each OAuth based provider, either add a ``SocialApp``
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
-        'APP': {
-            'client_id': 'Ov23liodL5AiNt5kfB8d',
-            'secret': 'bfab0d49f138df0d017d2bcc0f9bbb1b199b7e62',
+        "APP": {
+            "client_id": "Ov23liodL5AiNt5kfB8d",
+            "secret": "bfab0d49f138df0d017d2bcc0f9bbb1b199b7e62",
         },
-        "VERIFIED_EMAIL": True
+        "VERIFIED_EMAIL": True,
     }
 }
 
@@ -185,8 +182,9 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 
 
 import os
+
 out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "uploads/"))
-if  not out_dir.endswith("/"):
+if not out_dir.endswith("/"):
     out_dir += "/"
 os.makedirs(out_dir, exist_ok=True)
 
@@ -196,7 +194,7 @@ UNNAMED_THINGY_UPLOADS_DIR = out_dir
 # FIXME: Move this somewhere else or make this configurable
 # This *must* be bind mountable into the docker container
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "outputs/"))
-if  not output_dir.endswith("/"):
+if not output_dir.endswith("/"):
     output_dir += "/"
 os.makedirs(output_dir, exist_ok=True)
 

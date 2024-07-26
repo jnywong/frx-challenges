@@ -1,15 +1,17 @@
-import os
 import tempfile
-from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+
 from django import forms
-from django.contrib.auth.decorators import login_required
-from ..models import Submission, Evaluation
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import render
+
+from ..models import Evaluation, Submission
 
 
 class UploadForm(forms.Form):
     file = forms.FileField()
+
 
 @login_required
 def upload(request: HttpRequest) -> HttpResponse:
@@ -22,7 +24,7 @@ def upload(request: HttpRequest) -> HttpResponse:
             s = Submission(
                 user=request.user,
                 status=Submission.Status.UPLOADED,
-                data_uri=f"file:///{filepath}"
+                data_uri=f"file:///{filepath}",
             )
             s.save()
             return HttpResponseRedirect("/")
@@ -30,22 +32,24 @@ def upload(request: HttpRequest) -> HttpResponse:
         form = UploadForm()
     return render(request, "upload.html", {"form": form})
 
+
 def results(request: HttpRequest) -> HttpResponse:
     evaluations = Evaluation.objects.all()
 
     evaluations_resp = []
 
     for ev in evaluations:
-        evaluations_resp.append({
-            "username": ev.submission.user.username,
-            "status": ev.status,
-            "last_updated": ev.last_updated.isoformat(),
-            "result": ev.result
-        })
+        evaluations_resp.append(
+            {
+                "username": ev.submission.user.username,
+                "status": ev.status,
+                "last_updated": ev.last_updated.isoformat(),
+                "result": ev.result,
+            }
+        )
 
-    return JsonResponse({
-        "evaluations": evaluations_resp
-    })
+    return JsonResponse({"evaluations": evaluations_resp})
+
 
 def home(request: HttpRequest) -> HttpResponse:
     return render(request, "results.html")

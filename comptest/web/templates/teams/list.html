@@ -1,14 +1,14 @@
-{% extends "page.html" %}
-
-{% block body %}
+{% extends "page.html" %} {% block body %}
 
 <h2>List of Teams you are a part of</h2>
-<a href="{% url 'teams-create' %}" class="btn btn-secondary">Create a new team</a>
+<a href="{% url 'teams-create' %}" class="btn btn-secondary"
+  >Create a new team</a
+>
 
 <ul>
-{% for t in teams %}
-<li><a href="{% url 'teams-view' t.id %}">{{ t.name }}</a></li>
-{% endfor %}
+  {% for t in teams %}
+  <li><a href="{% url 'teams-view' t.id %}">{{ t.name }}</a></li>
+  {% endfor %}
 </ul>
 
 {% endblock %}

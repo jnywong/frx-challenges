@@ -1,3 +1,3 @@
+aiodocker
 django
 django-allauth[socialaccount]
-aiodocker
