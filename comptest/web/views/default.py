@@ -51,5 +51,5 @@ def results(request: HttpRequest) -> HttpResponse:
     return JsonResponse({"evaluations": evaluations_resp})
 
 
-def home(request: HttpRequest) -> HttpResponse:
+def leaderboard(request: HttpRequest) -> HttpResponse:
     return render(request, "results.html")

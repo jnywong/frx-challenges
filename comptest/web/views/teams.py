@@ -59,13 +59,17 @@ def view(request: HttpRequest, id: int) -> HttpResponse:
     if request.user.is_authenticated:
         try:
             # FIXME: Turn `first` into `only` after adding appropriate constraints
-            user_membership = TeamMembership.objects.filter(team=team, user=request.user).first()
+            user_membership = TeamMembership.objects.filter(
+                team=team, user=request.user
+            ).first()
             user_is_admin = user_membership.is_admin
         except TeamMembership.DoesNotExist:
             # User is not part of the team
             pass
 
-    return render(request, "teams/view.html", {"team": team, "user_is_admin": user_is_admin})
+    return render(
+        request, "teams/view.html", {"team": team, "user_is_admin": user_is_admin}
+    )
 
 
 class AddMemberForm(forms.Form):

@@ -12,8 +12,7 @@
 <ul>
   {% for m in team.memberships.all %}
   <li>{{ m.user.username }}</li>
-  {% if m.is_admin %}<span>admin</span>{% endif %}
-  {% endfor %}
+  {% if m.is_admin %}<span>admin</span>{% endif %} {% endfor %}
 </ul>
 
 {% endblock %}

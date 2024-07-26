@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.db import models
+from django.db import models, transaction
 
 
 # Create your models here.
@@ -55,4 +55,19 @@ class TeamMembership(models.Model):
 
     class Meta:
         # A user can be added to a team only once
-        unique_together = ('user', 'team')
+        unique_together = ("user", "team")
+
+
+class Page(models.Model):
+    title = models.CharField(max_length=1024)
+    slug = models.SlugField(max_length=64)
+    order = models.IntegerField(unique=True)
+    is_home = models.BooleanField(default=False)
+    content = models.TextField()
+
+    def save(self, *args, **kwargs):
+        if not self.is_home:
+            return super().save(*args, **kwargs)
+        with transaction.atomic():
+            Page.objects.filter(is_home=True).update(is_home=False)
+            super().save(*args, **kwargs)
