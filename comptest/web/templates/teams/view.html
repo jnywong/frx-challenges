@@ -3,9 +3,11 @@
 <h2>{{ team.name }}</h2>
 
 <h3>Members</h3>
+{% if user_is_admin %}
 <a href="{% url 'teams-add-member' team.id %}" class="btn btn-secondary"
   >Add users to this team</a
 >
+{% endif %}
 
 <ul>
   {% for m in team.memberships.all %}
