@@ -52,3 +52,7 @@ class TeamMembership(models.Model):
     is_admin = models.BooleanField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="memberships")
+
+    class Meta:
+        # A user can be added to a team only once
+        unique_together = ('user', 'team')
