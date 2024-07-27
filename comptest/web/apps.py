@@ -1,4 +1,3 @@
-from allauth.socialaccount.signals import pre_social_login
 from django.apps import AppConfig
 
 
