@@ -1,10 +1,10 @@
 # Contributing guide
 
-Welcome! Thank you for considering contributing to this project!
+Welcome!👋 Thank you for considering contributing to this project!
 
-- [Development installation](#development-installation)
-- [Gain Admin Access](#gain-admin-access)
-- [Code of Conduct](#code-of-conduct)
+- [Development installation 💻](#development-installation)
+- [Gain Admin Access 🛡️](#gain-admin-access)
+- [Code of Conduct 📜](#code-of-conduct)
 
 ## Development installation
 
