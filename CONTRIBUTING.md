@@ -10,7 +10,7 @@ Here are the steps to get a development installation up and running.
 Follow the [GitHub guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo
 ) for how to fork a repository, clone it, and learn about creating pull requests.
 
-### 2. Install dependencies
+### 2. Install the dependencies
 
 Ensure you have the necessary dependencies installed. 
 
@@ -22,7 +22,7 @@ Ensure you have the necessary dependencies installed.
 
 **Note:** Consider installing the dependencies in a virtual environment for better isolation.
 
-### 3. Apply migrations
+### 3. Apply the migrations
 
 Apply the migrations to the database. Read more about Django migrations [here](https://docs.djangoproject.com/en/5.0/topics/migrations/).
 
