@@ -1,8 +1,12 @@
 # Contributing guide
 
-Welcome! Thank you for considering contributing to this project!
+Welcome!👋 Thank you for considering contributing to this project!
 
-## Steps
+- [Development installation 💻](#development-installation)
+- [Gain Admin Access 🛡️](#gain-admin-access)
+- [Code of Conduct 📜](#code-of-conduct)
+
+## Development installation
 
 Here are the steps to get a development installation up and running.
 
@@ -39,6 +43,22 @@ Start the development server to see the changes you make.
 ```bash
 python3 manage.py runserver
 ```
+
+## Gain Admin access
+
+In order to access the admin interface at `/admin`, your user needs to be a Django superuser.
+
+Because we use GitHub external login we cannot use the existing `manage.py createsuperuser` command, so a separate [promote command](https://github.com/2i2c-org/unnamed-thingity-thing/blob/main/comptest/web/management/commands/promote.py) was created to promote an existing user (created via GiHub login) into a superuser.
+
+Steps to access the admin interface:
+
+1. Go to the admin interface `http://127.0.0.1/admin` and login with your GitHub account.
+
+2. Promote your GitHub username to a superuser by running the following command, replace `<username>` with your GitHub username:
+
+   ```bash
+   python3 manage.py promote <username>
+   ```
 
 ## Code of Conduct
 
