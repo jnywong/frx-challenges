@@ -4,40 +4,40 @@ Welcome! Thank you for considering contributing to this project! Here are the st
 
 ## Getting started
 
-1. **Fork the repository**
+### Fork the repository
 
 Follow the [GitHub guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo
 ) for how to fork a repository, clone it, and learn about creating pull requests.
 
-2. **Install dependencies**
+### Install dependencies
 
-   Ensure you have the necessary dependencies installed. 
+Ensure you have the necessary dependencies installed. 
 
-     ```bash
-     pip install -r requirements.txt
-     ```
+  ```bash
+  pip install -r requirements.txt
+  ```
 
-   **Important:** Make sure you have a working installation of Python 3.6 or later.
+**Important:** Make sure you have a working installation of Python 3.6 or later.
 
-   **Note:** Consider installing the dependencies in a virtual environment for better isolation.
+**Note:** Consider installing the dependencies in a virtual environment for better isolation.
 
-3. **Apply migrations**
+### Apply migrations
 
-   Apply the migrations to the database. Read more about Django migrations [here](https://docs.djangoproject.com/en/5.0/topics/migrations/).
+Apply the migrations to the database. Read more about Django migrations [here](https://docs.djangoproject.com/en/5.0/topics/migrations/).
 
-   ```bash
-   python3 manage.py migrate
-   ```
+```bash
+python3 manage.py migrate
+```
 
-    **Note:** Every time you make any changes to the models, you will need to create a new migration and apply it.
+**Note:** Every time you make any changes to the models, you will need to create a new migration and apply it.
 
-4. **Run the development server**
+### Run the development server
 
-   Start the development server to see the changes you make.
-  
-    ```bash
-    python3 manage.py runserver
-    ```
+Start the development server to see the changes you make.
+
+```bash
+python3 manage.py runserver
+```
 
 ## Code of Conduct
 
