@@ -1,15 +1,16 @@
 # Contributing guide
 
-Welcome! Thank you for considering contributing to this project! Here are the steps to get a development installation up and running.
+Welcome! Thank you for considering contributing to this project!
 
-## Getting started
+## Steps
+Here are the steps to get a development installation up and running.
 
-### Fork the repository
+### 1. Fork the repository
 
 Follow the [GitHub guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo
 ) for how to fork a repository, clone it, and learn about creating pull requests.
 
-### Install dependencies
+### 2. Install dependencies
 
 Ensure you have the necessary dependencies installed. 
 
@@ -21,7 +22,7 @@ Ensure you have the necessary dependencies installed.
 
 **Note:** Consider installing the dependencies in a virtual environment for better isolation.
 
-### Apply migrations
+### 3. Apply migrations
 
 Apply the migrations to the database. Read more about Django migrations [here](https://docs.djangoproject.com/en/5.0/topics/migrations/).
 
@@ -31,7 +32,7 @@ python3 manage.py migrate
 
 **Note:** Every time you make any changes to the models, you will need to create a new migration and apply it.
 
-### Run the development server
+### 4. Run the development server
 
 Start the development server to see the changes you make.
 
