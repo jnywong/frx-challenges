@@ -56,9 +56,9 @@ Steps to access the admin interface:
 
 2. Promote your GitHub username to a superuser by running the following command, replace `<username>` with your GitHub username:
 
-    ```bash
-    python3 manage.py promote <username>
-    ```
+   ```bash
+   python3 manage.py promote <username>
+   ```
 
 ## Code of Conduct
 
