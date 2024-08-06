@@ -3,20 +3,20 @@
 Welcome! Thank you for considering contributing to this project!
 
 ## Steps
+
 Here are the steps to get a development installation up and running.
 
 ### 1. Fork the repository
 
-Follow the [GitHub guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo
-) for how to fork a repository, clone it, and learn about creating pull requests.
+Follow the [GitHub guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) for how to fork a repository, clone it, and learn about creating pull requests.
 
 ### 2. Install the dependencies
 
-Ensure you have the necessary dependencies installed. 
+Ensure you have the necessary dependencies installed.
 
-  ```bash
-  pip install -r requirements.txt
-  ```
+```bash
+pip install -r requirements.txt
+```
 
 **Important:** Make sure you have a working installation of Python 3.6 or later.
 
