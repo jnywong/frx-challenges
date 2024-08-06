@@ -2,7 +2,11 @@
 
 Welcome! Thank you for considering contributing to this project!
 
-## Development installation steps
+- [Development installation](#development-installation)
+- [Gain Admin Access](#gain-admin-access)
+- [Code of Conduct](#code-of-conduct)
+
+## Development installation
 
 Here are the steps to get a development installation up and running.
 
@@ -40,7 +44,7 @@ Start the development server to see the changes you make.
 python3 manage.py runserver
 ```
 
-## How to gain Admin access
+## Gain Admin access
 
 In order to access the admin interface at `/admin`, your user needs to be a Django superuser.
 
