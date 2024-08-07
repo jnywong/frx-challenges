@@ -11,9 +11,18 @@ class Team(models.Model):
     )
 
 class Project(models.Model):
-    name = models.CharField(max_length=1024, default="Untitled Project")
-    description = models.CharField(max_length=2048, default="No description provided")
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True, related_name="projects")
+    name = models.CharField(max_length=1024)
+    description = models.CharField(max_length=2048)
+    #FIXME: A default for the team had to be provided
+    # but because there was no default team, it was set to None
+    team = models.ForeignKey(
+        Team,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None,
+        related_name="projects"
+    )
 
 class Submission(models.Model):
     class Status(models.TextChoices):
@@ -28,7 +37,7 @@ class Submission(models.Model):
     data_uri = models.CharField(max_length=4096)
     # FIXME: Figure out max_length or use IntChoices
     status = models.CharField(choices=Status, default=Status.NOT_STARTED, max_length=16)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return f"({self.status}) {self.data_uri}"
