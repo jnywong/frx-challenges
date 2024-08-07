@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models, transaction
 
-
 # Create your models here.
+
 
 class Team(models.Model):
     name = models.CharField(max_length=1024)
@@ -10,10 +10,11 @@ class Team(models.Model):
         User, through="TeamMembership", related_name="teams"
     )
 
+
 class Project(models.Model):
     name = models.CharField(max_length=1024)
     description = models.CharField(max_length=2048)
-    #FIXME: A default for the team had to be provided
+    # FIXME: A default for the team had to be provided
     # but because there was no default team, it was set to None
     team = models.ForeignKey(
         Team,
@@ -21,8 +22,9 @@ class Project(models.Model):
         null=True,
         blank=True,
         default=None,
-        related_name="projects"
+        related_name="projects",
     )
+
 
 class Submission(models.Model):
     class Status(models.TextChoices):
@@ -62,6 +64,7 @@ class Evaluation(models.Model):
     def __str__(self):
         return f"({self.status}) {self.result} {self.submission.data_uri}"
 
+
 class TeamMembership(models.Model):
     is_admin = models.BooleanField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
@@ -70,6 +73,7 @@ class TeamMembership(models.Model):
     class Meta:
         # A user can be added to a team only once
         unique_together = ("user", "team")
+
 
 class Page(models.Model):
     title = models.CharField(max_length=1024)
