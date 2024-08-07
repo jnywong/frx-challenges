@@ -11,9 +11,9 @@ class Team(models.Model):
     )
 
 class Project(models.Model):
-    name = models.CharField(max_length=1024)
-    description = models.CharField(max_length=2048)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="projects")
+    name = models.CharField(max_length=1024, default="Untitled Project")
+    description = models.CharField(max_length=2048, default="No description provided")
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True, related_name="projects")
 
 class Submission(models.Model):
     class Status(models.TextChoices):
