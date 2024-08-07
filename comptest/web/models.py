@@ -3,6 +3,18 @@ from django.db import models, transaction
 
 
 # Create your models here.
+
+class Team(models.Model):
+    name = models.CharField(max_length=1024)
+    members = models.ManyToManyField(
+        User, through="TeamMembership", related_name="teams"
+    )
+
+class Project(models.Model):
+    name = models.CharField(max_length=1024)
+    description = models.CharField(max_length=2048)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="projects")
+
 class Submission(models.Model):
     class Status(models.TextChoices):
         NOT_STARTED = "NOT_STARTED"
@@ -16,6 +28,7 @@ class Submission(models.Model):
     data_uri = models.CharField(max_length=4096)
     # FIXME: Figure out max_length or use IntChoices
     status = models.CharField(choices=Status, default=Status.NOT_STARTED, max_length=16)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"({self.status}) {self.data_uri}"
@@ -40,14 +53,6 @@ class Evaluation(models.Model):
     def __str__(self):
         return f"({self.status}) {self.result} {self.submission.data_uri}"
 
-
-class Team(models.Model):
-    name = models.CharField(max_length=1024)
-    members = models.ManyToManyField(
-        User, through="TeamMembership", related_name="teams"
-    )
-
-
 class TeamMembership(models.Model):
     is_admin = models.BooleanField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
@@ -56,7 +61,6 @@ class TeamMembership(models.Model):
     class Meta:
         # A user can be added to a team only once
         unique_together = ("user", "team")
-
 
 class Page(models.Model):
     title = models.CharField(max_length=1024)
