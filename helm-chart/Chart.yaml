@@ -1,6 +1,5 @@
 apiVersion: v2
-name: helm-chart
+name: unnamed
 description: A Helm chart for Kubernetes
-type: unnamed
 version: 0.1.0
 appVersion: "1.16.0"

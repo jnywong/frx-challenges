@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "unnamed.ingress.fullname" . }}
+  name: {{ include "unnamed.fullname" . }}
   labels:
     {{- include "unnamed.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -17,11 +17,11 @@ spec:
     {{- range $host := .Values.ingress.hosts | default (list "") }}
     - http:
         paths:
-          - path: {{ .path }}
-            pathType: {{ .pathType }}
+          - path: {{ $.Values.ingress.path }}
+            pathType: {{ $.Values.ingress.pathType }}
             backend:
               service:
-                name: {{ include "helm-chart.fullname" $ }}
+                name: {{ include "unnamed.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
       {{- if $host }}
