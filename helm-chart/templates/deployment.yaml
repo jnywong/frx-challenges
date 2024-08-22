@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "unnamed.fullname" . }}
+  labels:
+    {{- include "unnamed.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "unnamed.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "unnamed.selectorLabels" . | nindent 8 }}
+    spec:
+      initContainers:
+        - name: db-migrate
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - python
+            - ./comptest/manage.py
+            - migrate
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: db
+              mountPath: /mnt
+              readOnly: false
+      containers:
+        - name: run-app
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          workingDir: /opt/unnamed-thingity-thing/comptest
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          command:
+            - gunicorn
+            - comptest.wsgi
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: db
+              mountPath: /mnt
+              readOnly: false
+      volumes:
+        - name: db
+          persistentVolumeClaim:
+            claimName: db-pvc

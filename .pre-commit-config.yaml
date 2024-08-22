@@ -29,13 +29,12 @@ repos:
     hooks:
       - id: black
 
-  # Autoformat: markdown, yaml
+  # Autoformat: markdown, yaml (but not helm templates)
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        # Don't run prettier on our jinja2 template files. We run djlint instead
-        exclude: "kubespawner/templates/.*\\.html"
+        exclude: helm-chart/templates/.*
 
   # Misc...
   - repo: https://github.com/pre-commit/pre-commit-hooks
