@@ -22,7 +22,7 @@
 charts:
   - name: unnamed
     chartPath: helm-chart
-    imagePrefix: quay.io/2i2c-org/
+    imagePrefix: quay.io/2i2c/
     # Set dev version by taking latest tag and incrementing patch
     baseVersion: patch
 
