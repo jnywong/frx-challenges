@@ -43,6 +43,8 @@ spec:
               protocol: TCP
           command:
             - gunicorn
+            - --bind
+            - 0.0.0.0:{{ .Values.service.port }}
             - comptest.wsgi
           securityContext:
             runAsUser: 0
