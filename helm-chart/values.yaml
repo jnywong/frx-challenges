@@ -25,7 +25,7 @@ service:
 
 ingress:
   enabled: false
-  className: nginx
+  ingressClassName: nginx
   annotations: {}
   hosts: []
   path: /
