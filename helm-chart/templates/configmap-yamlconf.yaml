@@ -4,4 +4,6 @@ metadata:
   name: {{ include "unnamed.fullname" . }}-django-yamlconf
 data:
   comptest.yaml: |
-    {{- toYaml .Values.yamlSettings | indent 4 }}
+    {{- range $key, $val := .Values.yamlSettings }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
