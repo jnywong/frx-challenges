@@ -40,4 +40,6 @@ tolerations: []
 
 affinity: {}
 
-yamlSettings: {}
+yamlSettings:
+  enabled: false
+  overrides: {}
