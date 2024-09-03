@@ -52,13 +52,17 @@ spec:
             - name: db
               mountPath: /mnt
               readOnly: false
+            {{- if .Values.yamlSettings.enabled }}
             - name: django-yamlconf
               mountPath: /mnt/unnamed-thingity-thing/
               subPath: comptest.yaml
+            {{- end }}
       volumes:
         - name: db
           persistentVolumeClaim:
             claimName: db-pvc
+        {{- if .Values.yamlSettings.enabled }}
         - name: django-yamlconf
           configMap:
             name: {{ include "unnamed.fullname" . }}-django-yamlconf
+        {{- end }}
