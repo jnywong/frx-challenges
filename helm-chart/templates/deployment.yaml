@@ -52,7 +52,7 @@ spec:
             - name: db
               mountPath: /mnt
               readOnly: false
-            - name: django-config
+            - name: django-yamlconf
               mountPath: /mnt/unnamed-thingity-thing/
               subPath: comptest.yaml
       volumes:
