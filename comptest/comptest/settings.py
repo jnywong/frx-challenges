@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+import django_yamlconf
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-su6*zos$30s$6@7q6lm-)rf1@bxdq!qd566f!a^9wgqs*p)m3%"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_yamlconf",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -202,3 +205,5 @@ if not output_dir.endswith("/"):
 os.makedirs(output_dir, exist_ok=True)
 
 UNNAMED_THINGY_EVALUATOR_OUTPUTS_TEMPDIR = output_dir
+
+django_yamlconf.load()
