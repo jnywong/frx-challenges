@@ -30,7 +30,8 @@ spec:
             runAsUser: 0
           volumeMounts:
             - name: db
-              mountPath: /mnt
+              mountPath: /opt/unnamed-thingity-thing/comptest/db.sqlite3
+              subPath: db.sqlite3
               readOnly: false
       containers:
         - name: run-app
@@ -50,7 +51,8 @@ spec:
             runAsUser: 0
           volumeMounts:
             - name: db
-              mountPath: /mnt
+              mountPath: /opt/unnamed-thingity-thing/comptest/db.sqlite3
+              subPath: db.sqlite3
               readOnly: false
             {{- if .Values.yamlSettings.enabled }}
             - name: django-yamlconf
