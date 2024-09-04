@@ -22,9 +22,10 @@ spec:
         - name: db-migrate
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          workingDir: /opt/unnamed-thingity-thing/comptest
           command:
             - python
-            - ./comptest/manage.py
+            - manage.py
             - migrate
           securityContext:
             runAsUser: 0
