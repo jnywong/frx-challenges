@@ -4,5 +4,5 @@ kind: ConfigMap
 metadata:
   name: {{ include "unnamed.fullname" . }}-django-yamlconf
 data:
-  comptest.yaml: |
-    {{ toYaml .Values.yamlSettings.overrides}}
+  {{- .Values.yamlSettings.overrides | toYaml | nindent 2 }}
+{{- end }}
