@@ -55,6 +55,7 @@ spec:
             {{- if .Values.yamlSettings.enabled }}
             - name: django-yamlconf
               mountPath: /opt/unnamed-thingity-thing/comptest/comptest.yaml
+              subPath: comptest.yaml
             {{- end }}
       volumes:
         - name: db
