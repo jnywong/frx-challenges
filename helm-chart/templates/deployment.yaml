@@ -54,8 +54,7 @@ spec:
               readOnly: false
             {{- if .Values.yamlSettings.enabled }}
             - name: django-yamlconf
-              mountPath: /mnt/unnamed-thingity-thing/
-              subPath: comptest.yaml
+              mountPath: /opt/unnamed-thingity-thing/comptest/comptest.yaml
             {{- end }}
       volumes:
         - name: db
