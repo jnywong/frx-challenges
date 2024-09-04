@@ -4,17 +4,18 @@ kind: ConfigMap
 metadata:
   name: {{ include "unnamed.fullname" . }}-django-yamlconf
 data:
+  comptest.yaml: |-
 {{- range $key, $value := .Values.yamlSettings.overrides }}
   {{- if kindIs "map" $value }}
     {{ $key }}: |
 {{ toYaml $value | indent 4 }}
-  {{- else if kindIs "array" $value }}
-    {{ $key }}: |
+  {{- else if or (kindIs "array" $value) (kindIs "slice" $value) }}
+    {{ $key }}:
 {{- range $item := $value }}
-      - {{ $item | quote }}
+      - {{ $item }}
 {{- end }}
   {{- else }}
-    {{ $key }}: {{ $value | quote }}
+    {{ $key }}: {{ $value }}
   {{- end }}
 {{- end }}
 {{- end }}
