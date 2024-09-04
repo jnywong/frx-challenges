@@ -5,8 +5,4 @@ metadata:
   name: {{ include "unnamed.fullname" . }}-django-yamlconf
 data:
   comptest.yaml: |
-    {{- range $key, $val := .Values.yamlSettings.overrides }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
-
-{{- end }}
+    {{ toYaml .Values.yamlSettings.overrides}}
