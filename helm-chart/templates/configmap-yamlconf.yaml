@@ -5,21 +5,5 @@ metadata:
   name: {{ include "unnamed.fullname" . }}-django-yamlconf
 data:
   comptest.yaml: |-
-{{- define "toYamlRecursive" -}}
-{{- range $key, $value := . }}
-  {{- if kindIs "map" $value }}
-    {{ $key }}:
-{{- include "toYamlRecursive" $value | indent 2 }}
-  {{- else if or (kindIs "array" $value) (kindIs "slice" $value) }}
-    {{ $key }}:
-{{- range $item := $value }}
-      - {{ $item }}
-{{- end }}
-  {{- else }}
-    {{ $key }}: {{ $value }}
-  {{- end }}
-{{- end }}
-{{- end }}
-
-{{- include "toYamlRecursive" .Values.yamlSettings.overrides }}
+{{- include "unnamed.toYamlRecursive" .Values.yamlSettings.overrides | indent 2 }}
 {{- end -}}

@@ -49,3 +49,19 @@ Selector labels
 app.kubernetes.io/name: {{ include "unnamed.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "unnamed.toYamlRecursive" -}}
+{{- range $key, $value := . }}
+  {{- if kindIs "map" $value }}
+    {{ $key }}:
+{{- include "unnamed.toYamlRecursive" $value | indent 2 }}
+  {{- else if or (kindIs "array" $value) (kindIs "slice" $value) }}
+    {{ $key }}:
+{{- range $item := $value }}
+      - {{ $item }}
+{{- end }}
+  {{- else }}
+    {{ $key }}: {{ $value }}
+  {{- end }}
+{{- end }}
+{{- end }}
