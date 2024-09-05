@@ -32,6 +32,10 @@ ingress:
   pathType: Prefix
   tls: []
 
+nfs:
+  pv:
+    serverIP: ""
+
 resources: {}
 
 nodeSelector: {}

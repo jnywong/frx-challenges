@@ -10,7 +10,6 @@ spec:
   nfs:
     server: {{ .Values.nfs.pv.serverIP | quote }}
     path: "/db/{{ .Release.Name }}"
-  mountOptions: {{ .Values.nfs.pv.mountOptions | toJson }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
