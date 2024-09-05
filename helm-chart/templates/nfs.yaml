@@ -7,10 +7,10 @@ spec:
     storage: 1Ti
   accessModes:
     - ReadWriteMany
+  storageClassName: {{ .Values.nfs.pv.storageClassName }}
   nfs:
     server: {{ .Values.nfs.pv.serverIP | quote }}
     path: "/db/{{ .Release.Name }}"
-  mountOptions: {{ .Values.nfs.pv.mountOptions | toJson }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -20,6 +20,7 @@ spec:
   accessModes:
     - ReadWriteMany
   volumeName: {{ .Release.Name }}-db-nfs
+  storageClassName: {{ .Values.nfs.pv.storageClassName }}
   resources:
     requests:
       storage: 1Ti
