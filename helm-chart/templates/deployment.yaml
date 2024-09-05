@@ -63,7 +63,7 @@ spec:
       volumes:
         - name: db
           persistentVolumeClaim:
-            claimName: db-pvc
+            claimName: {{ .Release.Name }}-db-pvc
         {{- if .Values.yamlSettings.enabled }}
         - name: django-yamlconf
           configMap:
