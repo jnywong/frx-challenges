@@ -35,7 +35,6 @@ ingress:
 nfs:
   pv:
     serverIP: ""
-    storageClassName: ""
 
 resources: {}
 

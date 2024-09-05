@@ -7,7 +7,6 @@ spec:
     storage: 1Ti
   accessModes:
     - ReadWriteMany
-  storageClassName: {{ .Values.nfs.pv.storageClassName }}
   nfs:
     server: {{ .Values.nfs.pv.serverIP | quote }}
     path: "/db/{{ .Release.Name }}"
@@ -20,7 +19,7 @@ spec:
   accessModes:
     - ReadWriteMany
   volumeName: {{ .Release.Name }}-db-nfs
-  storageClassName: {{ .Values.nfs.pv.storageClassName }}
+  storageClassName: ""
   resources:
     requests:
       storage: 1Ti
