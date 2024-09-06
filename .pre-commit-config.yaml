@@ -34,7 +34,14 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        exclude: helm-chart/templates/.*
+        exclude: ^helm-chart/templates/.*|^comptest/web/templates/.*
+
+  # Autoformat and lint: HTML
+  - repo: https://github.com/Riverside-Healthcare/djLint
+    rev: v1.35.2
+    hooks:
+      - id: djlint-reformat-django
+      - id: djlint-django
 
   # Misc...
   - repo: https://github.com/pre-commit/pre-commit-hooks
