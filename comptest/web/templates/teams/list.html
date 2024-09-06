@@ -1,17 +1,13 @@
-{% extends "page.html" %} {% block body %}
-
-<h2>List of Teams you are a part of</h2>
-<a href="{% url 'teams-create' %}" class="btn btn-secondary"
-  >Create a new team</a
->
-
-<ul>
-  {% for m in memberships %}
-  <li>
-    <a href="{% url 'teams-view' m.team.id %}">{{ m.team.name }}</a>
-    {% if m.is_admin %}<span>admin</span>{% endif %}
-  </li>
-  {% endfor %}
-</ul>
-
-{% endblock %}
+{% extends "page.html" %}
+{% block body %}
+    <h2>List of Teams you are a part of</h2>
+    <a href="{% url 'teams-create' %}" class="btn btn-secondary">Create a new team</a>
+    <ul>
+        {% for m in memberships %}
+            <li>
+                <a href="{% url 'teams-view' m.team.id %}">{{ m.team.name }}</a>
+                {% if m.is_admin %}<span>admin</span>{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock body %}

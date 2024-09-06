@@ -30,13 +30,14 @@ repos:
       - id: black
 
   # Autoformat: markdown, yaml (but not helm templates)
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
-    hooks:
-      - id: prettier
-        exclude: helm-chart/templates/.*
+  # - repo: https://github.com/pre-commit/mirrors-prettier
+  #   rev: v4.0.0-alpha.8
+  #   hooks:
+  #     - id: prettier
+  #       exclude: |
+  #         ^helm-chart/templates/.*|^comptest/web/templates/.*
 
-  # Autoformat and lint: HTML and set --profile=django
+  # Autoformat and lint: HTML
   - repo: https://github.com/Riverside-Healthcare/djLint
     rev: v1.35.2
     hooks:
