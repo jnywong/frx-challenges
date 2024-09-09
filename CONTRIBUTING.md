@@ -60,6 +60,12 @@ Steps to access the admin interface:
    python3 manage.py promote <username>
    ```
 
+**Note:** You can also promote a list of users to superusers by running the following command:
+
+```bash
+python3 manage.py promote '["username1", "username2" ,"username3"]'
+```
+
 ## Code of Conduct
 
 Please note that this project has a [Code of Conduct](https://github.com/2i2c-org/unnamed-thingity-thing?tab=coc-ov-file). By participating in this project you agree to follow it.
