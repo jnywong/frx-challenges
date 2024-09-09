@@ -17,13 +17,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         usernames_str = options["usernames"]
-        try:
-            usernames = ast.literal_eval(usernames_str)
-            if not isinstance(usernames, list):
-                raise ValueError("Input should be a list of usernames")
-        except (ValueError, SyntaxError) as e:
-            print(self.style.ERROR(f"Invalid input format: {e}"))
-            return
+        if usernames_str.startswith("[") and usernames_str.endswith("]"):
+            try:
+                usernames = ast.literal_eval(usernames_str)
+                if not isinstance(usernames, list):
+                    raise ValueError("Input should be a list of usernames")
+            except (ValueError, SyntaxError) as e:
+                print(self.style.ERROR(f"Invalid input format: {e}"))
+                return
+        else:
+            usernames = [usernames_str]
 
         for username in usernames:
             print(username)
