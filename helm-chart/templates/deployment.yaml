@@ -34,6 +34,22 @@ spec:
               mountPath: /opt/unnamed-thingity-thing/comptest/db.sqlite3
               subPath: db.sqlite3
               readOnly: false
+        - name: admin-add
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          workingDir: /opt/unnamed-thingity-thing/comptest
+          command:
+            - python
+            - manage.py
+            - promote
+            - {{ .Values.adminUsers | quote }}
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: db
+              mountPath: /opt/unnamed-thingity-thing/comptest/db.sqlite3
+              subPath: db.sqlite3
+              readOnly: false
       containers:
         - name: run-app
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
