@@ -1,4 +1,3 @@
-import ast
 from argparse import ArgumentParser
 
 from django.contrib.auth.models import User
@@ -9,27 +8,16 @@ class Command(BaseCommand):
     def add_arguments(self, parser: ArgumentParser):
         parser.add_argument(
             "usernames",
+            nargs="+",
             help="""
             List of existing users to promote as superusers,
-            e.g., \'[\"user1\", \"user2\", \"user3\"]\'
+            e.g., user1 user2 user3
             """,
         )
 
     def handle(self, *args, **options):
-        usernames_str = options["usernames"]
-        if usernames_str.startswith("[") and usernames_str.endswith("]"):
-            try:
-                usernames = ast.literal_eval(usernames_str)
-                if not isinstance(usernames, list):
-                    raise ValueError("Input should be a list of usernames")
-            except (ValueError, SyntaxError) as e:
-                print(self.style.ERROR(f"Invalid input format: {e}"))
-                return
-        else:
-            usernames = [usernames_str]
-
+        usernames = options["usernames"]
         for username in usernames:
-            print(username)
             try:
                 user = User.objects.filter(username=username).get()
                 user.is_staff = True

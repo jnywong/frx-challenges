@@ -42,7 +42,7 @@ spec:
             - python
             - manage.py
             - promote
-            - {{ .Values.adminUsers | quote }}
+            - '{{ include "quoteList" .Values.adminUsers }}'
           securityContext:
             runAsUser: 0
           volumeMounts:
