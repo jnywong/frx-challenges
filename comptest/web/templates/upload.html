@@ -6,7 +6,7 @@
         text you upload
     </p>
     <form class="form"
-          action="{% url '/upload' %}"
+          action="{% url 'upload' %}"
           method="post"
           enctype="multipart/form-data">
         {% csrf_token %} {{ form }}
