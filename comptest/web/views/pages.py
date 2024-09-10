@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from markdown_it import MarkdownIt
@@ -35,6 +36,9 @@ def home(request: HttpRequest) -> HttpResponse:
         .enable("table")
     )
     html_content = md.render(page.content)
-    return render(
-        request, "page/view.html", {"page": page, "html_content": html_content}
-    )
+    context = {
+        "page": page,
+        "html_content": html_content,
+        "challenge_state": settings.CHALLENGE_STATE,
+    }
+    return render(request, "page/view.html", context)

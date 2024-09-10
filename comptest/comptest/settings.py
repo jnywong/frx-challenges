@@ -187,6 +187,11 @@ LOGIN_URL = "/accounts/github/login/"
 # FIXME: Understand the security implications?
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
+# Challenge state can have the following values:
+# - NOT_STARTED: The challenge has not started yet
+# - RUNNING: The challenge is currently running
+# Based on this, different views are shown to the user
+CHALLENGE_STATE = "NOT_STARTED"
 
 import os
 
