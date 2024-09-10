@@ -74,6 +74,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "web.context_processors.navbar_pages",
+                "web.context_processors.footer_content",
             ],
         },
     },
@@ -191,7 +192,20 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 # - NOT_STARTED: The challenge has not started yet
 # - RUNNING: The challenge is currently running
 # Based on this, different views are shown to the user
-CHALLENGE_STATE = "NOT_STARTED"
+CHALLENGE_STATE = "RUNNING"
+
+FOOTER = """
+<div class="footer">
+    <p id="footer-text">&copy; HELLO!</p>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var footerText = document.getElementById('footer-text');
+            var timeOfDay = new Date().toString();
+            footerText.innerHTML = timeOfDay;
+        });
+    </script>
+</div>
+"""
 
 import os
 
