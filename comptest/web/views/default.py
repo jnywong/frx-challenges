@@ -52,4 +52,9 @@ def results(request: HttpRequest) -> HttpResponse:
 
 
 def leaderboard(request: HttpRequest) -> HttpResponse:
+    if settings.CHALLENGE_STATE != "RUNNING":
+        return HttpResponse(
+            "Challenge hasn't started, so leaderboard is not available", status=400
+        )
+
     return render(request, "results.html")
