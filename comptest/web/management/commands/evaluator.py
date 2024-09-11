@@ -15,7 +15,6 @@ from ...models import Evaluation, Submission
 
 
 class DockerEvaluator:
-    # Locally built
     image = "quay.io/yuvipanda/evaluator-harness:latest"
 
     def __init__(self):
