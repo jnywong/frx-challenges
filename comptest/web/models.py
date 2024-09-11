@@ -39,7 +39,6 @@ class Submission(models.Model):
     data_uri = models.CharField(max_length=4096)
     # FIXME: Figure out max_length or use IntChoices
     status = models.CharField(choices=Status, default=Status.NOT_STARTED, max_length=16)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return f"({self.status}) {self.data_uri}"
