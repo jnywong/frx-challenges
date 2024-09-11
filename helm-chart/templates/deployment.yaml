@@ -76,7 +76,6 @@ spec:
               mountPath: /opt/unnamed-thingity-thing/comptest/comptest.yaml
               subPath: comptest.yaml
             {{- end }}
-      extraContainers:
         - name: run-evaluator
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
