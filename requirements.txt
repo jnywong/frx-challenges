@@ -1,4 +1,5 @@
 aiodocker
+aiohttp >= 3.10.5
 django
 django-allauth[socialaccount]
 django-reversion
