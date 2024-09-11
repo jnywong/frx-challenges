@@ -76,6 +76,26 @@ spec:
               mountPath: /opt/unnamed-thingity-thing/comptest/comptest.yaml
               subPath: comptest.yaml
             {{- end }}
+      extraContainers:
+        - name: run-evaluator
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          workingDir: /opt/unnamed-thingity-thing/comptest
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          command:
+            - python
+            - manage.py
+            - evaluator
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: db
+              mountPath: /opt/unnamed-thingity-thing/comptest/db.sqlite3
+              subPath: db.sqlite3
+              readOnly: false
       volumes:
         - name: db
           persistentVolumeClaim:
