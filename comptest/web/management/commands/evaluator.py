@@ -15,13 +15,18 @@ from ...models import Evaluation, Submission
 
 
 class DockerEvaluator:
-    # Locally built
     image = "quay.io/yuvipanda/evaluator-harness:latest"
 
     def __init__(self):
         self.docker = aiodocker.Docker()
 
+    async def pull_image(self):
+        await self.docker.images.pull(self.image)
+        print(f"Successfully pulled Docker image: {self.image}")
+
     async def start_evaluation(self, input_uri):
+        await self.pull_image()
+
         results_dir = tempfile.mkdtemp(
             prefix=settings.UNNAMED_THINGY_EVALUATOR_OUTPUTS_TEMPDIR
         )

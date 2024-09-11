@@ -66,6 +66,19 @@ Steps to access the admin interface:
 python3 manage.py promote '["username1", "username2" ,"username3"]'
 ```
 
+## Run the evaluator script
+
+The evaluator script is used to evaluate user submissions.
+It does so by creating and starting a Docker container to evaluate each
+submission. The results are then stored to a file.
+
+To run the evaluator script, run the following command then go to the app and
+do a submission:
+
+```bash
+   python3 manage.py evaluator
+```
+
 ## Code of Conduct
 
 Please note that this project has a [Code of Conduct](https://github.com/2i2c-org/unnamed-thingity-thing?tab=coc-ov-file). By participating in this project you agree to follow it.
