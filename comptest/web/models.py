@@ -103,6 +103,7 @@ class ContentFile(models.Model):
     """
     Files (like images, object files, etc) to be used when constructing pages
     """
+
     title = models.CharField(max_length=1024)
     slug = models.SlugField(
         max_length=128, help_text="Slug used to refer to this image"
