@@ -30,10 +30,6 @@
                         {% endfor %}
                         {% if challenge_state == "RUNNING" %}
                             <a class="nav-link" href="{% url 'leaderboard' %}">Leaderboard</a>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link disabled" href="#">Leaderboard</a>
-                            </li>
                         {% endif %}
                     </div>
                 </div>
@@ -53,11 +49,6 @@
                             {% if challenge_state == "RUNNING" %}
                                 <a class="btn btn-primary"
                                    href="{% url 'github_login' %}?next={{ request.path }}">Login with GitHub</a>
-                            {% else %}
-                                <a class="btn btn-secondary disabled"
-                                   href="#"
-                                   role="button"
-                                   aria-disabled="true">Login with GitHub</a>
                             {% endif %}
                         {% endif %}
                     </div>
