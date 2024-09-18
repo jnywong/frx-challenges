@@ -20,8 +20,6 @@
                 <a class="navbar-brand" href="/">Unnamed Competitive Tester</a>
                 <div class="collapse navbar-collapse">
                     <div class="navbar-nav">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
-                           href="{% url 'home' %}">Home</a>
                         {% for p in pages %}
                             {% url 'page-view' p.slug as page_url %}
                             <a class="nav-link {% if page_url == request.path %}active{% endif %}"
