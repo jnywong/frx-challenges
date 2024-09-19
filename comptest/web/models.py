@@ -96,4 +96,19 @@ class Page(models.Model):
             super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.title}"
+        return self.title
+
+
+class ContentFile(models.Model):
+    """
+    Files (like images, object files, etc) to be used when constructing pages
+    """
+
+    title = models.CharField(max_length=1024)
+    slug = models.SlugField(
+        max_length=128, help_text="Slug used to refer to this image"
+    )
+    file = models.FileField(upload_to="content-files/%Y/%m/%d/")
+
+    def __str__(self):
+        return self.title
