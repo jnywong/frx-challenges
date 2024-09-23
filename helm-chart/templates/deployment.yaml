@@ -5,6 +5,9 @@ metadata:
   labels:
     {{- include "unnamed.labels" . | nindent 4 }}
 spec:
+  strategy:
+    # We have a PVC that can be only bound to one place, so needs to Recreate
+    type: Recreate
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -30,10 +33,11 @@ spec:
           securityContext:
             runAsUser: 0
           volumeMounts:
-            - name: db
-              mountPath: /opt/unnamed-thingity-thing/comptest/db.sqlite3
-              subPath: db.sqlite3
-              readOnly: false
+            - name: storage
+              mountPath: /opt/state
+            - name: django-yamlconf
+              mountPath: /opt/unnamed-thingity-thing/comptest/comptest.yaml
+              subPath: comptest.yaml
         - name: admin-add
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -46,10 +50,11 @@ spec:
           securityContext:
             runAsUser: 0
           volumeMounts:
-            - name: db
-              mountPath: /opt/unnamed-thingity-thing/comptest/db.sqlite3
-              subPath: db.sqlite3
-              readOnly: false
+            - name: storage
+              mountPath: /opt/state
+            - name: django-yamlconf
+              mountPath: /opt/unnamed-thingity-thing/comptest/comptest.yaml
+              subPath: comptest.yaml
       containers:
         - name: run-app
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
@@ -67,21 +72,15 @@ spec:
           securityContext:
             runAsUser: 0
           volumeMounts:
-            - name: db
-              mountPath: /opt/unnamed-thingity-thing/comptest/db.sqlite3
-              subPath: db.sqlite3
-              readOnly: false
-            {{- if .Values.yamlSettings.enabled }}
+            - name: storage
+              mountPath: /opt/state
             - name: django-yamlconf
               mountPath: /opt/unnamed-thingity-thing/comptest/comptest.yaml
               subPath: comptest.yaml
-            {{- end }}
       volumes:
-        - name: db
+        - name: storage
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-db-pvc
-        {{- if .Values.yamlSettings.enabled }}
+            claimName: {{ include "unnamed.fullname" . }}
         - name: django-yamlconf
           configMap:
             name: {{ include "unnamed.fullname" . }}-django-yamlconf
-        {{- end }}

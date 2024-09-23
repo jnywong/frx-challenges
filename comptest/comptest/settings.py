@@ -230,3 +230,4 @@ os.makedirs(output_dir, exist_ok=True)
 UNNAMED_THINGY_EVALUATOR_OUTPUTS_TEMPDIR = output_dir
 
 django_yamlconf.load()
+django_yamlconf.list_attrs()
