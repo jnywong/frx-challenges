@@ -94,7 +94,7 @@ class Page(models.Model):
         default=MimeType.markdown,
         help_text="Mimetype used to render this page",
         max_length=32,
-        choices=MimeType
+        choices=MimeType,
     )
 
     content = models.TextField(help_text="Markdown specifying the page's content")
