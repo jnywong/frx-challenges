@@ -15,4 +15,7 @@ urlpatterns = [
 # Enable static serving even with external webserver like gunicorn
 urlpatterns += staticfiles_urlpatterns()
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Serve media URLs only when running as debug mode
+# nginx should serve them for us otherwise
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
