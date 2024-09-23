@@ -29,13 +29,19 @@ def view(request: HttpRequest, slug: str) -> HttpResponse:
 def home(request: HttpRequest) -> HttpResponse:
     page = Page.objects.get(is_home=True)
 
-    md = (
-        MarkdownIt("commonmark", {"breaks": True, "html": True})
-        .use(front_matter_plugin)
-        .use(footnote_plugin)
-        .enable("table")
-    )
-    html_content = md.render(page.content)
+    if page.mimetype == Page.MimeType.markdown:
+        md = (
+            MarkdownIt("commonmark", {"breaks": True, "html": True})
+            .use(front_matter_plugin)
+            .use(footnote_plugin)
+            .enable("table")
+        )
+        html_content = md.render(page.content)
+    elif page.mimetype == Page.MimeType.html:
+        html_content = page.content
+    else:
+        raise ValueError(f"Unsupported mimetype {page.mimetype} for {page.title}")
+
     context = {
         "page": page,
         "html_content": html_content,
