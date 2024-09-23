@@ -1,11 +1,11 @@
 from django.conf import settings
 from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from markdown_it import MarkdownIt
 from mdit_py_plugins.footnote import footnote_plugin
 from mdit_py_plugins.front_matter import front_matter_plugin
 
-from ..models import Page, ContentFile
+from ..models import ContentFile, Page
 
 
 def view(request: HttpRequest, slug: str) -> HttpResponse:
