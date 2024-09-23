@@ -117,7 +117,7 @@ class ContentFile(models.Model):
 
     title = models.CharField(max_length=1024)
     slug = models.SlugField(
-        max_length=128, help_text="Slug used to refer to this image"
+        max_length=128, help_text="Slug used to refer to this image", unique=True
     )
     file = models.FileField(upload_to="content-files/%Y/%m/%d/")
 
