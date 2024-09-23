@@ -75,6 +75,10 @@ class TeamMembership(models.Model):
 
 
 class Page(models.Model):
+    class MimeType(models.TextChoices):
+        markdown = "text/markdown"
+        html = "text/html"
+
     title = models.CharField(max_length=1024)
     slug = models.SlugField(
         max_length=128, help_text="Slug used to refer to this page's URL"
@@ -86,6 +90,13 @@ class Page(models.Model):
         default=False,
         help_text="Use current page as the home page. Only one page can have this enabled at any given time",
     )
+    mimetype = models.CharField(
+        default=MimeType.markdown,
+        help_text="Mimetype used to render this page",
+        max_length=32,
+        choices=MimeType
+    )
+
     content = models.TextField(help_text="Markdown specifying the page's content")
 
     def save(self, *args, **kwargs):
