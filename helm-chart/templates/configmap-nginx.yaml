@@ -7,6 +7,9 @@ data:
     server {
         listen {{ .Values.service.port }};
 
+        # Increase the limit of
+        client_max_body_size 1024m;
+
         location /media/ {
           alias /opt/state/media/;
 
