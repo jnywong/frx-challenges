@@ -6,10 +6,13 @@ $primary: #eedc11; // set the $primary variable
 $secondary: #3fc2cd;
 
 // merge with existing $theme-colors map
-$theme-colors: map-merge($theme-colors, (
-  "primary": $primary,
-  "secondary": $secondary
-));
+$theme-colors: map-merge(
+  $theme-colors,
+  (
+    "primary": $primary,
+    "secondary": $secondary,
+  )
+);
 
 // set changes
 @import "bootstrap";
