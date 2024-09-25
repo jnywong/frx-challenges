@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link href='{% static "webpack-output/main.css" %}' rel="stylesheet" />
         {% block title %}
-        <title>{{site_name}}</title>
+            <title>{{ site_name }}</title>
         {% endblock title %}
         {% block head %}
         {% endblock head %}
@@ -16,9 +16,9 @@
             <div class="container">
                 <a class="navbar-brand" href="/">
                     {% if site_logo_url %}
-                    <img src="{{site_logo_url}}" title="{{site_name}}" height="32px" />
+                        <img src="{{ site_logo_url }}" title="{{ site_name }}" height="32px" />
                     {% else %}
-                    {{site_name}}
+                        {{ site_name }}
                     {% endif %}
                 </a>
                 <div class="collapse navbar-collapse">
