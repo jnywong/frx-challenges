@@ -14,9 +14,9 @@
     <body>
         <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand" href="/">
+                <a class="navbar-brand" href="/" title="{{ site_name }}">
                     {% if site_logo_url %}
-                        <img src="{{ site_logo_url }}" title="{{ site_name }}" height="32px" />
+                        <img src="{{ site_logo_url }}" alt="{{ site_name }}" height="32px" width="auto"/>
                     {% else %}
                         {{ site_name }}
                     {% endif %}
