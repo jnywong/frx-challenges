@@ -12,7 +12,8 @@
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
-    "webpack": "webpack"
+    "webpack": "webpack",
+    "webpack:watch": "webpack --watch"
   },
   "dependencies": {
     "bootstrap": "^5.3.3"
