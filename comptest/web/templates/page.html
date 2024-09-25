@@ -5,14 +5,22 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link href='{% static "webpack-output/main.css" %}' rel="stylesheet" />
-        <title>Unnamed Competitive Tester</title>
+        {% block title %}
+        <title>{{site_name}}</title>
+        {% endblock title %}
         {% block head %}
         {% endblock head %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand" href="/">Unnamed Competitive Tester</a>
+                <a class="navbar-brand" href="/">
+                    {% if site_logo_url %}
+                    <img src="{{site_logo_url}}" title="{{site_name}}" height="32px" />
+                    {% else %}
+                    {{site_name}}
+                    {% endif %}
+                </a>
                 <div class="collapse navbar-collapse">
                     <div class="navbar-nav">
                         {% for p in pages %}
@@ -54,13 +62,6 @@
         </div>
     </body>
     <footer>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container">
-                <!-- <a class="navbar-brand" href="/"></a> -->
-                <div class="collapse navbar-collapse">
-                    <div class="navbar-nav">{{ footer|safe }}</div>
-                </div>
-            </div>
-        </nav>
+        {{ site_footer_html|safe }}
     </footer>
 </html>
