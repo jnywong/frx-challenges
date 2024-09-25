@@ -8,5 +8,9 @@ def navbar_pages(request):
     return {"pages": pages}
 
 
-def footer_content(request):
-    return {"footer": settings.FOOTER}
+def site_display_settings(request):
+    return {
+        "site_name": settings.SITE_NAME,
+        "site_logo_url": settings.SITE_LOGO_URL,
+        "site_footer_html": settings.SITE_FOOTER_HTML,
+    }

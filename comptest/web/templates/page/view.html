@@ -1,4 +1,9 @@
 {% extends "page.html" %}
+{% block title %}
+    <title>
+        {% if not page.is_home %}{{ page.title|title }} -{% endif %}
+    {{ site_name }}</title>
+{% endblock title %}
 {% block body %}
     {{ html_content|safe }}
 {% endblock body %}

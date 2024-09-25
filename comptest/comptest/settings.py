@@ -74,7 +74,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "web.context_processors.navbar_pages",
-                "web.context_processors.footer_content",
+                "web.context_processors.site_display_settings",
             ],
         },
     },
@@ -197,18 +197,6 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 # Based on this, different views are shown to the user
 CHALLENGE_STATE = "RUNNING"
 
-FOOTER = """
-<div class="footer">
-    <p id="footer-text">&copy; HELLO!</p>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var footerText = document.getElementById('footer-text');
-            var timeOfDay = new Date().toString();
-            footerText.innerHTML = timeOfDay;
-        });
-    </script>
-</div>
-"""
 
 import os
 
@@ -228,6 +216,15 @@ if not output_dir.endswith("/"):
 os.makedirs(output_dir, exist_ok=True)
 
 UNNAMED_THINGY_EVALUATOR_OUTPUTS_TEMPDIR = output_dir
+
+## Site specific display settings
+SITE_NAME = "Unnamed thingity thingy"
+SITE_LOGO_URL = ""
+SITE_FOOTER_HTML = """
+<div class="footer">
+    <p>Change this to your custom footer</p>
+</div>
+"""
 
 django_yamlconf.load()
 django_yamlconf.list_attrs()
