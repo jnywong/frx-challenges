@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: {{ include "unnamed.fullname" . }}-django-yamlconf
 data:
-  comptest.yaml: |-
-{{- include "unnamed.toYamlRecursive" .Values.yamlSettings.overrides | indent 2 }}
+  comptest.yaml: |
+    {{ mustToJson .Values.yamlSettings.overrides }}
