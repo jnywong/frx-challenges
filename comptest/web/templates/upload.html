@@ -7,13 +7,13 @@
             text you upload
         </p>
         <form class="form"
-            action="{% url 'upload' %}"
-            method="post"
-            enctype="multipart/form-data">
+              action="{% url 'upload' %}"
+              method="post"
+              enctype="multipart/form-data">
             {% csrf_token %} {{ form }}
             <input class="form-control btn btn-primary mt-2"
-                type="submit"
-                value="Submit" />
+                   type="submit"
+                   value="Submit" />
         </form>
     </div>
 {% endblock body %}
