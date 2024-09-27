@@ -51,3 +51,9 @@ yamlSettings:
     DATABASES.default.NAME: /opt/state/db.sqlite3
 
 adminUsers: []
+
+nginx:
+  image:
+    repository: nginx
+    tag: 1.27
+  resources: {}
