@@ -99,6 +99,12 @@ class Page(models.Model):
 
     content = models.TextField(help_text="Markdown specifying the page's content")
 
+    header_content = models.TextField(
+        help_text="Content to use as page header",
+        null=True,
+        blank=True
+    )
+
     def save(self, *args, **kwargs):
         if not self.is_home:
             return super().save(*args, **kwargs)

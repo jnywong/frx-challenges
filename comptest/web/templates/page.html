@@ -12,53 +12,79 @@
         {% endblock head %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg">
-            <div class="container">
-                <a class="navbar-brand" href="/" title="{{ site_name }}">
-                    {% if site_logo_url %}
-                        <img src="{{ site_logo_url }}"
-                             alt="{{ site_name }}"
-                             height="50px"
-                             width="auto" />
-                    {% else %}
-                        {{ site_name }}
-                    {% endif %}
-                </a>
-                <div class="d-flex">
-                    <div class="navbar-nav">
-                        {% for p in pages %}
-                            {% url 'page-view' p.slug as page_url %}
-                            <a class="nav-link {% if page_url == request.path %}active{% endif %}"
-                               aria-current="page"
-                               href="{{ page_url }}">{{ p.title }}</a>
-                        {% endfor %}
-                        {% if challenge_state == "RUNNING" %}
-                            <a class="nav-link" href="{% url 'leaderboard' %}">Leaderboard</a>
-                        {% endif %}
-                        {% if request.user.is_authenticated %}
-                            <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
-                            {% if request.user.is_superuser %}
-                                <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-                            {% endif %}
-                            <a class="nav-link {% if request.resolver_match.url_name == 'teams-list' %}active{% endif %}"
-                               href="{% url 'teams-list' %}">My Teams</a>
-                            {% if request.resolver_match.url_name != 'upload' %}
-                                <a class="btn btn-primary" href="{% url 'upload' %}">Make a submission</a>
-                            {% endif %}
+        <div
+            class="page-header {% if site_page_header_image_url %}page-header-with-image{% endif %}"
+            {% if site_page_header_image_url %}style="background-image: url('{{ site_page_header_image_url }}')"{% endif %}
+        >
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div class="container">
+                    <a class="navbar-brand" href="/" title="{{ site_name }}">
+                        {% if site_logo_url %}
+                            <img src="{{ site_logo_url }}"
+                                alt="{{ site_name }}"
+                                width="auto" />
                         {% else %}
-                            {% if challenge_state == "RUNNING" %}
-                                <a class="btn btn-primary"
-                                   href="{% url 'github_login' %}?next={{ request.path }}">Login with GitHub</a>
-                            {% endif %}
+                            {{ site_name }}
                         {% endif %}
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav">
+                            {% for p in pages %}
+                                {% url 'page-view' p.slug as page_url %}
+                                <li class="nav-item {% if page_url == request.path %}active{% endif %}">
+                                    <a class="nav-link "
+                                    aria-current="page"
+                                    href="{{ page_url }}">{{ p.title }}</a>
+                                </li>
+                            {% endfor %}
+                            {% if challenge_state == "RUNNING" %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'leaderboard' %}">Leaderboard</a>
+                                </li>
+                            {% endif %}
+                            {% if request.user.is_authenticated %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+                                </li>
+                                {% if request.user.is_superuser %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                                </li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'teams-list' %}active{% endif %}"
+                                    href="{% url 'teams-list' %}">My Teams</a>
+                                </li>
+                                {% if request.resolver_match.url_name != 'upload' %}
+                                <li class="nav-item">
+                                    <a class="btn btn-primary" href="{% url 'upload' %}">Make a submission</a>
+                                </li>
+                                {% endif %}
+                            {% else %}
+                                {% if challenge_state == "RUNNING" %}
+                                <li class="nav-item">
+                                    <a class="btn btn-primary"
+                                    href="{% url 'github_login' %}?next={{ request.path }}">Login with GitHub</a>
+                                </li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
                     </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+            {% block page_header %}
+            {% endblock %}
+        </div>
         {% block body %}
         {% endblock body %}
     </body>
     <footer>
         {{ site_footer_html|safe }}
     </footer>
+
+    <script src='{% static "webpack-output/main.js" %}'></script>
 </html>
