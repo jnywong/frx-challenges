@@ -7,6 +7,7 @@ from mdit_py_plugins.front_matter import front_matter_plugin
 
 from ..models import ContentFile, Page
 
+
 def render_page(request: HttpRequest, page: Page) -> HttpResponse:
     if page.mimetype == Page.MimeType.markdown:
         md = (
