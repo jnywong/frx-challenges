@@ -4,6 +4,9 @@
         {% if not page.is_home %}{{ page.title|title }} -{% endif %}
     {{ site_name }}</title>
 {% endblock title %}
+{% block page_header %}
+    {{ page_header_content|safe }}
+{% endblock page_header %}
 {% block body %}
     {{ html_content|safe }}
 {% endblock body %}

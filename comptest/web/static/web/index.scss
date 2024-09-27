@@ -12,3 +12,33 @@ h5,
 h6 {
   font-family: Merriweather, serif;
 }
+
+/* Site logo */
+.navbar-brand img {
+  @include rfs(50px, height);
+}
+
+.page-header {
+  @include rfs(2rem, padding-bottom);
+}
+
+.page-header {
+  @include rfs(2rem, padding-bottom);
+}
+
+nav.navbar {
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+}
+
+nav.navbar a {
+  color: white;
+}
+
+nav.navbar a:hover {
+  color: #aaa;
+}
+
+.page-header-with-image {
+  background-size: cover;
+  background-position: center;
+}

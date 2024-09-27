@@ -5,7 +5,7 @@ const miniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   context: __dirname,
-  entry: "./static/web/index.scss",
+  entry: "./static/web/index.js",
   output: {
     path: path.resolve(__dirname, "static/webpack-output/"),
     publicPath: "auto", // necessary for CDNs/S3/blob storages

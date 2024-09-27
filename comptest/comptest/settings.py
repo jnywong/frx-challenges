@@ -225,6 +225,7 @@ SITE_FOOTER_HTML = """
     <p>Change this to your custom footer</p>
 </div>
 """
+SITE_PAGE_HEADER_IMAGE_URL = ""
 
 django_yamlconf.load()
 django_yamlconf.list_attrs()
