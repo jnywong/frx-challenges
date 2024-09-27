@@ -38,6 +38,22 @@ spec:
             - name: django-yamlconf
               mountPath: /opt/unnamed-thingity-thing/comptest/comptest.yaml
               subPath: comptest.yaml
+        - name: collect-static
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          workingDir: /opt/unnamed-thingity-thing/comptest
+          command:
+            - python
+            - manage.py
+            - collectstatic
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: django-yamlconf
+              mountPath: /opt/unnamed-thingity-thing/comptest/comptest.yaml
+              subPath: comptest.yaml
+            - name: staticfiles
+              mountPath: /opt/staticfiles
         - name: admin-add
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -85,6 +101,9 @@ spec:
             - name: nginx-config
               mountPath: /etc/nginx/conf.d/default.conf
               subPath: default.conf
+            - name: staticfiles
+              mountPath: /opt/staticfiles
+              readOnly: true
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -93,6 +112,8 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: {{ include "unnamed.fullname" . }}
+        - name: staticfiles
+          emptyDir: {}
         - name: django-yamlconf
           configMap:
             name: {{ include "unnamed.fullname" . }}-django-yamlconf
