@@ -3,4 +3,4 @@ profile = "black"
 
 [tool.djlint]
 profile = "django"
-ignore = "H031,H030,H020,D018"
+ignore = "H006,H031,H030,H020,D018"
