@@ -48,6 +48,7 @@ yamlSettings:
   enabled: false
   overrides:
     MEDIA_ROOT: /opt/state/media/
+    STATIC_ROOT: /opt/staticfiles/
     DATABASES.default.NAME: /opt/state/db.sqlite3
 
 adminUsers: []
