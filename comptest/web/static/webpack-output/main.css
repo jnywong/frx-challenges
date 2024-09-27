@@ -11639,10 +11639,10 @@ h6,
 nav.navbar {
   background-image: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
 }
-nav.navbar a {
+.page-header a {
   color: #fff;
 }
-nav.navbar a:hover {
+.page-header a:hover {
   color: #aaa;
 }
 .page-header-with-image {
