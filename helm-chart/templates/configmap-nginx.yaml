@@ -20,7 +20,7 @@ data:
         }
 
         location /static/ {
-          alias /opt/state/static/;
+          alias /opt/staticfiles/;
 
           # Options for optimal local static content serving
           # From https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/
