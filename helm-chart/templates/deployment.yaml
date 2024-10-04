@@ -14,10 +14,13 @@ spec:
       {{- include "unnamed.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- /* changed configmap checksums -> changed pod template -> triggers rollout */}}
+        checksum/configmap-nginx: {{ include (print .Template.BasePath "/configmap-nginx.yaml") . | sha256sum }}
+        checksum/configmap-yamlconf: {{ include (print .Template.BasePath "/configmap-yamlconf.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- . | nindent 8 | toYaml }}
+        {{- end }}
       labels:
         {{- include "unnamed.selectorLabels" . | nindent 8 }}
     spec:
