@@ -58,14 +58,3 @@ nginx:
     repository: nginx
     tag: 1.27
   resources: {}
-
-dockerApi:
-  image:
-    repository: docker.io/library/docker
-    tag: "27.0.3-dind" # source: https://hub.docker.com/_/docker/tags
-    pullPolicy: "IfNotPresent"
-    pullSecrets: []
-  resources: {}
-  securityContext:
-    privileged: true
-    runAsUser: 0

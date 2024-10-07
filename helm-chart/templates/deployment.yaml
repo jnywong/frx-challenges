@@ -110,11 +110,21 @@ spec:
             - name: django-yamlconf
               mountPath: /opt/unnamed-thingity-thing/comptest/comptest.yaml
               subPath: comptest.yaml
-            - name: docker-socket
-              mountPath: /var/run/{{ .Release.Namespace}}-{{ .Release.Name }}/docker-api/docker-api.sock
           env:
             - name: DOCKER_HOST
-              value: unix:///var/run/{{ .Release.Namespace}}-{{ .Release.Name }}/docker-api/docker-api.sock
+              value: tcp://127.0.0.1:2376
+        - name: dind
+          image: docker:27.0.3-dind
+          command:
+            - dockerd
+            - --host=tcp://127.0.0.1:2376
+          ports:
+            - name: dind-port
+              containerPort: 2376
+              hostPort: 2376
+              protocol: TCP
+          securityContext:
+            privileged: true
         - name: nginx
           image: {{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}
           securityContext:
@@ -145,7 +155,3 @@ spec:
         - name: nginx-config
           configMap:
             name: {{ include "unnamed.fullname" . }}-nginx
-        - name: docker-socket
-          hostPath:
-            path: /var/run/{{ .Release.Namespace}}-{{ .Release.Name }}/docker-api/docker-api.sock
-            type: Socket
