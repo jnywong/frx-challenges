@@ -18,7 +18,8 @@ class DockerEvaluator:
     image = "quay.io/yuvipanda/evaluator-harness:latest"
 
     def __init__(self):
-        self.docker = aiodocker.Docker()
+        docker_host = os.getenv("DOCKER_HOST", "")
+        self.docker = aiodocker.Docker(url=docker_host)
 
     async def pull_image(self):
         await self.docker.images.pull(self.image)
