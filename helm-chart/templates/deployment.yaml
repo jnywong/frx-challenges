@@ -118,11 +118,6 @@ spec:
           command:
             - dockerd
             - --host=tcp://127.0.0.1:2376
-          ports:
-            - name: dind-port
-              containerPort: 2376
-              hostPort: 2376
-              protocol: TCP
           securityContext:
             privileged: true
         - name: nginx
