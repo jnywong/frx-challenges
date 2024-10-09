@@ -137,7 +137,6 @@ class Command(BaseCommand):
             unstarted_evaluations = Evaluation.objects.select_related(
                 "submission"
             ).filter(status=Evaluation.Status.NOT_STARTED)
-            logger.debug(f"Unstarted evaluations: {unstarted_evaluations}")
 
             async for e in unstarted_evaluations:
                 await self.start_evaluation(evaluator, e)
@@ -146,7 +145,6 @@ class Command(BaseCommand):
             running_evaluations = Evaluation.objects.select_related(
                 "submission"
             ).filter(status=Evaluation.Status.EVALUATING)
-            logger.debug(f"Running evaluations: {running_evaluations}")
 
             async for e in running_evaluations:
                 await self.process_running_evaluation(evaluator, e)
