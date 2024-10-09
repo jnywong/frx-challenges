@@ -148,6 +148,7 @@ AUTHENTICATION_BACKENDS = [
 
 LOGGING = {
     "version": 1,
+    "disable_existing_loggers": False,
     "filters": {
         "require_debug_true": {
             "()": "django.utils.log.RequireDebugTrue",
@@ -155,16 +156,21 @@ LOGGING = {
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
-            "filters": ["require_debug_true"],
             "class": "logging.StreamHandler",
         }
     },
     "loggers": {
+        # This will process records from all loggers
+        "": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
         "django.db.backends": {
             "level": "DEBUG",
             "handlers": ["console"],
-        }
+            "filters": ["require_debug_true"],
+        },
     },
 }
 
