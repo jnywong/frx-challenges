@@ -1,5 +1,6 @@
 import asyncio
 import json
+import logging
 import os
 import tempfile
 from urllib.parse import urlparse
@@ -13,6 +14,8 @@ from django.db.models import Exists, OuterRef, Q
 
 from ...models import Evaluation, Submission
 
+logger = logging.getLogger()
+
 
 class DockerEvaluator:
     image = "quay.io/yuvipanda/evaluator-harness:latest"
@@ -23,7 +26,7 @@ class DockerEvaluator:
 
     async def pull_image(self):
         await self.docker.images.pull(self.image)
-        print(f"Successfully pulled Docker image: {self.image}")
+        logger.info(f"Successfully pulled Docker image: {self.image}")
 
     async def start_evaluation(self, input_uri):
         await self.pull_image()
@@ -55,7 +58,15 @@ class DockerEvaluator:
                 },
             }
         )
-        await container.start()
+
+        logger.debug(f"Container created with ID: {container.id}")
+        try:
+            await container.start()
+            logs = await container.log(stdout=True, stderr=True)
+            logger.debug(f"Container logs: {logs}")
+        except Exception as e:
+            logger.error(f"Failed to start container: {e}")
+
         return {
             "container_id": container.id,
             "results_uri": results_uri,
@@ -67,6 +78,8 @@ class DockerEvaluator:
 
     async def get_result(self, state: dict) -> dict:
         container = await self.docker.containers.get(container_id=state["container_id"])
+        logger.debug(f"Container state: {container["State"]}")
+
         success = (
             container["State"]["Status"] == "exited"
             and container["State"]["ExitCode"] == 0
@@ -84,7 +97,7 @@ class Command(BaseCommand):
     async def start_evaluation(
         self, evaluator: DockerEvaluator, evaluation: Evaluation
     ):
-        print(f"starting evaluation of {evaluation.submission.data_uri}")
+        logger.info(f"starting evaluation of {evaluation.submission.data_uri}")
         new_state = await evaluator.start_evaluation(evaluation.submission.data_uri)
         evaluation.evaluator_state = new_state
         evaluation.status = Evaluation.Status.EVALUATING
@@ -96,8 +109,9 @@ class Command(BaseCommand):
         state = evaluation.evaluator_state
         is_still_running = await evaluator.is_still_running(state)
         if not is_still_running:
-            print(f"{evaluation} is completed")
+            logger.info(f"{evaluation} is completed")
             result = await evaluator.get_result(state)
+            logger.debug(f"Result: {result}")
             if result is None:
                 evaluation.status = Evaluation.Status.FAILED
             else:
@@ -105,7 +119,7 @@ class Command(BaseCommand):
                 evaluation.result = result
             await evaluation.asave()
         else:
-            print(f"{evaluation} is still running")
+            logger.info(f"{evaluation} is still running")
 
     async def ahandle(self):
         evaluator = DockerEvaluator()
@@ -123,6 +137,7 @@ class Command(BaseCommand):
             unstarted_evaluations = Evaluation.objects.select_related(
                 "submission"
             ).filter(status=Evaluation.Status.NOT_STARTED)
+            logger.debug(f"Unstarted evaluations: {unstarted_evaluations}")
 
             async for e in unstarted_evaluations:
                 await self.start_evaluation(evaluator, e)
@@ -131,6 +146,7 @@ class Command(BaseCommand):
             running_evaluations = Evaluation.objects.select_related(
                 "submission"
             ).filter(status=Evaluation.Status.EVALUATING)
+            logger.debug(f"Running evaluations: {running_evaluations}")
 
             async for e in running_evaluations:
                 await self.process_running_evaluation(evaluator, e)
