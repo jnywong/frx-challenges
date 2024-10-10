@@ -31,7 +31,8 @@ def upload(request: HttpRequest) -> HttpResponse:
                 data_uri=f"file:///{filepath}",
             )
             s.save()
-            return HttpResponseRedirect("/")
+            # FIXME: Redirect to viewing the currently uploaded submission instead
+            return HttpResponseRedirect("/leaderboard")
     else:
         form = UploadForm()
     return render(request, "upload.html", {"form": form})
