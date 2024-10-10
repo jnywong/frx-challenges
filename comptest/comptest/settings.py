@@ -216,6 +216,12 @@ if not output_dir.endswith("/"):
 os.makedirs(output_dir, exist_ok=True)
 
 UNNAMED_THINGY_EVALUATOR_OUTPUTS_TEMPDIR = output_dir
+EVALUATOR_DOCKER_IMAGE = "quay.io/yuvipanda/evaluator-harness:latest"
+EVALUATOR_DOCKER_CMD = [
+]
+
+EVALUATOR_DOCKER_EXTRA_BINDS = [
+]
 
 ## Site specific display settings
 SITE_NAME = "Unnamed thingity thingy"

@@ -15,11 +15,10 @@ from ...models import Evaluation, Submission
 
 
 class DockerEvaluator:
-    image = "quay.io/yuvipanda/evaluator-harness:latest"
-
     def __init__(self):
         docker_host = os.getenv("DOCKER_HOST", "")
         self.docker = aiodocker.Docker(url=docker_host)
+        self.image = settings.EVALUATOR_DOCKER_IMAGE
 
     async def pull_image(self):
         await self.docker.images.pull(self.image)
@@ -38,15 +37,17 @@ class DockerEvaluator:
         assert url_parts.scheme == "file"
         input_container_path = "/input"
         output_container_path = "/output"
+        # Reference to possible config we can pass in
+        # https://docs.docker.com/reference/api/engine/version/v1.43/#tag/Container/operation/ContainerCreate
         container = await self.docker.containers.create(
             config={
                 "Image": self.image,
-                "Cmd": [
-                    f"file://{input_container_path}",
-                    f"file://{output_container_path}/output.json",
+                "Cmd": settings.EVALUATOR_DOCKER_CMD + [
+                    f"{input_container_path}",
+                    f"{output_container_path}/output.json",
                 ],
                 "HostConfig": {
-                    "Binds": [
+                    "Binds": settings.EVALUATOR_DOCKER_EXTRA_BINDS + [
                         # FIXME: This is security critical code, pay attention and
                         # carefully reason about this before deploying to 'production'
                         f"{url_parts.path}:{input_container_path}:ro",
