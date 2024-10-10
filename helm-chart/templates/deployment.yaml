@@ -118,6 +118,9 @@ spec:
           command:
             - dockerd
             - --host=tcp://127.0.0.1:2376
+          volumeMounts:
+            - name: storage
+              mountPath: /opt/state
           securityContext:
             privileged: true
         - name: nginx

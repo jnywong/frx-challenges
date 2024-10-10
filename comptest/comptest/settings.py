@@ -207,21 +207,12 @@ CHALLENGE_STATE = "RUNNING"
 import os
 
 out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "uploads/"))
-if not out_dir.endswith("/"):
-    out_dir += "/"
-os.makedirs(out_dir, exist_ok=True)
 
-UNNAMED_THINGY_UPLOADS_DIR = out_dir
+SUBMISSIONS_UPLOADS_DIR = out_dir
 
-# Make a local directory for containing outputs if needed
-# FIXME: Move this somewhere else or make this configurable
-# This *must* be bind mountable into the docker container
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "outputs/"))
-if not output_dir.endswith("/"):
-    output_dir += "/"
-os.makedirs(output_dir, exist_ok=True)
+SUBMISSIONS_RESULTS_DIR = output_dir
 
-UNNAMED_THINGY_EVALUATOR_OUTPUTS_TEMPDIR = output_dir
 EVALUATOR_DOCKER_IMAGE = "quay.io/yuvipanda/evaluator-harness:latest"
 EVALUATOR_DOCKER_CMD = []
 

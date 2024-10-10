@@ -30,8 +30,9 @@ class DockerEvaluator:
     async def start_evaluation(self, input_uri):
         await self.pull_image()
 
+        os.makedirs(settings.SUBMISSIONS_RESULTS_DIR, exist_ok=True)
         results_dir = tempfile.mkdtemp(
-            prefix=settings.UNNAMED_THINGY_EVALUATOR_OUTPUTS_TEMPDIR
+            prefix=settings.SUBMISSIONS_RESULTS_DIR
         )
         results_file = os.path.join(results_dir, "output.json")
         results_uri = f"file://{results_file}"
