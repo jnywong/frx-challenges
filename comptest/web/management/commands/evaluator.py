@@ -42,12 +42,14 @@ class DockerEvaluator:
         container = await self.docker.containers.create(
             config={
                 "Image": self.image,
-                "Cmd": settings.EVALUATOR_DOCKER_CMD + [
+                "Cmd": settings.EVALUATOR_DOCKER_CMD
+                + [
                     f"{input_container_path}",
                     f"{output_container_path}/output.json",
                 ],
                 "HostConfig": {
-                    "Binds": settings.EVALUATOR_DOCKER_EXTRA_BINDS + [
+                    "Binds": settings.EVALUATOR_DOCKER_EXTRA_BINDS
+                    + [
                         # FIXME: This is security critical code, pay attention and
                         # carefully reason about this before deploying to 'production'
                         f"{url_parts.path}:{input_container_path}:ro",
