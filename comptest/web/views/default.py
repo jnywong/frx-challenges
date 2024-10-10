@@ -1,3 +1,4 @@
+import os
 import tempfile
 
 from django import forms
@@ -18,7 +19,10 @@ def upload(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
-            _, filepath = tempfile.mkstemp(prefix=settings.UNNAMED_THINGY_UPLOADS_DIR)
+            # FIXME: We are creating the uploads directory on first use if
+            # necessary. This may be a security risk, let's verify.
+            os.makedirs(settings.SUBMISSIONS_UPLOADS_DIR, exist_ok=True)
+            _, filepath = tempfile.mkstemp(prefix=settings.SUBMISSIONS_UPLOADS_DIR)
             with open(filepath, "wb") as f:
                 f.write(request.FILES["file"].read())
             s = Submission(

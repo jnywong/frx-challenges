@@ -50,6 +50,8 @@ yamlSettings:
     MEDIA_ROOT: /opt/state/media/
     STATIC_ROOT: /opt/staticfiles/
     DATABASES.default.NAME: /opt/state/db.sqlite3
+    SUBMISSIONS_UPLOADS_DIR: /opt/state/submissions/
+    SUBMISSIONS_RESULTS_DIR: /opt/state/submission-results/
 
 adminUsers: []
 
