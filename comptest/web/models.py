@@ -16,6 +16,7 @@ class Submission(models.Model):
     A submission can be a collection of versions.
     """
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024, default="My model name")
     description = models.CharField(max_length=2048, default="My model description")
     # FIXME: A default for the team had to be provided
