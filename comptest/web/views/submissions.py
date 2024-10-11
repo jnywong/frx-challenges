@@ -1,15 +1,9 @@
-from django import forms
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
+from ..forms import SubmissionForm
 from ..models import Evaluation, Submission
-
-
-class SubmissionForm(forms.Form):
-    name = forms.CharField()
-    description = forms.CharField()
-    gh_repo = forms.URLField()
 
 
 @login_required

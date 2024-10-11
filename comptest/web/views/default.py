@@ -1,17 +1,13 @@
 import os
 import tempfile
 
-from django import forms
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 
-from ..models import Evaluation, Version
-
-
-class UploadForm(forms.Form):
-    file = forms.FileField()
+from ..forms import UploadForm
+from ..models import Evaluation, Submission, Version
 
 
 @login_required
@@ -26,6 +22,9 @@ def upload(request: HttpRequest) -> HttpResponse:
             with open(filepath, "wb") as f:
                 f.write(request.FILES["file"].read())
             s = Version(
+                submission=Submission.objects.get(
+                    id=1
+                ),  # FIXME: hardcoded id for testing
                 user=request.user,
                 status=Version.Status.UPLOADED,
                 data_uri=f"file:///{filepath}",
