@@ -11,9 +11,13 @@ class Team(models.Model):
     )
 
 
-class Project(models.Model):
-    name = models.CharField(max_length=1024)
-    description = models.CharField(max_length=2048)
+class Submission(models.Model):
+    """
+    A submission can be a collection of versions.
+    """
+
+    name = models.CharField(max_length=1024, default="My model name")
+    description = models.CharField(max_length=2048, default="My model description")
     # FIXME: A default for the team had to be provided
     # but because there was no default team, it was set to None
     team = models.ForeignKey(
@@ -24,11 +28,12 @@ class Project(models.Model):
         default=None,
         related_name="projects",
     )
+    gh_repo = models.URLField(max_length=1024, default="https://github.com")
 
 
 class Version(models.Model):
     """
-    Users can create multiple versions of a submission.
+    A version of a submission.
     """
 
     class Status(models.TextChoices):
@@ -37,15 +42,16 @@ class Version(models.Model):
         UPLOADED = "UPLOADED"
         CLEARED = "CLEARED"
 
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     # FIXME: Cascade is probably not quite right?
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # FIXME: Figure out max_length
     data_uri = models.CharField(max_length=4096)
     # FIXME: Figure out max_length or use IntChoices
     status = models.CharField(choices=Status, default=Status.NOT_STARTED, max_length=16)
-    title = models.CharField(max_length=255, default="My model name")
-    description = models.TextField(
-        blank=True, null=False, default="My model description"
+    name = models.CharField(max_length=1024, default="My version name")
+    description = models.CharField(
+        max_length=2048, default="My version description", blank=True
     )
 
     def __str__(self):
@@ -60,7 +66,11 @@ class Evaluation(models.Model):
         HIDDEN = "HIDDEN"
         FAILED = "FAILED"
 
-    version = models.ForeignKey(Version, on_delete=models.CASCADE)
+    version = models.ForeignKey(
+        Version,
+        models.SET_NULL,
+        null=True,
+    )  # on_delete=models.CASCADE,)
     evaluator_state = models.JSONField(default=dict)
     result = models.JSONField(blank=True, null=True)
     # FIXME: Figure out max_length or use IntChoices
