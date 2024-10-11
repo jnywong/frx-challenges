@@ -29,7 +29,7 @@ class Submission(models.Model):
         default=None,
         related_name="projects",
     )
-    gh_repo = models.URLField(max_length=1024, default="https://github.com")
+    gh_repo = models.URLField(max_length=1024, default="https://example.com")
 
 
 class Version(models.Model):
