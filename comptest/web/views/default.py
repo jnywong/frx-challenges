@@ -3,15 +3,15 @@ import tempfile
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
 
 from ..forms import UploadForm
 from ..models import Evaluation, Submission, Version
 
 
 @login_required
-def upload(request: HttpRequest) -> HttpResponse:
+def upload(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -22,18 +22,16 @@ def upload(request: HttpRequest) -> HttpResponse:
             with open(filepath, "wb") as f:
                 f.write(request.FILES["file"].read())
             s = Version(
-                submission=Submission.objects.get(
-                    id=1
-                ),  # FIXME: hardcoded id for testing
+                submission=Submission.objects.get(id=id),
                 user=request.user,
                 status=Version.Status.UPLOADED,
                 data_uri=f"file:///{filepath}",
             )
             s.save()
-            return HttpResponseRedirect("/submissions")
+            return redirect("submissions-detail", id)
     else:
         form = UploadForm()
-    return render(request, "upload.html", {"form": form})
+    return render(request, "upload.html", {"form": form, "id": id})
 
 
 def results(request: HttpRequest) -> HttpResponse:
