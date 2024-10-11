@@ -61,11 +61,6 @@
                                     <a class="nav-link {% if request.resolver_match.url_name == 'teams-list' %}active{% endif %}"
                                        href="{% url 'teams-list' %}">My Teams</a>
                                 </li>
-                                {% if request.resolver_match.url_name != 'upload' %}
-                                    <li class="nav-item">
-                                        <a class="btn btn-primary" href="{% url 'upload' %}">Make a submission</a>
-                                    </li>
-                                {% endif %}
                             {% else %}
                                 {% if challenge_state == "RUNNING" %}
                                     <li class="nav-item">
