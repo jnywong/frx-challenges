@@ -1,0 +1,16 @@
+{% extends "page.html" %}
+{% block body %}
+    <div class="container">
+        <h1>Create a submission</h1>
+        <p>Create a submission.</p>
+        <form class="form"
+              action="{% url 'submissions-create' %}"
+              method="post"
+              enctype="multipart/form-data">
+            {% csrf_token %} {{ form }}
+            <input class="form-control btn btn-primary mt-2"
+                   type="submit"
+                   value="Submit" />
+        </form>
+    </div>
+{% endblock body %}
