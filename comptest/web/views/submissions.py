@@ -10,5 +10,5 @@ def list(request: HttpRequest) -> HttpResponse:
     """
     List all evaluations of the current user
     """
-    submissions = Evaluation.objects.filter(submission__user=request.user)
+    submissions = Evaluation.objects.filter(version__user=request.user)
     return render(request, "submissions.html", {"submissions": submissions})
