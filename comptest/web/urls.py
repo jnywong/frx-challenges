@@ -12,6 +12,7 @@ urlpatterns = [
     path("page/<slug:slug>", pages.view, name="page-view"),
     path("file/<slug:slug>", pages.content_file, name="content-file"),
     path("leaderboard", default.leaderboard, name="leaderboard"),
-    path("submissions", submissions.list, name="submissions-list"),
+    path("submissions/", submissions.list, name="submissions-list"),
+    path("submissions/create", submissions.create, name="submissions-create"),
     path("", pages.home, name="home"),
 ]
