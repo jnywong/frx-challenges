@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 
-from ..models import Evaluation, Submission
+from ..models import Evaluation, Version
 
 
 class UploadForm(forms.Form):
@@ -25,14 +25,13 @@ def upload(request: HttpRequest) -> HttpResponse:
             _, filepath = tempfile.mkstemp(prefix=settings.SUBMISSIONS_UPLOADS_DIR)
             with open(filepath, "wb") as f:
                 f.write(request.FILES["file"].read())
-            s = Submission(
+            s = Version(
                 user=request.user,
-                status=Submission.Status.UPLOADED,
+                status=Version.Status.UPLOADED,
                 data_uri=f"file:///{filepath}",
             )
             s.save()
-            # FIXME: Redirect to viewing the currently uploaded submission instead
-            return HttpResponseRedirect("/leaderboard")
+            return HttpResponseRedirect("/submissions")
     else:
         form = UploadForm()
     return render(request, "upload.html", {"form": form})

@@ -26,7 +26,11 @@ class Project(models.Model):
     )
 
 
-class Submission(models.Model):
+class Version(models.Model):
+    """
+    Users can create multiple versions of a submission.
+    """
+
     class Status(models.TextChoices):
         NOT_STARTED = "NOT_STARTED"
         UPLOADING = "UPLOADING"
@@ -39,6 +43,10 @@ class Submission(models.Model):
     data_uri = models.CharField(max_length=4096)
     # FIXME: Figure out max_length or use IntChoices
     status = models.CharField(choices=Status, default=Status.NOT_STARTED, max_length=16)
+    title = models.CharField(max_length=255, default="My model name")
+    description = models.TextField(
+        blank=True, null=False, default="My model description"
+    )
 
     def __str__(self):
         return f"({self.status}) {self.data_uri}"
@@ -52,7 +60,7 @@ class Evaluation(models.Model):
         HIDDEN = "HIDDEN"
         FAILED = "FAILED"
 
-    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+    version = models.ForeignKey(Version, on_delete=models.CASCADE)
     evaluator_state = models.JSONField(default=dict)
     result = models.JSONField(blank=True, null=True)
     # FIXME: Figure out max_length or use IntChoices
@@ -61,7 +69,7 @@ class Evaluation(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"({self.status}) {self.result} {self.submission.data_uri}"
+        return f"({self.status}) {self.result} {self.version.data_uri}"
 
 
 class TeamMembership(models.Model):
