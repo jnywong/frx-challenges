@@ -2,7 +2,7 @@ from django import forms
 
 
 class SubmissionForm(forms.Form):
-    """Form create a new submission"""
+    """Form to create a new submission"""
 
     name = forms.CharField()
     description = forms.CharField()
