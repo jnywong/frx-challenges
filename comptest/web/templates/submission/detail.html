@@ -1,0 +1,42 @@
+{% extends "page.html" %}
+{% block body %}
+    <div class="container">
+        <h1>Submission details</h1>
+    </div>
+    <div class="container">
+        {% if versions %}
+            <div class="row py-2">
+                <div class="col">
+                    <a href="{% url 'upload' submission.id %}"
+                       class="btn btn-primary mt-2 float-end">Upload</a>
+                </div>
+            </div>
+            <div class="row py-2">
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for v in versions %}
+                            <tr>
+                                <td>{{ v.id }}</td>
+                                <td>{{ v.name }}</td>
+                                <td>{{ v.description }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="row py-2">
+                <div class="col">
+                    <a href="{% url 'upload' submission.id %}" class="btn btn-primary mt-2">Upload submission</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock body %}

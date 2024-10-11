@@ -37,6 +37,23 @@ def list(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
+def detail(request: HttpRequest, id: int) -> HttpResponse:
+    """
+    Show details of a specific submission
+    """
+    queryset = Submission.objects.filter(
+        user=request.user
+    )  ## TODO: test that another user cannot access the current user's submission
+    submission = queryset.get(id=id)
+    versions = submission.version_set.all()
+    return render(
+        request,
+        "submission/detail.html",
+        {"submission": submission, "versions": versions},
+    )
+
+
+@login_required
 def list_evaluations(request: HttpRequest) -> HttpResponse:
     """
     List all evaluations of the current user
