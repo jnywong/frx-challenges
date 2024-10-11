@@ -3,7 +3,7 @@ from django.urls import path
 from .views import default, pages, submissions, teams
 
 urlpatterns = [
-    path("upload", default.upload, name="upload"),
+    path("upload/<int:id>", default.upload, name="upload"),
     path("results", default.results, name="results"),
     path("teams/list", teams.list, name="teams-list"),
     path("teams/create", teams.create, name="teams-create"),
@@ -14,5 +14,6 @@ urlpatterns = [
     path("leaderboard", default.leaderboard, name="leaderboard"),
     path("submissions/", submissions.list, name="submissions-list"),
     path("submissions/create", submissions.create, name="submissions-create"),
+    path("submissions/<int:id>", submissions.detail, name="submissions-detail"),
     path("", pages.home, name="home"),
 ]
