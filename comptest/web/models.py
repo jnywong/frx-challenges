@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models, transaction
+from django_jsonform.models.fields import JSONField
 
 # Create your models here.
 
@@ -29,7 +30,7 @@ class Submission(models.Model):
         default=None,
         related_name="projects",
     )
-    gh_repo = models.URLField(max_length=1024, default="https://example.com")
+    metadata = models.JSONField(blank=True, null=True)
 
 
 class Version(models.Model):
@@ -146,3 +147,20 @@ class ContentFile(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class SubmissionMetadata(models.Model):
+    """
+    Define metadata fields for submission.
+    """
+
+    ITEMS_SCHEMA = {
+        "type": "array",  # a list which will contain the items
+        "items": {"type": "string"},  # items in the array are strings
+    }
+
+    items = JSONField(schema=ITEMS_SCHEMA)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        get_latest_by = "date_created"
