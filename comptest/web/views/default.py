@@ -25,6 +25,7 @@ def upload(request: HttpRequest, id: int) -> HttpResponse:
                 submission=Submission.objects.get(id=id),
                 user=request.user,
                 status=Version.Status.UPLOADED,
+                filename=request.FILES["file"].name,
                 data_uri=f"file:///{filepath}",
             )
             s.save()
@@ -42,7 +43,8 @@ def results(request: HttpRequest) -> HttpResponse:
     for ev in evaluations:
         evaluations_resp.append(
             {
-                "username": ev.submission.user.username,
+                "evaluation_id": ev.id,
+                "username": ev.version.user.username,
                 "status": ev.status,
                 "last_updated": ev.last_updated.isoformat(),
                 "result": ev.result,
