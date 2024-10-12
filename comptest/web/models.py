@@ -20,6 +20,7 @@ class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024, default="My model name")
     description = models.CharField(max_length=2048, default="My model description")
+    date_created = models.DateTimeField(auto_now=True)
     # FIXME: A default for the team had to be provided
     # but because there was no default team, it was set to None
     team = models.ForeignKey(
@@ -45,16 +46,14 @@ class Version(models.Model):
         CLEARED = "CLEARED"
 
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now=True)
     # FIXME: Cascade is probably not quite right?
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    filename = models.CharField(max_length=1024)
     # FIXME: Figure out max_length
     data_uri = models.CharField(max_length=4096)
     # FIXME: Figure out max_length or use IntChoices
     status = models.CharField(choices=Status, default=Status.NOT_STARTED, max_length=16)
-    name = models.CharField(max_length=1024, default="My version name")
-    description = models.CharField(
-        max_length=2048, default="My version description", blank=True
-    )
 
     def __str__(self):
         return f"({self.status}) {self.data_uri}"
