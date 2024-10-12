@@ -2,6 +2,7 @@ aiodocker
 aiohttp >= 3.10.5
 django
 django-allauth[socialaccount]
+django-jsonform
 django-reversion
 django-yamlconf
 fsspec

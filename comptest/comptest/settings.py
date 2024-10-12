@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
     "reversion",
+    "django_jsonform",
 ]
 
 MIDDLEWARE = [
