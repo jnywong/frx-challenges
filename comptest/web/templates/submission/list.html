@@ -29,7 +29,7 @@
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Description</th>
-                            <th scope="col">GitHub repository</th>
+                            <th scope="col">Date created</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,9 +40,7 @@
                                     <a href={{ sub.id }}>{{ sub.name }}</a>
                                 </td>
                                 <td>{{ sub.description }}</td>
-                                <td>
-                                    <a href={{ sub.gh_repo }}>{{ sub.gh_repo }}</a>
-                                </td>
+                                <td>{{ sub.date_created|date:"M j Y" }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
