@@ -16,16 +16,24 @@
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Description</th>
+                            <th scope="col">Filename</th>
+                            <th scope="col">Date uploaded</th>
+                            <th scope="col">Evaluation</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for v in versions %}
                             <tr>
                                 <td>{{ v.id }}</td>
-                                <td>{{ v.name }}</td>
-                                <td>{{ v.description }}</td>
+                                <td>{{ v.filename }}</td>
+                                <td>{{ v.date_created|date:"M j Y" }}</td>
+                                {% if v.evaluation_set.all %}
+                                    <td>
+                                        <a href="{% url 'evaluation-detail' v.evaluation_set.all.0.id %}">View score</a>
+                                    </td>
+                                {% else %}
+                                    <td>Pending</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>

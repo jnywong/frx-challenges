@@ -15,5 +15,8 @@ urlpatterns = [
     path("submissions/", submissions.list, name="submissions-list"),
     path("submissions/create", submissions.create, name="submissions-create"),
     path("submissions/<int:id>", submissions.detail, name="submissions-detail"),
+    path(
+        "evaluation/<int:id>", submissions.detail_evaluation, name="evaluation-detail"
+    ),
     path("", pages.home, name="home"),
 ]
