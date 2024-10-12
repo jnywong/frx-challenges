@@ -1,12 +1,19 @@
 from django import forms
 
+from .models import SubmissionMetadata
+
 
 class SubmissionForm(forms.Form):
     """Form to create a new submission"""
 
-    name = forms.CharField()
-    description = forms.CharField()
-    gh_repo = forms.URLField()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["name"] = forms.CharField()
+        self.fields["description"] = forms.CharField()
+        if SubmissionMetadata.objects.exists():
+            metadata = SubmissionMetadata.objects.latest().items
+            for m in metadata:
+                self.fields[m] = forms.CharField()
 
 
 class UploadForm(forms.Form):
