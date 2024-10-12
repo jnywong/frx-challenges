@@ -3,7 +3,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 from ..forms import SubmissionForm
-from ..models import Evaluation, Submission
+from ..models import Evaluation, Submission, SubmissionMetadata
 
 
 @login_required
@@ -18,7 +18,8 @@ def create(request: HttpRequest) -> HttpResponse:
             submission.user = request.user
             submission.name = form.cleaned_data["name"]
             submission.description = form.cleaned_data["description"]
-            submission.gh_repo = form.cleaned_data["gh_repo"]
+            if SubmissionMetadata.objects.exists():
+                submission.metadata = _serialize_submission_metadata(form)
             submission.save()
             return HttpResponseRedirect("/submissions")
     else:
@@ -60,3 +61,13 @@ def list_evaluations(request: HttpRequest) -> HttpResponse:
     """
     evaluations = Evaluation.objects.filter(version__user=request.user)
     return render(request, "submissions.html", {"evaluations": evaluations})
+
+
+def _serialize_submission_metadata(inputForm):
+    """Serializes metadata from submission form into JSON"""
+    fields = SubmissionMetadata.objects.latest().items
+    values = [inputForm.cleaned_data[f] for f in fields]
+
+    json_dict = {key: value for key, value in zip(fields, values)}
+
+    return json_dict
