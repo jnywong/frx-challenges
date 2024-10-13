@@ -1,7 +1,11 @@
 {% extends "page.html" %}
 {% block body %}
-    <div class="container">
-        <h1>Submission details</h1>
+    <div class="container py-2">
+        <div class="row py-2">
+            <div class="col py-2">
+                <h1>{{ submission.name }}</h1>
+            </div>
+        </div>
     </div>
     <div class="container">
         {% if versions %}

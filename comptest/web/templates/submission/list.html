@@ -10,11 +10,19 @@
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
 {% endblock head %}
 {% block body %}
-    <div class="container">
-        <h1>My Submissions</h1>
-        <p>Create, view and edit submissions. Each submission can contain multiple entries.</p>
+    <div class="container py-2">
+        <div class="row py-2">
+            <div class="col py-2">
+                <h1>My Submissions</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>Create, view and edit submissions. Each submission can contain multiple entries.</p>
+            </div>
+        </div>
     </div>
-    <div class="container">
+    <div class="container py-2">
         {% if submissions %}
             <div class="row py-2">
                 <div class="col">

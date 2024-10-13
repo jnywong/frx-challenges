@@ -10,16 +10,31 @@
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
 {% endblock head %}
 {% block body %}
-    <div class="container">
-        <h1>Explanatory Headline</h1>
-        <p>Explanatory text, explanatory text explanatory text</p>
-        <table class="table" id="results">
-            <thead>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-        <script>
+    <div class="container py-2">
+        <div class="row py-2">
+            <div class="col py-2">
+                <h1>Explanatory Headline</h1>
+            </div>
+        </div>
+        <div class="row py-2">
+            <div class="col py-2">
+                <p>Explanatory text, explanatory text explanatory text</p>
+            </div>
+        </div>
+    </div>
+    <div class="container py-2">
+        <div class="row py-2">
+            <div class="col py-2">
+                <table class="table" id="results">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
     dayjs.extend(window.dayjs_plugin_relativeTime);
     // FIXME: This should be configurable and returned from the API
     const RESULT_KEYS = ["chars", "lines"];
@@ -75,6 +90,5 @@
     }
 
     main();
-        </script>
-    </div>
+    </script>
 {% endblock body %}
