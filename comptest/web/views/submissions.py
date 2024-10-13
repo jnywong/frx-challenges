@@ -1,6 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from markdown_it import MarkdownIt
+from mdit_py_plugins.footnote import footnote_plugin
+from mdit_py_plugins.front_matter import front_matter_plugin
 
 from ..forms import SubmissionForm
 from ..models import Evaluation, Submission, SubmissionMetadata
@@ -11,6 +14,15 @@ def create(request: HttpRequest) -> HttpResponse:
     """
     Create a new submission.
     """
+    if SubmissionMetadata.objects.exists():
+        md = (
+            MarkdownIt("commonmark", {"breaks": True, "html": True})
+            .use(front_matter_plugin)
+            .use(footnote_plugin)
+            .enable("table")
+        )
+        html_content = md.render(SubmissionMetadata.objects.latest().instructions)
+
     if request.method == "POST":
         form = SubmissionForm(request.POST)
         if form.is_valid():
@@ -25,7 +37,9 @@ def create(request: HttpRequest) -> HttpResponse:
     else:
         form = SubmissionForm()
 
-    return render(request, "submission/create.html", {"form": form})
+    return render(
+        request, "submission/create.html", {"form": form, "html_content": html_content}
+    )
 
 
 @login_required

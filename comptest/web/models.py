@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models, transaction
 from django_jsonform.models.fields import JSONField
+from solo.models import SingletonModel
 
 # Create your models here.
 
@@ -148,7 +149,7 @@ class ContentFile(models.Model):
         return self.title
 
 
-class SubmissionMetadata(models.Model):
+class SubmissionMetadata(SingletonModel):
     """
     Define metadata fields for submission.
     """
@@ -158,8 +159,10 @@ class SubmissionMetadata(models.Model):
         "items": {"type": "string"},  # items in the array are strings
     }
 
+    instructions = models.TextField()
     items = JSONField(schema=ITEMS_SCHEMA)
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         get_latest_by = "date_created"
+        verbose_name = "Submission Metadata"

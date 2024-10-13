@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "django_jsonform",
     "crispy_forms",
     "crispy_bootstrap5",
+    "solo",
 ]
 
 MIDDLEWARE = [
@@ -223,14 +224,14 @@ EVALUATOR_DOCKER_CMD = []
 EVALUATOR_DOCKER_EXTRA_BINDS = []
 
 ## Site specific display settings
-SITE_NAME = "Unnamed thingity thingy"
-SITE_LOGO_URL = ""
+SITE_NAME = "Cellmap Challenge"
+SITE_LOGO_URL = "header-logo"
 SITE_FOOTER_HTML = """
 <div class="footer">
     <p>Change this to your custom footer</p>
 </div>
 """
-SITE_PAGE_HEADER_IMAGE_URL = ""
+SITE_PAGE_HEADER_IMAGE_URL = "home-hero-image"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
