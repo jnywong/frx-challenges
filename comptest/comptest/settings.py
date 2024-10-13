@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.github",
     "reversion",
     "django_jsonform",
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -129,6 +131,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+STATIC_ROOT = "web/static/"
 STATIC_URL = "static/"
 
 MEDIA_ROOT = "media/"
@@ -228,6 +231,8 @@ SITE_FOOTER_HTML = """
 </div>
 """
 SITE_PAGE_HEADER_IMAGE_URL = ""
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 django_yamlconf.load()
 django_yamlconf.list_attrs()

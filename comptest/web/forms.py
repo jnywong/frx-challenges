@@ -1,3 +1,5 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 from django import forms
 
 from .models import SubmissionMetadata
@@ -8,8 +10,14 @@ class SubmissionForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_action = "submissions-create"
+        self.helper.add_input(Submit("submit", "Submit", css_class="form-control"))
+
         self.fields["name"] = forms.CharField()
-        self.fields["description"] = forms.CharField()
+        self.fields["description"] = forms.CharField(required=False)
         if SubmissionMetadata.objects.exists():
             metadata = SubmissionMetadata.objects.latest().items
             for m in metadata:

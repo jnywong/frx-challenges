@@ -1,7 +1,9 @@
 aiodocker
 aiohttp >= 3.10.5
+crispy-bootstrap5
 django
 django-allauth[socialaccount]
+django-crispy-forms
 django-jsonform
 django-reversion
 django-yamlconf
