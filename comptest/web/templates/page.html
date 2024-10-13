@@ -13,12 +13,14 @@
     </head>
     <body>
         <div class="page-header {% if site_page_header_image_url %}page-header-with-image{% endif %}"
-             {% if site_page_header_image_url %}style="background-image: url('{{ site_page_header_image_url }}')"{% endif %}>
+             {% if site_page_header_image_url %}style="background-image: url({% url 'content-file' site_page_header_image_url %})"{% endif %}>
             <nav class="navbar navbar-expand-lg navbar-dark">
                 <div class="container">
                     <a class="navbar-brand" href="/" title="{{ site_name }}">
                         {% if site_logo_url %}
-                            <img src="{{ site_logo_url }}" alt="{{ site_name }}" width="auto" />
+                            <img src="{% url 'content-file' site_logo_url %}"
+                                 alt="{{ site_name }}"
+                                 width="auto" />
                         {% else %}
                             {{ site_name }}
                         {% endif %}
