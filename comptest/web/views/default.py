@@ -13,7 +13,7 @@ from ..models import Evaluation, Submission, Version
 @login_required
 def upload(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
-        form = UploadForm(request.POST, request.FILES)
+        form = UploadForm(data=request.POST, files=request.FILES, id=id)
         if form.is_valid():
             # FIXME: We are creating the uploads directory on first use if
             # necessary. This may be a security risk, let's verify.
@@ -31,7 +31,7 @@ def upload(request: HttpRequest, id: int) -> HttpResponse:
             s.save()
             return redirect("submissions-detail", id)
     else:
-        form = UploadForm()
+        form = UploadForm(id=id)
     return render(request, "upload.html", {"form": form, "id": id})
 
 
