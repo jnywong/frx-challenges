@@ -13,14 +13,12 @@
     </head>
     <body>
         <div class="page-header {% if site_page_header_image_url %}page-header-with-image{% endif %}"
-             {% if site_page_header_image_url %}style="background-image: url({% url 'content-file' site_page_header_image_url %})"{% endif %}>
+             {% if site_page_header_image_url %}style="background-image: url('{{ site_page_header_image_url }}')"{% endif %}>
             <nav class="navbar navbar-expand-lg navbar-dark">
                 <div class="container">
                     <a class="navbar-brand" href="/" title="{{ site_name }}">
                         {% if site_logo_url %}
-                            <img src="{% url 'content-file' site_logo_url %}"
-                                 alt="{{ site_name }}"
-                                 width="auto" />
+                            <img src="{{ site_logo_url }}" alt="{{ site_name }}" width="auto" />
                         {% else %}
                             {{ site_name }}
                         {% endif %}
@@ -46,23 +44,26 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'leaderboard' %}">Leaderboard</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'submissions-list' %}">My Submissions</a>
+                                </li>
                             {% endif %}
                             {% if request.user.is_authenticated %}
-                                {% if challenge_state == "RUNNING" %}
-                                    <li class="nav-item">
-                                        <a class="btn btn-primary" href="{% url 'submissions-list' %}">Submissions</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link {% if request.resolver_match.url_name == 'teams-list' %}active{% endif %}"
-                                           href="{% url 'teams-list' %}">My Teams</a>
-                                    </li>
-                                {% endif %}
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
                                 </li>
                                 {% if request.user.is_superuser %}
                                     <li class="nav-item">
                                         <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                                    </li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'teams-list' %}active{% endif %}"
+                                       href="{% url 'teams-list' %}">My Teams</a>
+                                </li>
+                                {% if request.resolver_match.url_name != 'upload' %}
+                                    <li class="nav-item">
+                                        <a class="btn btn-primary" href="{% url 'upload' %}">Make a submission</a>
                                     </li>
                                 {% endif %}
                             {% else %}

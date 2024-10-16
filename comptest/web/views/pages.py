@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from markdown_it import MarkdownIt
@@ -27,6 +28,7 @@ def render_page(request: HttpRequest, page: Page) -> HttpResponse:
         "page": page,
         "html_content": html_content,
         "page_header_content": page_header_content,
+        "challenge_state": settings.CHALLENGE_STATE,
     }
     return render(request, "page/view.html", context)
 
