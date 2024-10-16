@@ -67,7 +67,9 @@ class DockerEvaluator:
             # the CpuPeriod of 100000 and multiplying the CPU limit by that number, as documented
             # in https://docs.docker.com/engine/containers/resource_constraints/#configure-the-default-cfs-scheduler
             host_config["CpuPeriod"] = 100000
-            host_config["CpuQuota"] = int(settings.EVALUATOR_DOCKER_CONTAINER_CPU_LIMIT * host_config["CpuPeriod"])
+            host_config["CpuQuota"] = int(
+                settings.EVALUATOR_DOCKER_CONTAINER_CPU_LIMIT * host_config["CpuPeriod"]
+            )
         container = await self.docker.containers.create(
             config={
                 "Image": self.image,
