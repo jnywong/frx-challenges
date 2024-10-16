@@ -2,12 +2,13 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django import forms
 from django.urls import reverse
-
-from .models import SubmissionMetadata
+from django.conf import settings
+from django_jsonform.forms.fields import JSONFormField
 
 
 class SubmissionForm(forms.Form):
     """Form to create a new submission"""
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -19,10 +20,7 @@ class SubmissionForm(forms.Form):
 
         self.fields["name"] = forms.CharField()
         self.fields["description"] = forms.CharField(required=False)
-        if SubmissionMetadata.objects.exists():
-            metadata = SubmissionMetadata.objects.latest().items
-            for m in metadata:
-                self.fields[m] = forms.CharField()
+        self.fields["metadata"] = JSONFormField(schema=settings.SITE_SUBMISSION_FORM_SCHEMA)
 
 
 class UploadForm(forms.Form):
