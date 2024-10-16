@@ -1,23 +1,22 @@
 import os
 import tempfile
 
-from django import forms
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from markdown_it import MarkdownIt
+from mdit_py_plugins.footnote import footnote_plugin
+from mdit_py_plugins.front_matter import front_matter_plugin
 
-from ..models import Evaluation, Submission
-
-
-class UploadForm(forms.Form):
-    file = forms.FileField()
+from ..forms import UploadForm
+from ..models import Evaluation, Submission, SubmissionMetadata, Version
 
 
 @login_required
-def upload(request: HttpRequest) -> HttpResponse:
+def upload(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
-        form = UploadForm(request.POST, request.FILES)
+        form = UploadForm(data=request.POST, files=request.FILES, id=id)
         if form.is_valid():
             # FIXME: We are creating the uploads directory on first use if
             # necessary. This may be a security risk, let's verify.
@@ -25,17 +24,30 @@ def upload(request: HttpRequest) -> HttpResponse:
             _, filepath = tempfile.mkstemp(prefix=settings.SUBMISSIONS_UPLOADS_DIR)
             with open(filepath, "wb") as f:
                 f.write(request.FILES["file"].read())
-            s = Submission(
+            s = Version(
+                submission=Submission.objects.get(id=id),
                 user=request.user,
-                status=Submission.Status.UPLOADED,
+                status=Version.Status.UPLOADED,
+                filename=request.FILES["file"].name,
                 data_uri=f"file:///{filepath}",
             )
             s.save()
-            # FIXME: Redirect to viewing the currently uploaded submission instead
-            return HttpResponseRedirect("/leaderboard")
+            return redirect("submissions-detail", id)
     else:
-        form = UploadForm()
-    return render(request, "upload.html", {"form": form})
+        form = UploadForm(id=id)
+    if SubmissionMetadata.objects.exists():
+        md = (
+            MarkdownIt("commonmark", {"breaks": True, "html": True})
+            .use(front_matter_plugin)
+            .use(footnote_plugin)
+            .enable("table")
+        )
+        html_content = md.render(SubmissionMetadata.objects.latest().instructions)
+    else:
+        html_content = ""
+    return render(
+        request, "upload.html", {"form": form, "id": id, "html_content": html_content}
+    )
 
 
 def results(request: HttpRequest) -> HttpResponse:
@@ -46,7 +58,8 @@ def results(request: HttpRequest) -> HttpResponse:
     for ev in evaluations:
         evaluations_resp.append(
             {
-                "username": ev.submission.user.username,
+                "evaluation_id": ev.id,
+                "username": ev.version.user.username,
                 "status": ev.status,
                 "last_updated": ev.last_updated.isoformat(),
                 "result": ev.result,
