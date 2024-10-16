@@ -217,6 +217,17 @@ EVALUATOR_DOCKER_IMAGE = "quay.io/yuvipanda/evaluator-harness:latest"
 EVALUATOR_DOCKER_CMD = []
 
 EVALUATOR_DOCKER_EXTRA_BINDS = []
+EVALUATOR_DOCKER_AUTH = {}
+# If you want to use a GCP Artifact Registry service key, use the following config:
+# for EVALUATOR_DOCKER_AUTH
+# {
+#     "username": "_json_key",
+#     "password": open("serviceaccount.json").read(), # or path to your service account file
+#     "serveraddress": "us-west2-docker.pkg.dev" # or the host used by your artifact registry
+# }
+
+# Max number of CPUs allowed for the evaluator
+EVALUATOR_DOCKER_CONTAINER_CPU_LIMIT = 2
 
 ## Site specific display settings
 SITE_NAME = "Unnamed thingity thingy"

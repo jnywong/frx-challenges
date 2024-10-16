@@ -24,8 +24,20 @@ class DockerEvaluator:
         self.image = settings.EVALUATOR_DOCKER_IMAGE
 
     async def pull_image(self):
-        await self.docker.images.pull(self.image)
-        logger.info(f"Successfully pulled Docker image: {self.image}")
+        try:
+            image_info = await self.docker.images.get(self.image)
+        except aiodocker.DockerError as e:
+            if e.status == 404:
+                image_info = None
+            else:
+                raise
+        if not image_info:
+            await self.docker.images.pull(
+                self.image, auth=settings.EVALUATOR_DOCKER_AUTH
+            )
+            logger.info(f"Successfully pulled Docker image: {self.image}")
+        else:
+            logger.info(f"Not pulling {self.image}, it already exists")
 
     async def start_evaluation(self, input_uri):
         await self.pull_image()
@@ -41,6 +53,21 @@ class DockerEvaluator:
         output_container_path = "/output"
         # Reference to possible config we can pass in
         # https://docs.docker.com/reference/api/engine/version/v1.43/#tag/Container/operation/ContainerCreate
+        host_config = {
+            "Binds": settings.EVALUATOR_DOCKER_EXTRA_BINDS
+            + [
+                # FIXME: This is security critical code, pay attention and
+                # carefully reason about this before deploying to 'production'
+                f"{url_parts.path}:{input_container_path}:ro",
+                f"{results_dir}:{output_container_path}:rw",
+            ],
+        }
+        if settings.EVALUATOR_DOCKER_CONTAINER_CPU_LIMIT:
+            # Replicate the 'cpus' flag to 'docker run' by using
+            # the CpuPeriod of 100000 and multiplying the CPU limit by that number, as documented
+            # in https://docs.docker.com/engine/containers/resource_constraints/#configure-the-default-cfs-scheduler
+            host_config["CpuPeriod"] = 100000
+            host_config["CpuQuota"] = int(settings.EVALUATOR_DOCKER_CONTAINER_CPU_LIMIT * host_config["CpuPeriod"])
         container = await self.docker.containers.create(
             config={
                 "Image": self.image,
@@ -49,15 +76,7 @@ class DockerEvaluator:
                     f"{input_container_path}",
                     f"{output_container_path}/output.json",
                 ],
-                "HostConfig": {
-                    "Binds": settings.EVALUATOR_DOCKER_EXTRA_BINDS
-                    + [
-                        # FIXME: This is security critical code, pay attention and
-                        # carefully reason about this before deploying to 'production'
-                        f"{url_parts.path}:{input_container_path}:ro",
-                        f"{results_dir}:{output_container_path}:rw",
-                    ]
-                },
+                "HostConfig": host_config,
             }
         )
 
@@ -80,7 +99,7 @@ class DockerEvaluator:
 
     async def get_result(self, state: dict) -> dict:
         container = await self.docker.containers.get(container_id=state["container_id"])
-        logger.debug(f"Container state: {container["State"]}")
+        logger.debug(f"Container state: {container['State']}")
 
         success = (
             container["State"]["Status"] == "exited"
