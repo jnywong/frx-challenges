@@ -60,3 +60,9 @@ nginx:
     repository: nginx
     tag: 1.27
   resources: {}
+
+dind:
+  rootless: false
+  image:
+    repository: docker
+    tag: 27.0.3-dind

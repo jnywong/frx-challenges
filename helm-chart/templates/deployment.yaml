@@ -94,6 +94,23 @@ spec:
             - name: django-yamlconf
               mountPath: /opt/unnamed-thingity-thing/comptest/comptest.yaml
               subPath: comptest.yaml
+        - name: dind
+          image: {{ .Values.dind.image.repository }}:{{ .Values.dind.image.tag }}
+          command:
+            {{ if .Values.dind.rootless }}
+            - dind
+            {{- end }}
+            - dockerd
+            - --host=tcp://127.0.0.1:2376
+          volumeMounts:
+            - name: storage
+              mountPath: /opt/state
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          env:
+            - name: DOCKER_HOST
+              value: tcp://127.0.0.1:2376
         - name: evaluator
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -113,16 +130,6 @@ spec:
           env:
             - name: DOCKER_HOST
               value: tcp://127.0.0.1:2376
-        - name: dind
-          image: docker:27.0.3-dind
-          command:
-            - dockerd
-            - --host=tcp://127.0.0.1:2376
-          volumeMounts:
-            - name: storage
-              mountPath: /opt/state
-          securityContext:
-            privileged: true
         - name: nginx
           image: {{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}
           securityContext:
