@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
     "reversion",
+    "django_jsonform",
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "solo",
 ]
 
 MIDDLEWARE = [
@@ -128,6 +132,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+STATIC_ROOT = "web/static/"
 STATIC_URL = "static/"
 
 MEDIA_ROOT = "media/"
@@ -219,7 +224,7 @@ EVALUATOR_DOCKER_CMD = []
 EVALUATOR_DOCKER_EXTRA_BINDS = []
 
 ## Site specific display settings
-SITE_NAME = "Unnamed thingity thingy"
+SITE_NAME = ""
 SITE_LOGO_URL = ""
 SITE_FOOTER_HTML = """
 <div class="footer">
@@ -227,6 +232,8 @@ SITE_FOOTER_HTML = """
 </div>
 """
 SITE_PAGE_HEADER_IMAGE_URL = ""
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 django_yamlconf.load()
 django_yamlconf.list_attrs()

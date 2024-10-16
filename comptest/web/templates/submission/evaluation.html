@@ -13,82 +13,77 @@
     <div class="container py-2">
         <div class="row py-2">
             <div class="col py-2">
-                <h1>Explanatory Headline</h1>
-            </div>
-        </div>
-        <div class="row py-2">
-            <div class="col py-2">
-                <p>Explanatory text, explanatory text explanatory text</p>
+                <h1>Evaluation</h1>
             </div>
         </div>
     </div>
     <div class="container py-2">
-        <div class="row py-2">
-            <div class="col py-2">
-                <table class="table" id="results">
-                    <thead>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <script>
+        <table class="table" id="results">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <script>
     dayjs.extend(window.dayjs_plugin_relativeTime);
     // FIXME: This should be configurable and returned from the API
     const RESULT_KEYS = ["chars", "lines"];
     async function main() {
-      const resp = await fetch("/results");
-      const { resultKeys, evaluations } = await resp.json();
+    const resp = await fetch("/results");
+    const { resultKeys, evaluations } = await resp.json();
 
-      const columns = [
+    const columns = [
         { data: "username", title: "username" },
         { data: "status", title: "status" },
         {
-          data: "last_updated",
-          name: "last_updated",
-          title: "last updated",
-          type: "date",
-          render: (data) => {
+        data: "last_updated",
+        name: "last_updated",
+        title: "last updated",
+        type: "date",
+        render: (data) => {
             return dayjs(data).fromNow();
-          },
         },
-      ].concat(
+        },
+    ].concat(
         RESULT_KEYS.map((r) => {
-          return {
+        return {
             title: r,
             data: (row) => {
-              if (row.result) {
+            if (row.result) {
                 return row.result[r];
-              } else {
+            } else {
                 return null;
-              }
+            }
             },
-          };
+        };
         }),
-      );
+    );
 
-      let table = new DataTable("#results", {
+    let table = new DataTable("#results", {
         ajax: {
-          url: "/results",
-          dataSrc: function (json) {
+        url: "/results",
+        dataSrc: function (json) {
             console.log(json);
-            return json.evaluations;
-          },
+            const filteredData = json.evaluations.filter(evaluation => {
+                return evaluation.evaluation_id == {{ evaluation.0.id }};
+            })
+            return filteredData;
+        },
         },
         columns: columns,
-        order: {
-          name: "last_updated",
-          dir: "desc",
-        },
-      });
+        searching: false,
+        paging: false,
+        ordering: false,
+        info: false,
+    });
 
-      setInterval(() => {
+    setInterval(() => {
         table.ajax.reload();
-      }, 600 * 1000);
+    }, 600 * 1000);
     }
 
-    main();
-    </script>
+main();
+
+        </script>
+    </div>
 {% endblock body %}
