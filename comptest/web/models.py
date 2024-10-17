@@ -70,9 +70,9 @@ class Evaluation(models.Model):
 
     version = models.ForeignKey(
         Version,
-        models.SET_NULL,
-        null=True,
-    )  # on_delete=models.CASCADE,)
+        on_delete=models.CASCADE,
+        related_name="evaluations"
+    )
     evaluator_state = models.JSONField(default=dict)
     result = models.JSONField(blank=True, null=True)
     # FIXME: Figure out max_length or use IntChoices
