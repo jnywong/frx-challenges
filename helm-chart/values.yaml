@@ -61,7 +61,7 @@ nginx:
     tag: 1.27
   resources: {}
 
-extraInitContainers: []
+extraInitContainers: {}
 
 dind:
   rootless: false
