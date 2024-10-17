@@ -1,7 +1,7 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.conf import settings
 from markdown_it import MarkdownIt
 from mdit_py_plugins.footnote import footnote_plugin
 from mdit_py_plugins.front_matter import front_matter_plugin
@@ -74,4 +74,3 @@ def detail_evaluation(request: HttpRequest, id: int) -> HttpResponse:
     """
     evaluation = Evaluation.objects.filter(version__user=request.user, id=id)
     return render(request, "submission/evaluation.html", {"evaluation": evaluation})
-

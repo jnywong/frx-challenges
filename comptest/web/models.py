@@ -1,7 +1,7 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models, transaction
 from django_jsonform.models.fields import JSONField
-from django.conf import settings
 
 # Create your models here.
 
@@ -32,7 +32,9 @@ class Submission(models.Model):
         default=None,
         related_name="projects",
     )
-    metadata = JSONField(blank=True, null=True, schema=settings.SITE_SUBMISSION_FORM_SCHEMA)
+    metadata = JSONField(
+        blank=True, null=True, schema=settings.SITE_SUBMISSION_FORM_SCHEMA
+    )
 
 
 class Version(models.Model):

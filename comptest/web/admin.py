@@ -2,13 +2,7 @@ from allauth.account.decorators import secure_admin_login
 from django.contrib import admin
 from reversion.admin import VersionAdmin
 
-from .models import (
-    ContentFile,
-    Evaluation,
-    Page,
-    Submission,
-    Version,
-)
+from .models import ContentFile, Evaluation, Page, Submission, Version
 
 
 @admin.register(Page)

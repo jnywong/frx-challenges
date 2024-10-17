@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     "reversion",
     "django_jsonform",
     "crispy_forms",
-    "crispy_bootstrap5"
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -246,14 +246,14 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN = "Some Text Heree"
 SITE_SUBMISSION_FORM_SCHEMA = {
-    'type': 'object',
-    'properties': {
-        'repo': {
-            'type': 'string',
-            'title': 'Repository',
-            'helpText': 'Link to repository containing code and stuff'
+    "type": "object",
+    "properties": {
+        "repo": {
+            "type": "string",
+            "title": "Repository",
+            "helpText": "Link to repository containing code and stuff",
         }
-    }
+    },
 }
 
 django_yamlconf.load()
