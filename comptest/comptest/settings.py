@@ -220,6 +220,8 @@ SUBMISSIONS_RESULTS_DIR = output_dir
 EVALUATOR_DOCKER_IMAGE = "quay.io/yuvipanda/evaluator-harness:latest"
 EVALUATOR_DOCKER_CMD = []
 
+# Set to true to disable network access from inside the container started by evaluator
+EVALUATOR_DOCKER_DISABLE_NETWORK = True
 EVALUATOR_DOCKER_EXTRA_BINDS = []
 EVALUATOR_DOCKER_AUTH = {}
 # If you want to use a GCP Artifact Registry service key, use the following config:
