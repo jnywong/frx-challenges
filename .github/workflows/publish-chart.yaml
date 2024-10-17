@@ -17,9 +17,8 @@ on:
       - "**.md"
       - ".github/workflows/*"
       - "!.github/workflows/publish-chart.yaml"
-    branches-ignore:
-      - "dependabot/**"
-      - "pre-commit-ci-update-config"
+    branches:
+      - "main"
     tags:
       - "**"
 
