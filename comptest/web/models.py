@@ -69,9 +69,7 @@ class Evaluation(models.Model):
         FAILED = "FAILED"
 
     version = models.ForeignKey(
-        Version,
-        on_delete=models.CASCADE,
-        related_name="evaluations"
+        Version, on_delete=models.CASCADE, related_name="evaluations"
     )
     evaluator_state = models.JSONField(default=dict)
     result = models.JSONField(blank=True, null=True)
