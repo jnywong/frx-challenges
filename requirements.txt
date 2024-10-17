@@ -6,7 +6,6 @@ django-allauth[socialaccount]
 django-crispy-forms
 django-jsonform
 django-reversion
-django-solo
 django-yamlconf
 fsspec
 markdown-it-py[plugins]

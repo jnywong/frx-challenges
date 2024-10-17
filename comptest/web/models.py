@@ -1,7 +1,7 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models, transaction
 from django_jsonform.models.fields import JSONField
-from solo.models import SingletonModel
 
 # Create your models here.
 
@@ -32,7 +32,9 @@ class Submission(models.Model):
         default=None,
         related_name="projects",
     )
-    metadata = models.JSONField(blank=True, null=True)
+    metadata = JSONField(
+        blank=True, null=True, schema=settings.SITE_SUBMISSION_FORM_SCHEMA
+    )
 
 
 class Version(models.Model):
@@ -69,10 +71,8 @@ class Evaluation(models.Model):
         FAILED = "FAILED"
 
     version = models.ForeignKey(
-        Version,
-        models.SET_NULL,
-        null=True,
-    )  # on_delete=models.CASCADE,)
+        Version, on_delete=models.CASCADE, related_name="evaluations"
+    )
     evaluator_state = models.JSONField(default=dict)
     result = models.JSONField(blank=True, null=True)
     # FIXME: Figure out max_length or use IntChoices
@@ -147,22 +147,3 @@ class ContentFile(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class SubmissionMetadata(SingletonModel):
-    """
-    Define metadata fields for submission.
-    """
-
-    ITEMS_SCHEMA = {
-        "type": "array",  # a list which will contain the items
-        "items": {"type": "string"},  # items in the array are strings
-    }
-
-    instructions = models.TextField()
-    items = JSONField(schema=ITEMS_SCHEMA)
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        get_latest_by = "date_created"
-        verbose_name = "Submission Metadata"

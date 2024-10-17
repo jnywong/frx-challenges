@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -6,7 +7,7 @@ from mdit_py_plugins.footnote import footnote_plugin
 from mdit_py_plugins.front_matter import front_matter_plugin
 
 from ..forms import SubmissionForm
-from ..models import Evaluation, Submission, SubmissionMetadata
+from ..models import Evaluation, Submission
 
 
 @login_required
@@ -14,14 +15,13 @@ def create(request: HttpRequest) -> HttpResponse:
     """
     Create a new submission.
     """
-    if SubmissionMetadata.objects.exists():
-        md = (
-            MarkdownIt("commonmark", {"breaks": True, "html": True})
-            .use(front_matter_plugin)
-            .use(footnote_plugin)
-            .enable("table")
-        )
-        html_content = md.render(SubmissionMetadata.objects.latest().instructions)
+    md = (
+        MarkdownIt("commonmark", {"breaks": True, "html": True})
+        .use(front_matter_plugin)
+        .use(footnote_plugin)
+        .enable("table")
+    )
+    html_content = md.render(settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN)
 
     if request.method == "POST":
         form = SubmissionForm(request.POST)
@@ -30,8 +30,7 @@ def create(request: HttpRequest) -> HttpResponse:
             submission.user = request.user
             submission.name = form.cleaned_data["name"]
             submission.description = form.cleaned_data["description"]
-            if SubmissionMetadata.objects.exists():
-                submission.metadata = _serialize_submission_metadata(form)
+            submission.metadata = form.cleaned_data["metadata"]
             submission.save()
             return HttpResponseRedirect("/submissions")
     else:
@@ -75,13 +74,3 @@ def detail_evaluation(request: HttpRequest, id: int) -> HttpResponse:
     """
     evaluation = Evaluation.objects.filter(version__user=request.user, id=id)
     return render(request, "submission/evaluation.html", {"evaluation": evaluation})
-
-
-def _serialize_submission_metadata(inputForm):
-    """Serializes metadata from submission form into JSON"""
-    fields = SubmissionMetadata.objects.latest().items
-    values = [inputForm.cleaned_data[f] for f in fields]
-
-    json_dict = {key: value for key, value in zip(fields, values)}
-
-    return json_dict

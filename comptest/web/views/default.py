@@ -10,7 +10,7 @@ from mdit_py_plugins.footnote import footnote_plugin
 from mdit_py_plugins.front_matter import front_matter_plugin
 
 from ..forms import UploadForm
-from ..models import Evaluation, Submission, SubmissionMetadata, Version
+from ..models import Evaluation, Submission, Version
 
 
 @login_required
@@ -35,16 +35,13 @@ def upload(request: HttpRequest, id: int) -> HttpResponse:
             return redirect("submissions-detail", id)
     else:
         form = UploadForm(id=id)
-    if SubmissionMetadata.objects.exists():
-        md = (
-            MarkdownIt("commonmark", {"breaks": True, "html": True})
-            .use(front_matter_plugin)
-            .use(footnote_plugin)
-            .enable("table")
-        )
-        html_content = md.render(SubmissionMetadata.objects.latest().instructions)
-    else:
-        html_content = ""
+    md = (
+        MarkdownIt("commonmark", {"breaks": True, "html": True})
+        .use(front_matter_plugin)
+        .use(footnote_plugin)
+        .enable("table")
+    )
+    html_content = md.render(settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN)
     return render(
         request, "upload.html", {"form": form, "id": id, "html_content": html_content}
     )
