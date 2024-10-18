@@ -98,9 +98,6 @@ def add_member(request: HttpRequest, id: int) -> HttpRequest:
             membership.is_admin = form.cleaned_data["is_admin"]
             membership.save()
             return HttpResponseRedirect(reverse("teams-view", args=(team.id,)))
-        else:
-            print("error")
     else:
         form = AddMemberForm()
-        print("test")
     return render(request, "teams/add-member.html", {"form": form, "team": team})
