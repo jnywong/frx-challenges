@@ -167,11 +167,11 @@ LOGGING = {
         # This will process records from all loggers
         "": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "INFO",
             "propagate": True,
         },
         "django.db.backends": {
-            "level": "DEBUG",
+            "level": "INFO",
             "handlers": ["console"],
             "filters": ["require_debug_true"],
         },
