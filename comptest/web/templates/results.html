@@ -60,10 +60,10 @@
           return {
             title: config[k].display_name,
             data: (row) => {
-              if (row.result) {
+              if (row.result && k in row.result) {
                 return row.result[k];
               } else {
-                return null;
+                return "";
               }
             },
           };
