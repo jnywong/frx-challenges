@@ -261,12 +261,8 @@ SITE_SUBMISSION_FORM_SCHEMA = {
 }
 
 EVALUATION_DISPLAY_CONFIG = {
-    "chars": {
-        "display_name": "Characters"
-    },
-    "lines": {
-        "display_name": "Lines"
-    }
+    "chars": {"display_name": "Characters"},
+    "lines": {"display_name": "Lines"},
 }
 
 django_yamlconf.load()

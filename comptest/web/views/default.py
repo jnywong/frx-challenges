@@ -50,10 +50,7 @@ def upload(request: HttpRequest, id: int) -> HttpResponse:
 def results(request: HttpRequest) -> HttpResponse:
     evaluations = Evaluation.objects.all()
 
-    evaluations_resp = {
-        "config": settings.EVALUATION_DISPLAY_CONFIG,
-        "results": []
-    }
+    evaluations_resp = {"config": settings.EVALUATION_DISPLAY_CONFIG, "results": []}
 
     for ev in evaluations:
         evaluations_resp["results"].append(
