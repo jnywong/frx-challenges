@@ -36,11 +36,12 @@
     </div>
     <script>
     dayjs.extend(window.dayjs_plugin_relativeTime);
-    // FIXME: This should be configurable and returned from the API
-    const RESULT_KEYS = ["chars", "lines"];
     async function main() {
       const resp = await fetch("/results");
-      const { resultKeys, evaluations } = await resp.json();
+      const respData = await resp.json();
+
+      const config = respData["config"];
+      const evaluations = respData["results"];
 
       const columns = [
         { data: "username", title: "username" },
@@ -55,12 +56,12 @@
           },
         },
       ].concat(
-        RESULT_KEYS.map((r) => {
+        Object.keys(config).map((k) => {
           return {
-            title: r,
+            title: config[k].display_name,
             data: (row) => {
               if (row.result) {
-                return row.result[r];
+                return row.result[k];
               } else {
                 return null;
               }
@@ -70,13 +71,7 @@
       );
 
       let table = new DataTable("#results", {
-        ajax: {
-          url: "/results",
-          dataSrc: function (json) {
-            console.log(json);
-            return json.evaluations;
-          },
-        },
+        data: evaluations,
         columns: columns,
         order: {
           name: "last_updated",

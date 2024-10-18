@@ -50,10 +50,10 @@ def upload(request: HttpRequest, id: int) -> HttpResponse:
 def results(request: HttpRequest) -> HttpResponse:
     evaluations = Evaluation.objects.all()
 
-    evaluations_resp = []
+    evaluations_resp = {"config": settings.EVALUATION_DISPLAY_CONFIG, "results": []}
 
     for ev in evaluations:
-        evaluations_resp.append(
+        evaluations_resp["results"].append(
             {
                 "evaluation_id": ev.id,
                 "username": ev.version.user.username,
@@ -63,7 +63,7 @@ def results(request: HttpRequest) -> HttpResponse:
             }
         )
 
-    return JsonResponse({"evaluations": evaluations_resp})
+    return JsonResponse(evaluations_resp)
 
 
 def leaderboard(request: HttpRequest) -> HttpResponse:
