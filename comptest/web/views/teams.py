@@ -5,6 +5,7 @@ from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+from ..forms import TeamForm
 from ..models import Team, TeamMembership
 
 
@@ -17,17 +18,13 @@ def list(request: HttpRequest) -> HttpResponse:
     return render(request, "teams/list.html", {"memberships": memberships})
 
 
-class TeamForm(forms.Form):
-    name = forms.CharField(max_length=1024)
-
-
 @login_required
 def create(request: HttpRequest) -> HttpResponse:
     """
     Create a new team with current user as admin
     """
     if request.method == "POST":
-        form = TeamForm(request.POST)
+        form = TeamForm(data=request.POST)
         if form.is_valid():
             team = Team()
             team.name = form.cleaned_data["name"]
@@ -38,9 +35,11 @@ def create(request: HttpRequest) -> HttpResponse:
             membership.team = team
             membership.is_admin = True
             membership.save()
-            return HttpResponseRedirect(reverse("teams-view", args=(team.id,)))
+
+            return HttpResponseRedirect(reverse("teams-view", args=[team.id]))
     else:
         form = TeamForm()
+
     return render(request, "teams/create.html", {"form": form})
 
 
