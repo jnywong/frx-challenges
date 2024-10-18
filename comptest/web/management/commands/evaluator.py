@@ -101,7 +101,9 @@ class DockerEvaluator:
 
     async def is_still_running(self, state: dict) -> bool:
         try:
-            container = await self.docker.containers.get(container_id=state["container_id"])
+            container = await self.docker.containers.get(
+                container_id=state["container_id"]
+            )
         except aiodocker.DockerError as e:
             if e.status == 404:
                 return False
