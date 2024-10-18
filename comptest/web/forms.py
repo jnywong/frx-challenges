@@ -49,3 +49,16 @@ class TeamForm(forms.Form):
         self.helper.form_method = "post"
         self.fields["name"] = forms.CharField(label="Team Name")
         self.helper.add_input(Submit("submit", "Submit", css_class="form-control"))
+
+
+class AddMemberForm(forms.Form):
+    """Form to add a member to a team"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.fields["username"] = forms.CharField(label="GitHub username")
+        self.fields["is_admin"] = forms.BooleanField(required=False)
+        self.helper.add_input(Submit("submit", "Add Member", css_class="form-control"))
