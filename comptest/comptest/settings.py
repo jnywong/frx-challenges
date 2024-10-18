@@ -234,6 +234,8 @@ EVALUATOR_DOCKER_AUTH = {}
 
 # Max number of CPUs allowed for the evaluator
 EVALUATOR_DOCKER_CONTAINER_CPU_LIMIT = 2
+# Max memory (in bytes) allowed for the evaluator container
+EVALUATOR_DOCKER_CONTAINER_MEMORY_LIMIT = 2 * 1024 * 1024 * 1024
 
 ## Site specific display settings
 SITE_NAME = ""

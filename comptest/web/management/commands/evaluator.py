@@ -70,6 +70,8 @@ class DockerEvaluator:
             host_config["CpuQuota"] = int(
                 settings.EVALUATOR_DOCKER_CONTAINER_CPU_LIMIT * host_config["CpuPeriod"]
             )
+        if settings.EVALUATOR_DOCKER_CONTAINER_MEMORY_LIMIT:
+            host_config["Memory"] = settings.EVALUATOR_DOCKER_CONTAINER_MEMORY_LIMIT
         if settings.EVALUATOR_DOCKER_DISABLE_NETWORK:
             host_config["NetworkMode"] = "none"
         container = await self.docker.containers.create(
