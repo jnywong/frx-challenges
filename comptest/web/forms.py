@@ -15,7 +15,9 @@ class SubmissionForm(forms.Form):
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.form_action = "submissions-create"
-        self.helper.add_input(Submit("submit", "Submit", css_class="form-control"))
+        self.helper.add_input(
+            Submit("submit", "Submit", css_class="form-control btn btn-secondary")
+        )
 
         self.fields["name"] = forms.CharField()
         self.fields["description"] = forms.CharField(required=False)
@@ -33,7 +35,9 @@ class UploadForm(forms.Form):
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.form_action = reverse("upload", args=[self.id])
-        self.helper.add_input(Submit("submit", "Submit", css_class="form-control"))
+        self.helper.add_input(
+            Submit("submit", "Submit", css_class="form-control btn btn-secondary")
+        )
 
         self.fields["file"] = forms.FileField()
         self.fields["file"].label = False
@@ -48,7 +52,9 @@ class TeamForm(forms.Form):
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.fields["name"] = forms.CharField(label="Team Name")
-        self.helper.add_input(Submit("submit", "Submit", css_class="form-control"))
+        self.helper.add_input(
+            Submit("submit", "Submit", css_class="form-control btn btn-secondary")
+        )
 
 
 class AddMemberForm(forms.Form):
@@ -61,4 +67,6 @@ class AddMemberForm(forms.Form):
         self.helper.form_method = "post"
         self.fields["username"] = forms.CharField(label="GitHub username")
         self.fields["is_admin"] = forms.BooleanField(required=False)
-        self.helper.add_input(Submit("submit", "Add Member", css_class="form-control"))
+        self.helper.add_input(
+            Submit("submit", "Add Member", css_class="form-control btn btn-secondary")
+        )
