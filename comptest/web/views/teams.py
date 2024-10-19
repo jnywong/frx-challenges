@@ -75,11 +75,19 @@ def add_member(request: HttpRequest, id: int) -> HttpRequest:
     try:
         team = Team.objects.filter(id=id).get()
     except Team.DoesNotExist:
-        raise Http404("The requested team does not exist")
+        raise Http404("The requested team does not exist.")
 
-    # FIXME: Validate that we are admin on the team so we can add people
-    # user = TeamMembership.objects.filter(team_id=id)
-    # print(user)
+    # Validate that user is a team admin so they can add people
+    try:
+        membership = TeamMembership.objects.filter(
+            team_id=id, user__username=request.user
+        ).get()
+        if membership.is_admin is True:
+            pass
+        else:
+            raise Http404("You are not an admin of this team.")
+    except TeamMembership.DoesNotExist:
+        raise Http404("Team membership does not exist.")
 
     if request.method == "POST":
         form = AddMemberForm(request.POST)
