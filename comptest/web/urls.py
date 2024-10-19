@@ -9,6 +9,11 @@ urlpatterns = [
     path("teams/create", teams.create, name="teams-create"),
     path("teams/<int:id>", teams.view, name="teams-view"),
     path("teams/<int:id>/add-member", teams.add_member, name="teams-add-member"),
+    path(
+        "teams/<int:team_id>/remove-member/<int:user_id>",
+        teams.remove_member,
+        name="teams-remove-member",
+    ),
     path("page/<slug:slug>", pages.view, name="page-view"),
     path("file/<slug:slug>", pages.content_file, name="content-file"),
     path("leaderboard", default.leaderboard, name="leaderboard"),
