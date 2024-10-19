@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from markdown_it import MarkdownIt
 from mdit_py_plugins.footnote import footnote_plugin
@@ -55,10 +55,11 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
     """
     Show details of a specific submission, such as versions and evaluations
     """
-    queryset = Submission.objects.filter(
-        user=request.user
-    )  ## TODO: test that another user cannot access the current user's submission
-    submission = queryset.get(id=id)
+    queryset = Submission.objects.filter(user=request.user)
+    try:
+        submission = queryset.get(id=id)
+    except Submission.DoesNotExist:
+        raise Http404("Submission does not exist")
     versions = submission.version_set.all()
     return render(
         request,
