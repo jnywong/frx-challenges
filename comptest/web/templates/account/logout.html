@@ -1,0 +1,40 @@
+{% extends "page.html" %}
+{% load socialaccount %}
+{% block body %}
+    <div class="container py-2">
+        <div class="row py-2">
+            <div class="col py-2">
+                <h1>Logout</h1>
+            </div>
+        </div>
+        <div class="row row-cols-1 py-2">
+            {% if user.is_authenticated %}
+                {% url 'socialaccount_connections' as connections_url_ %}
+                {% if connections_url_ %}
+                    <div class="col p-2">
+                        {% get_social_accounts user as accounts %}
+                        {% if accounts %}
+                            {% with account=accounts.github.0.get_provider_account %}
+                                <p>Account Connections:</p>
+                                <ul>
+                                    <li>
+                                        {{ account }} <span class="badge text-bg-secondary">{{ account.get_brand.name }}</span>
+                                    </li>
+                                </ul>
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% url 'account_logout' as logout_url_ %}
+                {% if logout_url_ %}
+                    <div class="col p-2">
+                        <form method="post" action="{% url 'account_logout' %}">
+                            {% csrf_token %}
+                            <button class="btn btn-danger" type="submit">Sign Out</button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock body %}
