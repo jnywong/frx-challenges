@@ -108,10 +108,19 @@ class DockerEvaluator:
             if e.status == 404:
                 return False
             raise
+
         return container["State"].get("Status") == "running"
 
     async def get_result(self, state: dict) -> dict:
-        container = await self.docker.containers.get(container_id=state["container_id"])
+        try:
+            container = await self.docker.containers.get(
+                container_id=state["container_id"]
+            )
+        except aiodocker.DockerError as e:
+            if e.status == 404:
+                return None
+            raise
+
         logger.debug(f"Container state: {container['State']}")
 
         success = (
