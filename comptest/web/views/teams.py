@@ -1,10 +1,11 @@
-from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+from ..forms import AddMemberForm, TeamForm
 from ..models import Team, TeamMembership
 
 
@@ -17,17 +18,13 @@ def list(request: HttpRequest) -> HttpResponse:
     return render(request, "teams/list.html", {"memberships": memberships})
 
 
-class TeamForm(forms.Form):
-    name = forms.CharField(max_length=1024)
-
-
 @login_required
 def create(request: HttpRequest) -> HttpResponse:
     """
     Create a new team with current user as admin
     """
     if request.method == "POST":
-        form = TeamForm(request.POST)
+        form = TeamForm(data=request.POST)
         if form.is_valid():
             team = Team()
             team.name = form.cleaned_data["name"]
@@ -38,9 +35,11 @@ def create(request: HttpRequest) -> HttpResponse:
             membership.team = team
             membership.is_admin = True
             membership.save()
-            return HttpResponseRedirect(reverse("teams-view", args=(team.id,)))
+
+            return HttpResponseRedirect(reverse("teams-view", args=[team.id]))
     else:
         form = TeamForm()
+
     return render(request, "teams/create.html", {"form": form})
 
 
@@ -72,31 +71,69 @@ def view(request: HttpRequest, id: int) -> HttpResponse:
     )
 
 
-class AddMemberForm(forms.Form):
-    username = forms.CharField(max_length=1024)
-    is_admin = forms.BooleanField(required=False)
-
-
 @login_required
 def add_member(request: HttpRequest, id: int) -> HttpRequest:
-    try:
-        team = Team.objects.filter(id=id).get()
-    except Team.DoesNotExist:
-        raise Http404("The requested team does not exist")
 
-    # FIXME: Validate that we are admin on the team so we can add people
+    team = _validate(request, id)
+
     if request.method == "POST":
         form = AddMemberForm(request.POST)
         if form.is_valid():
-            # FIXME: Handle missing users
+            # Handle missing users
+            try:
+                user = User.objects.filter(username=form.cleaned_data["username"]).get()
+            except User.DoesNotExist:
+                raise Http404("The requested user does not exist")
+
             # FIXME: Handle an 'invitation acceptance' flow for users
-            user = User.objects.filter(username=form.cleaned_data["username"]).get()
+
             membership = TeamMembership()
             membership.user = user
             membership.team = team
             membership.is_admin = form.cleaned_data["is_admin"]
-            membership.save()
+            try:
+                membership.save()
+            except IntegrityError:
+                raise Http404("The requested user is already a member of the team")
             return HttpResponseRedirect(reverse("teams-view", args=(team.id,)))
     else:
         form = AddMemberForm()
     return render(request, "teams/add-member.html", {"form": form, "team": team})
+
+
+def remove_member(request: HttpRequest, team_id: int, user_id: int) -> HttpRequest:
+    """Remove a member from the given team."""
+
+    team = _validate(request, team_id)
+    membership = TeamMembership.objects.filter(team_id=team_id, user_id=user_id).get()
+    # FIXME: Handle the case where you want to remove a team admin
+    if membership.is_admin:
+        raise Http404("Cannot remove an admin from this team.")
+    else:
+        membership.delete()
+
+    return HttpResponseRedirect(reverse("teams-view", args=(team.id,)))
+
+
+def _validate(request: HttpRequest, id: int):
+    """Validate team exists and a team admin made the request."""
+
+    # Validate that the team exists
+    try:
+        team = Team.objects.filter(id=id).get()
+    except Team.DoesNotExist:
+        raise Http404("The requested team does not exist.")
+
+    # Validate that user is a team admin
+    try:
+        membership = TeamMembership.objects.filter(
+            team_id=id, user__username=request.user
+        ).get()
+        if membership.is_admin is True:
+            pass
+        else:
+            raise Http404("You are not an admin of this team.")
+    except TeamMembership.DoesNotExist:
+        raise Http404("Team membership does not exist.")
+
+    return team
