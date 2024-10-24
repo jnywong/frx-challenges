@@ -20,6 +20,7 @@ project:
 
 site:
   template: book-theme
-  # options:
+  options:
+    hide_outline: true
+    logo: images/logo.png
   #   favicon: favicon.ico
-  #   logo: site_logo.png
