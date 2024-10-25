@@ -20,15 +20,15 @@
 # https://github.com/jupyterhub/chartpress
 #
 charts:
-  - name: frx-challenges
+  - name: unnamed
     chartPath: helm-chart
     imagePrefix: quay.io/2i2c/
     # Set dev version by taking latest tag and incrementing patch
     baseVersion: patch
 
     repo:
-      git: 2i2c-org/frx-challenges-helm-chart
-      published: https://2i2c.org/frx-challenges-helm-chart/
+      git: 2i2c-org/unnamed-thingity-thing
+      published: https://2i2c.org/unnamed-thingity-thing/
 
     images:
       unnamed:
