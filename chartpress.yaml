@@ -27,8 +27,8 @@ charts:
     baseVersion: patch
 
     repo:
-      git: 2i2c-org/unnamed-thingity-thing
-      published: https://2i2c.org/unnamed-thingity-thing/
+      git: 2i2c-org/frx-challenges-helm-chart
+      published: https://2i2c.org/frx-challenges-helm-chart/
 
     images:
       unnamed:

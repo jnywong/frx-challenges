@@ -65,14 +65,3 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   {{- end }}
 {{- end }}
 {{- end }}
-
-{{/*
-Adds quotes to each element of a list and returns them as string "a b c ..."
-*/}}
-{{- define "quoteList" -}}
-{{- $out := list -}}
-{{- range $index, $element := . -}}
-{{- $out = append $out $element -}}
-{{- end -}}
-{{- $out | join " " -}}
-{{- end -}}
