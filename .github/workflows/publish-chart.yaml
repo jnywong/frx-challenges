@@ -101,8 +101,8 @@ jobs:
 
       - name: Configure a git user
         run: |
-          git config --global user.email "github-actions@example.local"
-          git config --global user.name "GitHub Actions user"
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
 
       - name: Build image, push if necessary
         env:
@@ -119,8 +119,6 @@ jobs:
 
       - name: Publish chart with chartpress
         if: steps.publishing.outputs.publishing
-        env:
-          GITHUB_TOKEN: "${{ github.token }}"
         run: |
           set -eux
 
