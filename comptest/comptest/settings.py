@@ -224,6 +224,7 @@ EVALUATOR_DOCKER_CMD = []
 EVALUATOR_DOCKER_DISABLE_NETWORK = True
 EVALUATOR_DOCKER_EXTRA_BINDS = []
 EVALUATOR_DOCKER_AUTH = {}
+MAX_RUNNING_EVALUATIONS = 3
 # If you want to use a GCP Artifact Registry service key, use the following config:
 # for EVALUATOR_DOCKER_AUTH
 # {

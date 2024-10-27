@@ -63,10 +63,17 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           workingDir: /opt/unnamed-thingity-thing/comptest
           command:
+          {{- if .Values.adminUsers }}
             - python
             - manage.py
             - promote
-            - '{{ include "quoteList" .Values.adminUsers }}'
+            {{- range .Values.adminUsers }}
+            - {{ . }}
+            {{- end }}
+          {{- else }}
+            - echo
+            - "No admin users to add"
+          {{- end }}
           securityContext:
             runAsUser: 0
           volumeMounts:
