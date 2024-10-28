@@ -76,6 +76,23 @@ jobs:
         run: |
           docker login -u "${{ secrets.QUAY_USERNAME }}" -p "${{ secrets.QUAY_PASSWORD }}" quay.io
 
+      - name: Set up push rights to frx-challenges-helm-chart
+        # This was setup by...
+        # 1. Generating a private/public key pair:
+        #    ssh-keygen -t rsa -b 4096 -C "frx-challenges-helm-chart" -f gh-pages -N ""
+        # 2. Registering the private key (gh-pages) as a secret for this
+        #    repo:
+        #    https://github.com/2i2c-org/frx-challenges/settings/secrets/actions
+        # 3. Registering the public key (gh-pages.pub) as a deploy key
+        #    with push rights for the 2i2c-org/frx-challenges-helm-chart repo:
+        #    https://github.com/2i2c-org/frx-challenges-helm-chart/settings/keys
+        if: steps.publishing.outputs.publishing
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          echo "${{ secrets.ACTIONS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
       - name: Install dependencies
         run: |
           pip install -r dev-requirements.txt
@@ -84,8 +101,8 @@ jobs:
 
       - name: Configure a git user
         run: |
-          git config --global user.email "github-actions@example.local"
-          git config --global user.name "GitHub Actions user"
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
 
       - name: Build image, push if necessary
         env:
@@ -102,8 +119,6 @@ jobs:
 
       - name: Publish chart with chartpress
         if: steps.publishing.outputs.publishing
-        env:
-          GITHUB_TOKEN: "${{ github.token }}"
         run: |
           set -eux
 

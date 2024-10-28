@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 import aiodocker
 import aiodocker.containers
 import fsspec
+from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db.models import Exists, OuterRef, Q
@@ -108,10 +109,19 @@ class DockerEvaluator:
             if e.status == 404:
                 return False
             raise
+
         return container["State"].get("Status") == "running"
 
     async def get_result(self, state: dict) -> dict:
-        container = await self.docker.containers.get(container_id=state["container_id"])
+        try:
+            container = await self.docker.containers.get(
+                container_id=state["container_id"]
+            )
+        except aiodocker.DockerError as e:
+            if e.status == 404:
+                return None
+            raise
+
         logger.debug(f"Container state: {container['State']}")
 
         success = (
@@ -167,18 +177,30 @@ class Command(BaseCommand):
                 e = Evaluation(version=v)
                 await e.asave()
 
-            # Start Evaluations when they have not been started yet
+            # Get the Evaluations that have not been started yet
             unstarted_evaluations = Evaluation.objects.select_related("version").filter(
                 status=Evaluation.Status.NOT_STARTED
             )
 
-            async for e in unstarted_evaluations:
-                await self.start_evaluation(evaluator, e)
-
-            # Check running evaluations
+            # Get the running Evaluation objects
             running_evaluations = Evaluation.objects.select_related("version").filter(
                 status=Evaluation.Status.EVALUATING
             )
+
+            # Get the number of running evaluations
+            # This is a synchronous operation so it's wrapped in sync_to_async
+            num = await sync_to_async(running_evaluations.count)()
+            async for e in unstarted_evaluations:
+                # Only start a new evaluation if the number of running evaluations is less than the maximum
+                if num < settings.MAX_RUNNING_EVALUATIONS:
+                    await self.start_evaluation(evaluator, e)
+                    # Instead of checking the database again, we can just increment the counter
+                    # And the database will be checked in the next iteration
+                    num += 1
+                else:
+                    logger.warning(
+                        "Maximum number of running evaluations reached, waiting for some to finish"
+                    )
 
             async for e in running_evaluations:
                 await self.process_running_evaluation(evaluator, e)
