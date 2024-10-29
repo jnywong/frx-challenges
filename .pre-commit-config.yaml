@@ -34,7 +34,7 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        exclude: ^helm-chart/templates/.*|^comptest/web/templates/.*
+        exclude: ^helm-chart/templates/.*|^frx_challenges/web/templates/.*
 
   # Autoformat and lint: HTML
   - repo: https://github.com/Riverside-Healthcare/djLint

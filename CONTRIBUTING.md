@@ -48,7 +48,7 @@ python3 manage.py runserver
 
 In order to access the admin interface at `/admin`, your user needs to be a Django superuser.
 
-Because we use GitHub external login we cannot use the existing `manage.py createsuperuser` command, so a separate [promote command](https://github.com/2i2c-org/frx-challenges/blob/main/comptest/web/management/commands/promote.py) was created to promote an existing user (created via GiHub login) into a superuser.
+Because we use GitHub external login we cannot use the existing `manage.py createsuperuser` command, so a separate [promote command](https://github.com/2i2c-org/frx-challenges/blob/main/frx_challenges/web/management/commands/promote.py) was created to promote an existing user (created via GiHub login) into a superuser.
 
 Steps to access the admin interface:
 

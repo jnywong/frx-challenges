@@ -6,6 +6,6 @@ RUN mkdir /opt/frx-challenges
 
 COPY . /opt/frx-challenges
 
-WORKDIR /opt/frx-challenges
+WORKDIR /opt/frx-challenges/frx_challenges
 
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r ../requirements.txt
