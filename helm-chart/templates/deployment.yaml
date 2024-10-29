@@ -28,7 +28,6 @@ spec:
         - name: db-migrate
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          workingDir: /opt/frx-challenges/comptest
           command:
             - python
             - manage.py
@@ -39,12 +38,11 @@ spec:
             - name: storage
               mountPath: /opt/state
             - name: django-yamlconf
-              mountPath: /opt/frx-challenges/comptest/comptest.yaml
-              subPath: comptest.yaml
+              mountPath: /opt/frx-challenges/frx_challenges/frx_challenges.yaml
+              subPath: frx_challenges.yaml
         - name: collect-static
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          workingDir: /opt/frx-challenges/comptest
           command:
             - python
             - manage.py
@@ -54,14 +52,13 @@ spec:
             runAsUser: 0
           volumeMounts:
             - name: django-yamlconf
-              mountPath: /opt/frx-challenges/comptest/comptest.yaml
-              subPath: comptest.yaml
+              mountPath: /opt/frx-challenges/frx_challenges/frx_challenges.yaml
+              subPath: frx_challenges.yaml
             - name: staticfiles
               mountPath: /opt/staticfiles
         - name: admin-add
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          workingDir: /opt/frx-challenges/comptest
           command:
           {{- if .Values.adminUsers }}
             - python
@@ -80,8 +77,8 @@ spec:
             - name: storage
               mountPath: /opt/state
             - name: django-yamlconf
-              mountPath: /opt/frx-challenges/comptest/comptest.yaml
-              subPath: comptest.yaml
+              mountPath: /opt/frx-challenges/frx_challenges/frx_challenges.yaml
+              subPath: frx_challenges.yaml
         {{ with .Values.extraInitContainers }}
         {{ $extraInitContainers := . }}
         {{ $sortedKeys := keys $extraInitContainers | sortAlpha }}
@@ -93,12 +90,11 @@ spec:
         - name: django
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          workingDir: /opt/frx-challenges/comptest
           command:
             - gunicorn
             - --bind
             - 127.0.0.1:8000
-            - comptest.wsgi
+            - frx_challenges.wsgi
           securityContext:
             runAsUser: 0
           resources: {{ toJson .Values.resources }}
@@ -106,8 +102,8 @@ spec:
             - name: storage
               mountPath: /opt/state
             - name: django-yamlconf
-              mountPath: /opt/frx-challenges/comptest/comptest.yaml
-              subPath: comptest.yaml
+              mountPath: /opt/frx-challenges/frx_challenges/frx_challenges.yaml
+              subPath: frx_challenges.yaml
         - name: dind
           image: {{ .Values.dind.image.repository }}:{{ .Values.dind.image.tag }}
           command:
@@ -128,7 +124,6 @@ spec:
         - name: evaluator
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          workingDir: /opt/frx-challenges/comptest
           command:
             - python
             - manage.py
@@ -139,8 +134,8 @@ spec:
             - name: storage
               mountPath: /opt/state
             - name: django-yamlconf
-              mountPath: /opt/frx-challenges/comptest/comptest.yaml
-              subPath: comptest.yaml
+              mountPath: /opt/frx-challenges/frx_challenges/frx_challenges.yaml
+              subPath: frx_challenges.yaml
           env:
             - name: DOCKER_HOST
               value: tcp://127.0.0.1:2376
