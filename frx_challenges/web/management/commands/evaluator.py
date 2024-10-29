@@ -8,7 +8,6 @@ from urllib.parse import urlparse
 import aiodocker
 import aiodocker.containers
 import fsspec
-from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db.models import Exists, OuterRef, Q
@@ -189,7 +188,7 @@ class Command(BaseCommand):
 
             # Get the number of running evaluations
             # This is a synchronous operation so it's wrapped in sync_to_async
-            num = await sync_to_async(running_evaluations.count)()
+            num = await running_evaluations.acount()
             async for e in unstarted_evaluations:
                 # Only start a new evaluation if the number of running evaluations is less than the maximum
                 if num < settings.MAX_RUNNING_EVALUATIONS:
