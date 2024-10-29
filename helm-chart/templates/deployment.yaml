@@ -90,7 +90,7 @@ spec:
         - name: django
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
+          args:
             - gunicorn
             - --bind
             - 127.0.0.1:8000
@@ -124,7 +124,7 @@ spec:
         - name: evaluator
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
+          args:
             - python
             - manage.py
             - evaluator
