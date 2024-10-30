@@ -67,7 +67,6 @@ spec:
             {{- range .Values.adminUsers }}
             - {{ . }}
             {{- end }}
-        {{- end }}
           securityContext:
             runAsUser: 0
           volumeMounts:
@@ -76,6 +75,7 @@ spec:
             - name: django-yamlconf
               mountPath: /opt/frx-challenges/frx_challenges/frx_challenges.yaml
               subPath: frx_challenges.yaml
+        {{- end }}
         {{ with .Values.extraInitContainers }}
         {{ $extraInitContainers := . }}
         {{ $sortedKeys := keys $extraInitContainers | sortAlpha }}
