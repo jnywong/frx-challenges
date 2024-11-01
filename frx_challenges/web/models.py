@@ -1,9 +1,12 @@
 from __future__ import annotations
+
+from typing import List, Optional
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models, transaction
 from django_jsonform.models.fields import JSONField
-from typing import Optional, List
+
 # Create your models here.
 
 
@@ -60,15 +63,14 @@ class Version(models.Model):
     status = models.CharField(choices=Status, default=Status.NOT_STARTED, max_length=16)
 
     @property
-    def latest_evaluation(self) -> Optional[Evaluation]:
+    def latest_evaluation(self) -> Evaluation | None:
         """
         Return the latest Evaluation if it exists
         """
         try:
-            return self.evaluations.latest('last_updated')
+            return self.evaluations.latest("last_updated")
         except Evaluation.DoesNotExist:
             return None
-
 
     def __str__(self):
         return f"({self.status}) {self.data_uri}"
@@ -93,7 +95,7 @@ class Evaluation(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     @property
-    def ordered_results(self) -> List:
+    def ordered_results(self) -> list:
         """
         Return results of this evaluation, ordered per EVALUATION_DISPLAY_CONFIG
         """

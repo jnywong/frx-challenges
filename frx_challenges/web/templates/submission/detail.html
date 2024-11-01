@@ -1,11 +1,11 @@
 {% extends "page.html" %}
 {% block head %}
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"
-integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-crossorigin="anonymous"></script>
-<link rel="stylesheet"
-href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
-<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
 {% endblock %}
 {% block body %}
     <div class="container py-2">
@@ -31,9 +31,7 @@ href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
                             <th scope="col">Filename</th>
                             <th scope="col">Date uploaded</th>
                             <th scope="col">Evaluation Status</th>
-                            {% for dc in evaluation_display_config %}
-                            <th scope="col">{{ dc.display_name }}</th>
-                            {% endfor %}
+                            {% for dc in evaluation_display_config %}<th scope="col">{{ dc.display_name }}</th>{% endfor %}
                         </tr>
                     </thead>
                     <tbody>
@@ -44,29 +42,27 @@ href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
                                 <td>{{ v.date_created|date:"M j Y" }}</td>
                                 <td>{{ v.latest_evaluation.status }}</td>
                                 {% for r in v.latest_evaluation.ordered_results %}
-                                <td scope="col">
-                                    {% if r %}
-                                    {{ r }}
-                                    {% endif %}
-                                </td>
+                                    <td scope="col">
+                                        {% if r %}{{ r }}{% endif %}
+                                    </td>
                                 {% endfor %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="row py-2">
-                <div class="col">
-                    <a href="{% url 'upload' submission.id %}" class="btn btn-primary mt-2">Upload submission</a>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-        {% endif %}
-    </div>
-    <script>
+            {% else %}
+                <div class="row py-2">
+                    <div class="col">
+                        <a href="{% url 'upload' submission.id %}" class="btn btn-primary mt-2">Upload submission</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <script>
         async function main() {
             const resultsTable = new DataTable("#results");
         }
 
         main();
-    </script>
-{% endblock body %}
+        </script>
+    {% endblock body %}
