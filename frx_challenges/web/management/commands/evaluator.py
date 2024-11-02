@@ -10,9 +10,8 @@ import aiodocker.containers
 import fsspec
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.db.models import Exists, OuterRef, Q
 
-from ...models import Evaluation, Version
+from ...models import Evaluation
 
 logger = logging.getLogger()
 
