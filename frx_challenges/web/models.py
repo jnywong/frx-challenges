@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from typing import List, Optional
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models, transaction
-from django_jsonform.models.fields import JSONField
 from django.db.models.fields.json import KT
-from typing import Optional, List
+from django_jsonform.models.fields import JSONField
+
 # Create your models here.
 
 
@@ -50,10 +52,11 @@ class Submission(models.Model):
         # 3. Have results that contain all the keys we use for ordering
         # 4. Ordered by the ordering criteria expressed by EVALUATION_DISPLAY_CONFIG
 
-
         # Sort the display_config by ordering_priority (smaller numbers go first)
         # This primarily is used for tiebreaking, since we only want the 'best'
-        sorted_display_config = sorted(settings.EVALUATION_DISPLAY_CONFIG, key=lambda dc: -dc["ordering_priority"])
+        sorted_display_config = sorted(
+            settings.EVALUATION_DISPLAY_CONFIG, key=lambda dc: -dc["ordering_priority"]
+        )
 
         # Ordering criteria for querying our results
         ordering_criteria = []
@@ -61,21 +64,27 @@ class Submission(models.Model):
         result_must_have_keys = []
 
         for dc in sorted_display_config:
-            result_must_have_keys.append(dc['result_key'])
+            result_must_have_keys.append(dc["result_key"])
             k = KT(f"result__{dc['result_key']}")
             if dc["ordering"] == "smaller_is_better":
                 k = k.asc()
             elif dc["ordering"] == "bigger_is_better":
                 k = k.desc()
             else:
-                raise ValueError(f"Invalid ordering {dc['ordering']} found for result_key {dc['result_key']}")
+                raise ValueError(
+                    f"Invalid ordering {dc['ordering']} found for result_key {dc['result_key']}"
+                )
             ordering_criteria.append(k)
 
-        best_evaluation = Evaluation.objects.filter(
-            version__submission=self,
-            status=Evaluation.Status.EVALUATED,
-            result__has_keys=result_must_have_keys
-        ).order_by(*ordering_criteria).first()
+        best_evaluation = (
+            Evaluation.objects.filter(
+                version__submission=self,
+                status=Evaluation.Status.EVALUATED,
+                result__has_keys=result_must_have_keys,
+            )
+            .order_by(*ordering_criteria)
+            .first()
+        )
 
         if best_evaluation:
             return best_evaluation.version
@@ -92,7 +101,9 @@ class Version(models.Model):
         UPLOADED = "UPLOADED"
         CLEARED = "CLEARED"
 
-    submission = models.ForeignKey(Submission, on_delete=models.CASCADE, related_name="versions")
+    submission = models.ForeignKey(
+        Submission, on_delete=models.CASCADE, related_name="versions"
+    )
     date_created = models.DateTimeField(auto_now=True)
     # FIXME: Cascade is probably not quite right?
     user = models.ForeignKey(User, on_delete=models.CASCADE)
