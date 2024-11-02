@@ -54,32 +54,40 @@ def upload(request: HttpRequest, id: int) -> HttpResponse:
     )
 
 
-def results(request: HttpRequest) -> HttpResponse:
-    evaluations = Evaluation.objects.all()
-
-    evaluations_resp = {
-        "display_config": settings.EVALUATION_DISPLAY_CONFIG,
-        "results": [],
-    }
-
-    for ev in evaluations:
-        evaluations_resp["results"].append(
-            {
-                "evaluation_id": ev.id,
-                "username": ev.version.user.username,
-                "status": ev.status,
-                "last_updated": ev.last_updated.isoformat(),
-                "result": ev.result,
-            }
-        )
-
-    return JsonResponse(evaluations_resp)
-
-
 def leaderboard(request: HttpRequest) -> HttpResponse:
     if settings.CHALLENGE_STATE != "RUNNING":
         return HttpResponse(
             "Challenge hasn't started, so leaderboard is not available", status=400
         )
 
-    return render(request, "results.html")
+    sorted_display_config = sorted(settings.EVALUATION_DISPLAY_CONFIG, key=lambda dc: -dc["ordering_priority"])
+    results = []
+    all_submissions = Submission.objects.all()
+    for sub in all_submissions:
+        bv = sub.best_version
+        if not bv:
+            # Only display submissions with at least one 'best version'
+            continue
+        results.append({
+            "submission": sub,
+            "best_version": bv
+        })
+
+    def sort_key_func(r):
+        bv: Version = r["best_version"]
+        sort_key = []
+        for dc in sorted_display_config:
+            if dc["ordering"] == "smaller_is_better":
+                sort_key.append(-bv.latest_evaluation.result[dc["result_key"]])
+            elif dc["ordering"] == "bigger_is_better":
+                sort_key.append(bv.latest_evaluation.result[dc["result_key"]])
+            else:
+                raise ValueError(f"Invalid ordering {dc['ordering']} found for result_key {dc['result_key']}")
+
+        return sort_key
+
+    results = sorted(
+        results,
+        key=sort_key_func
+    )
+    return render(request, "results.html", {"results":results})
