@@ -48,22 +48,22 @@
                                 {% endfor %}
                             </tr>
                         {% endfor %}
-                        </tbody>
-                    </table>
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="row py-2">
+                <div class="col">
+                    <a href="{% url 'upload' submission.id %}" class="btn btn-primary mt-2">Upload submission</a>
                 </div>
-            {% else %}
-                <div class="row py-2">
-                    <div class="col">
-                        <a href="{% url 'upload' submission.id %}" class="btn btn-primary mt-2">Upload submission</a>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-        <script>
+            </div>
+        {% endif %}
+    </div>
+    <script>
         async function main() {
             const resultsTable = new DataTable("#results");
         }
 
         main();
-        </script>
-    {% endblock body %}
+    </script>
+{% endblock body %}
