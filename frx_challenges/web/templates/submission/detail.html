@@ -6,7 +6,7 @@
     <link rel="stylesheet"
           href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
-{% endblock %}
+{% endblock head %}
 {% block body %}
     <div class="container py-2">
         <div class="row py-2">
@@ -46,7 +46,8 @@
                                         {% if r %}{{ r }}{% endif %}
                                     </td>
                                 {% endfor %}
-                            {% endfor %}
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
