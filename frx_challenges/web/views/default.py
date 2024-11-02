@@ -4,7 +4,7 @@ import tempfile
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from markdown_it import MarkdownIt
 from mdit_py_plugins.footnote import footnote_plugin
