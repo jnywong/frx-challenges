@@ -6,10 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
-from markdown_it import MarkdownIt
-from mdit_py_plugins.footnote import footnote_plugin
-from mdit_py_plugins.front_matter import front_matter_plugin
 
+from ..md import MARKDOWN_RENDERER
 from ..forms import UploadForm
 from ..models import Evaluation, Submission, Version
 
@@ -42,13 +40,7 @@ def upload(request: HttpRequest, id: int) -> HttpResponse:
             return redirect("submissions-detail", id)
     else:
         form = UploadForm(id=id)
-    md = (
-        MarkdownIt("commonmark", {"breaks": True, "html": True})
-        .use(front_matter_plugin)
-        .use(footnote_plugin)
-        .enable("table")
-    )
-    html_content = md.render(settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN)
+    html_content = MARKDOWN_RENDERER.render(settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN)
     return render(
         request, "upload.html", {"form": form, "id": id, "html_content": html_content}
     )

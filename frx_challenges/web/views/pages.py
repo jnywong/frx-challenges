@@ -1,22 +1,14 @@
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
-from markdown_it import MarkdownIt
-from mdit_py_plugins.footnote import footnote_plugin
-from mdit_py_plugins.front_matter import front_matter_plugin
 
+from ..md import MARKDOWN_RENDERER
 from ..models import ContentFile, Page
 
 
 def render_page(request: HttpRequest, page: Page) -> HttpResponse:
     if page.mimetype == Page.MimeType.markdown:
-        md = (
-            MarkdownIt("commonmark", {"breaks": True, "html": True})
-            .use(front_matter_plugin)
-            .use(footnote_plugin)
-            .enable("table")
-        )
-        html_content = md.render(page.content)
-        page_header_content = md.render(page.header_content)
+        html_content = MARKDOWN_RENDERER.render(page.content)
+        page_header_content = MARKDOWN_RENDERER.render(page.header_content)
     elif page.mimetype == Page.MimeType.html:
         html_content = page.content
         page_header_content = page.header_content
