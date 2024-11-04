@@ -250,7 +250,9 @@ SITE_PAGE_HEADER_IMAGE_URL = ""
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN = "Some Text Heree"
-SITE_SUBMISSION_TOC_LABEL = "I agree to your reasonable [terms and conditions](https://en.wikipedia.org)"
+SITE_SUBMISSION_TOC_LABEL = (
+    "I agree to your reasonable [terms and conditions](https://en.wikipedia.org)"
+)
 SITE_SUBMISSION_FORM_SCHEMA = {
     "type": "object",
     "properties": {

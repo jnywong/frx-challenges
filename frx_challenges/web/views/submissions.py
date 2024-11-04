@@ -2,9 +2,9 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from ..md import MARKDOWN_RENDERER
 
 from ..forms import SubmissionForm
+from ..md import MARKDOWN_RENDERER
 from ..models import Evaluation, Submission
 
 
@@ -13,7 +13,9 @@ def create(request: HttpRequest) -> HttpResponse:
     """
     Create a new submission.
     """
-    html_content = MARKDOWN_RENDERER.render(settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN)
+    html_content = MARKDOWN_RENDERER.render(
+        settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN
+    )
 
     if request.method == "POST":
         form = SubmissionForm(request.POST)
