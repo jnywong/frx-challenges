@@ -4,7 +4,7 @@ from .models import Page
 
 
 def navbar_pages(request):
-    pages = Page.objects.all().order_by("order").exclude(is_home=True)
+    pages = Page.objects.filter(navbar_order__isnull=False).order_by("navbar_order").exclude(is_home=True)
     return {"pages": pages}
 
 
