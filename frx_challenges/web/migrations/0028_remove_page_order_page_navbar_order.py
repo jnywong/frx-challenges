@@ -12,8 +12,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name="page",
-            old_name="order",
-            new_name="navbar_order"
+            model_name="page", old_name="order", new_name="navbar_order"
         ),
     ]
