@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import reverse
 from django.shortcuts import render
+from django.urls import reverse
 
 from ..forms import SubmissionForm
 from ..md import MARKDOWN_RENDERER
@@ -28,7 +28,9 @@ def create(request: HttpRequest) -> HttpResponse:
             submission.metadata = form.cleaned_data["metadata"]
             submission.toc_accepted = form.cleaned_data["toc_accepted"]
             submission.save()
-            return HttpResponseRedirect(reverse("submissions-detail", args=[submission.id]))
+            return HttpResponseRedirect(
+                reverse("submissions-detail", args=[submission.id])
+            )
     else:
         form = SubmissionForm()
 
@@ -65,7 +67,7 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
                     {
                         "display_name": v["title"],
                         "help_string": v.get("helpText"),
-                        "value": submission.metadata.get(k)
+                        "value": submission.metadata.get(k),
                     }
                 )
             else:
@@ -74,7 +76,11 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
     return render(
         request,
         "submission/detail.html",
-        {"submission": submission, "versions": versions, "metadata_display": metadata_display},
+        {
+            "submission": submission,
+            "versions": versions,
+            "metadata_display": metadata_display,
+        },
     )
 
 
