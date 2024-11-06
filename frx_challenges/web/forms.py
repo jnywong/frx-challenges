@@ -23,6 +23,7 @@ class SubmissionForm(forms.ModelForm):
         )
 
         self.fields["name"] = forms.CharField()
+        self.fields["name"].label = "Submission name"
         self.fields["description"] = forms.CharField(required=False)
         self.fields["metadata"] = JSONFormField(
             schema=settings.SITE_SUBMISSION_FORM_SCHEMA
