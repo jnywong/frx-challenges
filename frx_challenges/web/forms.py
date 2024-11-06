@@ -5,11 +5,12 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django_jsonform.forms.fields import JSONFormField
+from web.models import Submission
 
 from .md import MARKDOWN_RENDERER
 
 
-class SubmissionForm(forms.Form):
+class SubmissionForm(forms.ModelForm):
     """Form to create a new submission"""
 
     def __init__(self, *args, **kwargs):
@@ -17,12 +18,12 @@ class SubmissionForm(forms.Form):
 
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.form_action = "submissions-create"
         self.helper.add_input(
             Submit("submit", "Submit", css_class="form-control btn btn-secondary")
         )
 
         self.fields["name"] = forms.CharField()
+        self.fields["name"].label = "Submission name"
         self.fields["description"] = forms.CharField(required=False)
         self.fields["metadata"] = JSONFormField(
             schema=settings.SITE_SUBMISSION_FORM_SCHEMA
@@ -33,6 +34,10 @@ class SubmissionForm(forms.Form):
             ),
             required=True,
         )
+
+    class Meta:
+        model = Submission
+        fields = ["name", "description", "metadata", "toc_accepted"]
 
 
 class UploadForm(forms.Form):

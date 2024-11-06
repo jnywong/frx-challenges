@@ -19,6 +19,7 @@ urlpatterns = [
     path("submissions/", submissions.list, name="submissions-list"),
     path("submissions/create", submissions.create, name="submissions-create"),
     path("submissions/<int:id>", submissions.detail, name="submissions-detail"),
+    path("submissions/<int:id>/edit", submissions.edit, name="submissions-edit"),
     path(
         "evaluation/<int:id>", submissions.detail_evaluation, name="evaluation-detail"
     ),

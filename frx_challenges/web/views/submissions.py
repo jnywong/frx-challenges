@@ -68,6 +68,7 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
                         "display_name": v["title"],
                         "help_string": v.get("helpText"),
                         "value": submission.metadata.get(k),
+                        "format": v["format"],
                     }
                 )
             else:
@@ -81,6 +82,39 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
             "versions": versions,
             "metadata_display": metadata_display,
         },
+    )
+
+
+@login_required
+def edit(request: HttpRequest, id: int) -> HttpResponse:
+    """
+    Edit submission metadata
+    """
+
+    html_content = MARKDOWN_RENDERER.render(
+        settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN
+    )
+
+    # Get model instance to pre-populate form
+    submission = Submission.objects.get(id=id)
+
+    if request.method == "POST":
+        form = SubmissionForm(request.POST, instance=submission)
+        if form.is_valid():
+            submission.user = request.user
+            submission.name = form.cleaned_data["name"]
+            submission.description = form.cleaned_data["description"]
+            submission.metadata = form.cleaned_data["metadata"]
+            submission.toc_accepted = form.cleaned_data["toc_accepted"]
+            submission.save()
+            return HttpResponseRedirect(
+                reverse("submissions-detail", args=[submission.id])
+            )
+    else:
+        form = SubmissionForm(instance=submission)
+
+    return render(
+        request, "submission/edit.html", {"form": form, "html_content": html_content}
     )
 
 
