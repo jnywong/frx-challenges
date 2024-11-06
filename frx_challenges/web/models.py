@@ -180,8 +180,11 @@ class Page(models.Model):
     slug = models.SlugField(
         max_length=128, help_text="Slug used to refer to this page's URL"
     )
-    order = models.IntegerField(
-        unique=True, help_text="Ordering of this page on the navbar"
+    navbar_order = models.IntegerField(
+        unique=True,
+        help_text="Ordering of this page on the navbar. Leave unset to hide from navbar",
+        blank=True,
+        null=True,
     )
     is_home = models.BooleanField(
         default=False,
