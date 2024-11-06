@@ -19,7 +19,11 @@
                     {% for md in metadata_display %}
                         <div class="col">
                             <b class="d-inline">{{ md.display_name }}</b>
-                            <p>{{ md.value }}</p>
+                            {% if md.value %}
+                                <p>{{ md.value }}</p>
+                            {% else %}
+                                <p>–</p>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
