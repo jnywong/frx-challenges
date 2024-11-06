@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 
 from ..forms import SubmissionForm
 from ..md import MARKDOWN_RENDERER
@@ -27,7 +28,9 @@ def create(request: HttpRequest) -> HttpResponse:
             submission.metadata = form.cleaned_data["metadata"]
             submission.toc_accepted = form.cleaned_data["toc_accepted"]
             submission.save()
-            return HttpResponseRedirect("/submissions")
+            return HttpResponseRedirect(
+                reverse("submissions-detail", args=[submission.id])
+            )
     else:
         form = SubmissionForm()
 
@@ -45,21 +48,39 @@ def list(request: HttpRequest) -> HttpResponse:
     return render(request, "submission/list.html", {"submissions": submissions})
 
 
-@login_required
 def detail(request: HttpRequest, id: int) -> HttpResponse:
     """
     Show details of a specific submission, such as versions and evaluations
     """
-    queryset = Submission.objects.filter(user=request.user)
     try:
-        submission = queryset.get(id=id)
+        submission = Submission.objects.get(id=id)
     except Submission.DoesNotExist:
         raise Http404("Submission does not exist")
     versions = submission.versions.all()
+
+    # Decide how we display metadata
+    metadata_display = []
+    if settings.SITE_SUBMISSION_FORM_SCHEMA:
+        for k, v in settings.SITE_SUBMISSION_FORM_SCHEMA["properties"].items():
+            if v["type"] == "string":
+                metadata_display.append(
+                    {
+                        "display_name": v["title"],
+                        "help_string": v.get("helpText"),
+                        "value": submission.metadata.get(k),
+                    }
+                )
+            else:
+                raise ValueError(f"Unsupported metadata schema type {v['type']} found")
+
     return render(
         request,
         "submission/detail.html",
-        {"submission": submission, "versions": versions},
+        {
+            "submission": submission,
+            "versions": versions,
+            "metadata_display": metadata_display,
+        },
     )
 
 
