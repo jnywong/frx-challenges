@@ -12,26 +12,23 @@
 {% block body %}
     <div class="container py-2">
         <div class="row py-2">
-            <div class="col py-2">
+            <div class="col-8 py-2">
                 <h1>My Submissions</h1>
+            </div>
+            <div class="col-4">
+                <a href="{% url 'submissions-create' %}"
+                   class="btn btn-secondary mt-2 float-end">Create submission</a>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <p>
-                    Create, view and edit submissions. Each submission can contain multiple entries. Click on the submission name to  view details.
-                </p>
+                <p>Create, view and edit submissions. Each submission can contain multiple entries.</p>
+                <p>Click on the submission name to view details.</p>
             </div>
         </div>
     </div>
     <div class="container py-2">
         {% if submissions %}
-            <div class="row py-2">
-                <div class="col">
-                    <a href="{% url 'submissions-create' %}"
-                       class="btn btn-secondary mt-2 float-end">Create submission</a>
-                </div>
-            </div>
             <div class="row py-2">
                 <table id="results" class="table table-striped table-sm">
                     <thead>
