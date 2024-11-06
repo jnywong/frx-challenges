@@ -37,7 +37,7 @@ class SubmissionForm(forms.ModelForm):
 
     class Meta:
         model = Submission
-        fields = ["name", "description", "metadata" "toc_accepted"]
+        fields = ["name", "description", "metadata", "toc_accepted"]
 
 
 class UploadForm(forms.Form):
