@@ -85,6 +85,39 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
 
 
 @login_required
+def edit(request: HttpRequest, id: int) -> HttpResponse:
+    """
+    Edit submission metadata
+    """
+
+    html_content = MARKDOWN_RENDERER.render(
+        settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN
+    )
+
+    # Get model instance to populate form
+    submission = Submission.objects.get(id=id)
+
+    if request.method == "POST":
+        form = SubmissionForm(instance=submission)
+        if form.is_valid():
+            submission.user = request.user
+            submission.name = form.cleaned_data["name"]
+            submission.description = form.cleaned_data["description"]
+            submission.metadata = form.cleaned_data["metadata"]
+            submission.toc_accepted = form.cleaned_data["toc_accepted"]
+            submission.save()
+            return HttpResponseRedirect(
+                reverse("submissions-detail", args=[submission.id])
+            )
+    else:
+        form = SubmissionForm(instance=submission)
+
+    return render(
+        request, "submission/edit.html", {"form": form, "html_content": html_content}
+    )
+
+
+@login_required
 def detail_evaluation(request: HttpRequest, id: int) -> HttpResponse:
     """
     View evaluation of a submission version
