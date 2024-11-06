@@ -27,7 +27,11 @@
                     {% for md in metadata_display %}
                         <div class="col">
                             <b class="d-inline">{{ md.display_name }}</b>
-                            {% if md.value %}
+                            {% if md.value and md.format == 'uri' %}
+                                <p>
+                                    <a href={{ md.value }}>{{ md.value }}</a>
+                                </p>
+                            {% elif md.value %}
                                 <p>{{ md.value }}</p>
                             {% else %}
                                 <p>–</p>

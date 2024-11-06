@@ -260,6 +260,7 @@ SITE_SUBMISSION_FORM_SCHEMA = {
             "type": "string",
             "title": "Repository",
             "helpText": "Link to repository containing code and stuff",
+            "format": "uri",
         }
     },
 }
