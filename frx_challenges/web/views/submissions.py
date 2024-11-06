@@ -94,11 +94,11 @@ def edit(request: HttpRequest, id: int) -> HttpResponse:
         settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN
     )
 
-    # Get model instance to populate form
+    # Get model instance to pre-populate form
     submission = Submission.objects.get(id=id)
 
     if request.method == "POST":
-        form = SubmissionForm(instance=submission)
+        form = SubmissionForm(request.POST, instance=submission)
         if form.is_valid():
             submission.user = request.user
             submission.name = form.cleaned_data["name"]
