@@ -38,6 +38,7 @@ class Submission(models.Model):
     metadata = JSONField(
         blank=True, null=True, schema=settings.SITE_SUBMISSION_FORM_SCHEMA
     )
+    toc_accepted = models.BooleanField()
 
     @property
     def best_version(self) -> Version:

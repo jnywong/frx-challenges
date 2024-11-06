@@ -3,7 +3,10 @@ from crispy_forms.layout import Submit
 from django import forms
 from django.conf import settings
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 from django_jsonform.forms.fields import JSONFormField
+
+from .md import MARKDOWN_RENDERER
 
 
 class SubmissionForm(forms.Form):
@@ -23,6 +26,12 @@ class SubmissionForm(forms.Form):
         self.fields["description"] = forms.CharField(required=False)
         self.fields["metadata"] = JSONFormField(
             schema=settings.SITE_SUBMISSION_FORM_SCHEMA
+        )
+        self.fields["toc_accepted"] = forms.BooleanField(
+            label=mark_safe(
+                MARKDOWN_RENDERER.renderInline(settings.SITE_SUBMISSION_TOC_LABEL)
+            ),
+            required=True,
         )
 
 

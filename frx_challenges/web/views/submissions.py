@@ -2,11 +2,9 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from markdown_it import MarkdownIt
-from mdit_py_plugins.footnote import footnote_plugin
-from mdit_py_plugins.front_matter import front_matter_plugin
 
 from ..forms import SubmissionForm
+from ..md import MARKDOWN_RENDERER
 from ..models import Evaluation, Submission
 
 
@@ -15,13 +13,9 @@ def create(request: HttpRequest) -> HttpResponse:
     """
     Create a new submission.
     """
-    md = (
-        MarkdownIt("commonmark", {"breaks": True, "html": True})
-        .use(front_matter_plugin)
-        .use(footnote_plugin)
-        .enable("table")
+    html_content = MARKDOWN_RENDERER.render(
+        settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN
     )
-    html_content = md.render(settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN)
 
     if request.method == "POST":
         form = SubmissionForm(request.POST)
@@ -31,6 +25,7 @@ def create(request: HttpRequest) -> HttpResponse:
             submission.name = form.cleaned_data["name"]
             submission.description = form.cleaned_data["description"]
             submission.metadata = form.cleaned_data["metadata"]
+            submission.toc_accepted = form.cleaned_data["toc_accepted"]
             submission.save()
             return HttpResponseRedirect("/submissions")
     else:
