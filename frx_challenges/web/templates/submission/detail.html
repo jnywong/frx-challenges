@@ -14,13 +14,15 @@
         <div class="row py-2">
             <div class="col py-2">
                 <h1>{{ submission.name }}</h1>
-                <h5>Description</h5>
-                <p>{{ submission.description }}</p>
-                {% for md in metadata_display %}
-                    <h5 class="d-inline">{{ md.display_name }}</h5>
-                    <small>{{ md.help_string }}</small>
-                    <p>{{ md.value }}</p>
-                {% endfor %}
+                {% if submission.description %}<p>{{ submission.description }}</p>{% endif %}
+                <div class="row py-2">
+                    {% for md in metadata_display %}
+                        <div class="col">
+                            <b class="d-inline">{{ md.display_name }}</b>
+                            <p>{{ md.value }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
         <div class="row py-2 border-top">
