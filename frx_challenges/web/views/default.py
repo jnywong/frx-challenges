@@ -55,7 +55,7 @@ def leaderboard(request: HttpRequest) -> HttpResponse:
         )
 
     sorted_display_config = sorted(
-        settings.EVALUATION_DISPLAY_CONFIG, key=lambda dc: -dc["ordering_priority"]
+        settings.EVALUATION_DISPLAY_CONFIG, key=lambda dc: dc["ordering_priority"]
     )
     results = []
     all_submissions = Submission.objects.all()
@@ -70,9 +70,9 @@ def leaderboard(request: HttpRequest) -> HttpResponse:
         bv: Version = r["best_version"]
         sort_key = []
         for dc in sorted_display_config:
-            if dc["ordering"] == "smaller_is_better":
+            if dc["ordering"] == "ascending":
                 sort_key.append(-bv.latest_evaluation.result[dc["result_key"]])
-            elif dc["ordering"] == "bigger_is_better":
+            elif dc["ordering"] == "descending":
                 sort_key.append(bv.latest_evaluation.result[dc["result_key"]])
             else:
                 raise ValueError(

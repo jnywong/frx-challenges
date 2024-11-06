@@ -268,14 +268,15 @@ EVALUATION_DISPLAY_CONFIG = [
     {
         "result_key": "chars",
         "display_name": "Characters",
-        # ordering options are "smaller_is_better" and "bigger_is_better"
-        "ordering": "smaller_is_better",
+        # ordering options are "ascending" and "descending"
+        "ordering": "ascending",
+        # "ordering_priority": 1 will rank the evaluation based on this result_key first
         "ordering_priority": 2,
     },
     {
         "result_key": "lines",
         "display_name": "Lines",
-        "ordering": "bigger_is_better",
+        "ordering": "descending",
         "ordering_priority": 1,
     },
 ]
