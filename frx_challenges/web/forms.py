@@ -27,7 +27,6 @@ class SubmissionForm(forms.ModelForm):
         self.fields["metadata"] = JSONFormField(
             schema=settings.SITE_SUBMISSION_FORM_SCHEMA
         )
-        self.fields["metadata"].widget.validate_on_submit = True
         self.fields["toc_accepted"] = forms.BooleanField(
             label=mark_safe(
                 MARKDOWN_RENDERER.renderInline(settings.SITE_SUBMISSION_TOC_LABEL)
