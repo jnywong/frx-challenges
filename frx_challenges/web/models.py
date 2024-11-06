@@ -46,14 +46,14 @@ class Submission(models.Model):
         """
         # Construct a query that returns evaluations that:
         # 1. Belong to a version that belong to this submission
-        # 2. Have been succesfully evaluated
+        # 2. Have been successfully evaluated
         # 3. Have results that contain all the keys we use for ordering
         # 4. Ordered by the ordering criteria expressed by EVALUATION_DISPLAY_CONFIG
 
         # Sort the display_config by ordering_priority (smaller numbers go first)
         # This primarily is used for tiebreaking, since we only want the 'best'
         sorted_display_config = sorted(
-            settings.EVALUATION_DISPLAY_CONFIG, key=lambda dc: -dc["ordering_priority"]
+            settings.EVALUATION_DISPLAY_CONFIG, key=lambda dc: dc["ordering_priority"]
         )
 
         # Ordering criteria for querying our results
@@ -64,9 +64,9 @@ class Submission(models.Model):
         for dc in sorted_display_config:
             result_must_have_keys.append(dc["result_key"])
             k = KT(f"result__{dc['result_key']}")
-            if dc["ordering"] == "smaller_is_better":
+            if dc["ordering"] == "ascending":
                 k = k.asc()
-            elif dc["ordering"] == "bigger_is_better":
+            elif dc["ordering"] == "descending":
                 k = k.desc()
             else:
                 raise ValueError(
