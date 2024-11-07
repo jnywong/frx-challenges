@@ -58,6 +58,12 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
         raise Http404("Submission does not exist")
     versions = submission.versions.all()
 
+    # Determine if request.user is submission owner
+    if request.user == submission.user:
+        is_owner = True
+    else:
+        is_owner = False
+
     # Decide how we display metadata
     metadata_display = []
     if settings.SITE_SUBMISSION_FORM_SCHEMA:
@@ -81,6 +87,7 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
             "submission": submission,
             "versions": versions,
             "metadata_display": metadata_display,
+            "is_owner": is_owner,
         },
     )
 
@@ -96,11 +103,14 @@ def edit(request: HttpRequest, id: int) -> HttpResponse:
     )
 
     # Get model instance to pre-populate form
-    submission = Submission.objects.get(id=id)
+    try:
+        submission = Submission.objects.get(id=id)
+    except Submission.DoesNotExist:
+        raise Http404("Submission does not exist.")
 
     # Raise error if user is not the owner of the submission
     if request.user != submission.user:
-        raise Http404("You are not the owner of this submission")
+        raise Http404("You are not the owner of this submission.")
 
     if request.method == "POST":
         form = SubmissionForm(request.POST, instance=submission)

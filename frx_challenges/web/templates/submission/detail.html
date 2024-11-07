@@ -18,10 +18,12 @@
                         <h1>{{ submission.name }}</h1>
                         {% if submission.description %}<p>{{ submission.description }}</p>{% endif %}
                     </div>
-                    <div class="col-4 text-end">
-                        <a href="{% url 'submissions-edit' submission.id %}"
-                           class="btn btn-secondary mt-2 float-end">Edit submission</a>
-                    </div>
+                    {% if is_owner %}
+                        <div class="col-4 text-end">
+                            <a href="{% url 'submissions-edit' submission.id %}"
+                               class="btn btn-secondary mt-2 float-end">Edit submission</a>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="row py-2">
                     {% for md in metadata_display %}
