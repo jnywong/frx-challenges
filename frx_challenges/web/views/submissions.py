@@ -98,6 +98,10 @@ def edit(request: HttpRequest, id: int) -> HttpResponse:
     # Get model instance to pre-populate form
     submission = Submission.objects.get(id=id)
 
+    # Raise error if user is not the owner of the submission
+    if request.user != submission.user:
+        raise Http404("You are not the owner of this submission")
+
     if request.method == "POST":
         form = SubmissionForm(request.POST, instance=submission)
         if form.is_valid():
