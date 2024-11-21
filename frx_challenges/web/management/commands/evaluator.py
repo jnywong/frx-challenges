@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import tempfile
+from typing import Optional
 from urllib.parse import urlparse
 
 import aiodocker
@@ -110,6 +111,17 @@ class DockerEvaluator:
 
         return container["State"].get("Status") == "running"
 
+    async def get_logs(self, state: dict) -> Optional[str]:
+        try:
+            container = await self.docker.containers.get(
+                container_id=state["container_id"]
+            )
+        except aiodocker.DockerError as e:
+            if e.status == 404:
+                return None
+            raise
+        return "".join(await container.log(stdout=True, stderr=True, follow=False))
+
     async def get_result(self, state: dict) -> dict:
         try:
             container = await self.docker.containers.get(
@@ -154,6 +166,7 @@ class Command(BaseCommand):
             logger.info(f"{evaluation} is completed")
             result = await evaluator.get_result(state)
             logger.debug(f"Result: {result}")
+            evaluation.evaluator_logs = await evaluator.get_logs(state)
             if result is None:
                 evaluation.status = Evaluation.Status.FAILED
             else:
