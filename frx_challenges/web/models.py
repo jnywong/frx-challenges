@@ -144,7 +144,7 @@ class Evaluation(models.Model):
         return f"({self.status}) {self.result} {self.version.data_uri}"
 
 
-class Collaborators(models.Model):
+class Collaborator(models.Model):
     """
     The owner of a submission can add/remove collaborators.
     """

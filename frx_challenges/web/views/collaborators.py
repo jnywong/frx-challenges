@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from ..forms import AddCollaboratorForm
-from ..models import Collaborators, Submission, User
+from ..models import Collaborator, Submission, User
 
 
 @login_required
@@ -13,14 +13,14 @@ def list(request: HttpRequest, id: int) -> HttpResponse:
     """
     List all collaborators of the submission.
     """
-    collaborators = Collaborators.objects.filter(submission_id=id)
+    collaborator = Collaborator.objects.filter(submission_id=id)
     submission = Submission.objects.get(pk=id)
     is_submission_owner = submission.user == request.user
     return render(
         request,
-        "collaborators/list.html",
+        "collaborator/list.html",
         {
-            "collaborators": collaborators,
+            "collaborators": collaborator,
             "submission": submission,
             "is_submission_owner": is_submission_owner,
         },
@@ -39,7 +39,7 @@ def add(request: HttpRequest, id: int) -> HttpResponse:
         if request.method == "POST":
             form = AddCollaboratorForm(request.POST)
             if form.is_valid():
-                collaborator = Collaborators()
+                collaborator = Collaborator()
                 collaborator.submission_id = id
                 # Handle missing users
                 try:
@@ -59,7 +59,7 @@ def add(request: HttpRequest, id: int) -> HttpResponse:
                 return HttpResponseRedirect(reverse("collaborators-list", args=[id]))
         else:
             form = AddCollaboratorForm()
-        return render(request, "collaborators/add.html", {"form": form, "id": id})
+        return render(request, "collaborator/add.html", {"form": form, "id": id})
     else:
         raise Http404("You are not allowed to add a collaborator to this submission")
 
@@ -74,7 +74,7 @@ def delete(request: HttpRequest, id: int, collab_id: int) -> HttpResponse:
     is_submission_owner = submission.user == request.user
 
     if is_submission_owner:
-        collaborator = Collaborators.objects.get(pk=collab_id)
+        collaborator = Collaborator.objects.get(pk=collab_id)
         if collaborator.is_owner:
             raise Http404("The owner of the submission cannot be deleted")
         collaborator.delete()
