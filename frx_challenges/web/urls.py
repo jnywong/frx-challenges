@@ -1,9 +1,9 @@
 from django.urls import path
 
-from .views import default, pages, submissions, teams
+from .views import default, pages, submissions, teams, versions
 
 urlpatterns = [
-    path("upload/<int:id>", default.upload, name="upload"),
+    path("upload/<int:id>", versions.upload, name="upload"),
     path("teams/list", teams.list, name="teams-list"),
     path("teams/create", teams.create, name="teams-create"),
     path("teams/<int:id>", teams.view, name="teams-view"),
@@ -20,6 +20,7 @@ urlpatterns = [
     path("submissions/create", submissions.create, name="submissions-create"),
     path("submissions/<int:id>", submissions.detail, name="submissions-detail"),
     path("submissions/<int:id>/edit", submissions.edit, name="submissions-edit"),
+    path("versions/<int:id>", versions.view, name="versions-view"),
     path(
         "evaluation/<int:id>", submissions.detail_evaluation, name="evaluation-detail"
     ),
