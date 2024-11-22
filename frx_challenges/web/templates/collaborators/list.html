@@ -27,6 +27,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Collaborators</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,6 +38,13 @@
                                         {{ c.user.username }}
                                         {% if c.is_owner %}<span>(submission owner)</span>{% endif %}
                                     </p>
+                                </td>
+                                <td>
+                                    {% if is_submission_owner %}
+                                        {% if not c.is_owner %}
+                                            <a href={% url 'collaborators-delete' submission.id c.id %}>Remove</a>
+                                        {% endif %}
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

@@ -21,6 +21,11 @@ urlpatterns = [
         collaborators.add,
         name="collaborators-add",
     ),
+    path(
+        "submissions/<int:id>/collaborators/delete/<int:collab_id>",
+        collaborators.delete,
+        name="collaborators-delete",
+    ),
     path("versions/<int:id>", versions.view, name="versions-view"),
     path(
         "evaluation/<int:id>", submissions.detail_evaluation, name="evaluation-detail"
