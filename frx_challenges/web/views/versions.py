@@ -9,7 +9,7 @@ from django.shortcuts import redirect, render
 
 from ..forms import UploadForm
 from ..md import MARKDOWN_RENDERER
-from ..models import Collaborators, Evaluation, Submission, Version
+from ..models import Collaborator, Evaluation, Submission, Version
 
 
 @login_required
@@ -85,8 +85,8 @@ def _validate_collaborator(request: HttpRequest, id: int):
     Validate that the user is a collaborator of the submission.
     """
     try:
-        Collaborators.objects.get(submission_id=id, user=request.user)
+        Collaborator.objects.get(submission_id=id, user=request.user)
         is_collaborator = True
-    except Collaborators.DoesNotExist:
+    except Collaborator.DoesNotExist:
         is_collaborator = False
     return is_collaborator

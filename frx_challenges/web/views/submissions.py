@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from ..forms import SubmissionForm
 from ..md import MARKDOWN_RENDERER
-from ..models import Collaborators, Evaluation, Submission
+from ..models import Collaborator, Evaluation, Submission
 
 
 @login_required
@@ -28,7 +28,7 @@ def create(request: HttpRequest) -> HttpResponse:
             submission.metadata = form.cleaned_data["metadata"]
             submission.toc_accepted = form.cleaned_data["toc_accepted"]
             submission.save()
-            collaborator = Collaborators()
+            collaborator = Collaborator()
             collaborator.submission_id = submission.id
             collaborator.user_id = request.user.id
             collaborator.is_owner = True
@@ -49,7 +49,7 @@ def list(request: HttpRequest) -> HttpResponse:
     """
     List all submissions of the current user/collaborator.
     """
-    collaborator = Collaborators.objects.filter(user=request.user).values_list(
+    collaborator = Collaborator.objects.filter(user=request.user).values_list(
         "submission_id"
     )
     submissions = Submission.objects.filter(id__in=collaborator)
@@ -159,9 +159,9 @@ def _validate_collaborator(request: HttpRequest, id: int):
     Validate that the user is a collaborator of the submission.
     """
     try:
-        Collaborators.objects.get(submission_id=id, user=request.user)
+        Collaborator.objects.get(submission_id=id, user=request.user)
         is_collaborator = True
-    except Collaborators.DoesNotExist:
+    except Collaborator.DoesNotExist:
         is_collaborator = False
 
     return is_collaborator
