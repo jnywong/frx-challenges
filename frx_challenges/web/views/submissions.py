@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from ..forms import SubmissionForm
 from ..md import MARKDOWN_RENDERER
-from ..models import Evaluation, Submission
+from ..models import Collaborators, Evaluation, Submission
 
 
 @login_required
@@ -42,9 +42,12 @@ def create(request: HttpRequest) -> HttpResponse:
 @login_required
 def list(request: HttpRequest) -> HttpResponse:
     """
-    List all submissions of the current user
+    List all submissions of the current user/collaborator.
     """
-    submissions = Submission.objects.filter(user=request.user)
+    collaborator = Collaborators.objects.filter(user=request.user).values_list(
+        "submission_id"
+    )
+    submissions = Submission.objects.filter(id__in=collaborator)
     return render(request, "submission/list.html", {"submissions": submissions})
 
 
