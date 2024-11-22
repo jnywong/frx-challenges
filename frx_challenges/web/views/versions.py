@@ -4,16 +4,19 @@ import tempfile
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 
 from ..forms import UploadForm
 from ..md import MARKDOWN_RENDERER
-from ..models import Evaluation, Submission, Version
+from ..models import Collaborators, Evaluation, Submission, Version
 
 
 @login_required
 def upload(request: HttpRequest, id: int) -> HttpResponse:
+    is_collaborator = _validate_collaborator(request, id)
+    if not is_collaborator:
+        raise Http404("You are not a collaborator of this submission.")
     if request.method == "POST":
         form = UploadForm(data=request.POST, files=request.FILES, id=id)
         if form.is_valid():
@@ -52,6 +55,10 @@ def view(request: HttpRequest, id: int) -> HttpResponse:
     version = Version.objects.get(id=id)
     evaluation = version.latest_evaluation
 
+    is_collaborator = _validate_collaborator(request, version.submission_id)
+    if not is_collaborator:
+        raise Http404("You are not a collaborator of this submission.")
+
     results_display = []
     if evaluation.result:
         for dc in settings.EVALUATION_DISPLAY_CONFIG:
@@ -71,3 +78,15 @@ def view(request: HttpRequest, id: int) -> HttpResponse:
             "results_display": results_display,
         },
     )
+
+
+def _validate_collaborator(request: HttpRequest, id: int):
+    """
+    Validate that the user is a collaborator of the submission.
+    """
+    try:
+        Collaborators.objects.get(submission_id=id, user=request.user)
+        is_collaborator = True
+    except Collaborators.DoesNotExist:
+        is_collaborator = False
+    return is_collaborator

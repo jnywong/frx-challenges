@@ -52,10 +52,6 @@
                                     <li class="nav-item">
                                         <a class="btn btn-primary" href="{% url 'submissions-list' %}">Submissions</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link {% if request.resolver_match.url_name == 'teams-list' %}active{% endif %}"
-                                           href="{% url 'teams-list' %}">My Teams</a>
-                                    </li>
                                 {% endif %}
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
