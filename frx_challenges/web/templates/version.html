@@ -11,7 +11,7 @@
         Status: <strong>{{ evaluation.status }}</strong>
         {% if evaluation.status != "EVALUATED" and evaluation.status != "FAILED" %}
         <a href="#" onclick="window.location.reload(); return false;">
-            <img title="Check for updates" src="{% static 'web/arrow-repeat.svg' %}">
+            <img alt="Check for updates" src="{% static 'web/arrow-repeat.svg' %}">
         </a>
         {% endif %}
     </div>
