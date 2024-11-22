@@ -1,51 +1,8 @@
-import os
-import tempfile
-
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 
-from ..forms import UploadForm
-from ..md import MARKDOWN_RENDERER
-from ..models import Evaluation, Submission, Version
-
-
-@login_required
-def upload(request: HttpRequest, id: int) -> HttpResponse:
-    if request.method == "POST":
-        form = UploadForm(data=request.POST, files=request.FILES, id=id)
-        if form.is_valid():
-            # FIXME: We are creating the uploads directory on first use if
-            # necessary. This may be a security risk, let's verify.
-            os.makedirs(settings.SUBMISSIONS_UPLOADS_DIR, exist_ok=True)
-            _, filepath = tempfile.mkstemp(prefix=settings.SUBMISSIONS_UPLOADS_DIR)
-            with open(filepath, "wb") as f:
-                f.write(request.FILES["file"].read())
-            with transaction.atomic():
-                v = Version(
-                    submission=Submission.objects.get(id=id),
-                    user=request.user,
-                    status=Version.Status.UPLOADED,
-                    filename=request.FILES["file"].name,
-                    data_uri=f"file:///{filepath}",
-                )
-                v.save()
-
-                # Make sure every version has at least one evaluation
-                # by default, even if it has not been started
-                e = Evaluation(version=v)
-                e.save()
-            return redirect("submissions-detail", id)
-    else:
-        form = UploadForm(id=id)
-    html_content = MARKDOWN_RENDERER.render(
-        settings.SITE_SUBMISSION_INSTRUCTIONS_MARKDOWN
-    )
-    return render(
-        request, "upload.html", {"form": form, "id": id, "html_content": html_content}
-    )
+from ..models import Submission, Version
 
 
 def leaderboard(request: HttpRequest) -> HttpResponse:
