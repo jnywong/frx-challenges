@@ -2,8 +2,22 @@
 {% block body %}
     <div class="container py-2">
         <div class="row py-2">
-            <div class="col py-2"></div>
-            <h1>{{ submission.name }}</h1>
+            <div class="col-6 py-2">
+                <h1>{{ submission.name }}</h1>
+                {% if submission.description %}<p>{{ submission.description }}</p>{% endif %}
+            </div>
+            {% if is_submission_owner %}
+                <div class="col-6">
+                    <div class=" col">
+                        <a href="{% url 'collaborators-add' submission.id %}"
+                           class="btn btn-secondary m-2 float-end">Add collaborator</a>
+                    </div>
+                    <div class="col">
+                        <a href="{% url 'submissions-detail' submission.id %}"
+                           class="btn btn-primary m-2 float-end">Back to submission</a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
     <div class="container py-2">
