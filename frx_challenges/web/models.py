@@ -9,13 +9,6 @@ from django_jsonform.models.fields import JSONField
 # Create your models here.
 
 
-class Team(models.Model):
-    name = models.CharField(max_length=1024)
-    members = models.ManyToManyField(
-        User, through="TeamMembership", related_name="teams"
-    )
-
-
 class Submission(models.Model):
     """
     A submission can be a collection of versions.
@@ -25,16 +18,6 @@ class Submission(models.Model):
     name = models.CharField(max_length=1024, default="My model name")
     description = models.CharField(max_length=2048, default="My model description")
     date_created = models.DateTimeField(auto_now=True)
-    # FIXME: A default for the team had to be provided
-    # but because there was no default team, it was set to None
-    team = models.ForeignKey(
-        Team,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        default=None,
-        related_name="projects",
-    )
     metadata = JSONField(
         blank=True, null=True, schema=settings.SITE_SUBMISSION_FORM_SCHEMA
     )
@@ -161,14 +144,18 @@ class Evaluation(models.Model):
         return f"({self.status}) {self.result} {self.version.data_uri}"
 
 
-class TeamMembership(models.Model):
-    is_admin = models.BooleanField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="memberships")
+class Collaborators(models.Model):
+    """
+    The owner of a submission can add/remove collaborators.
+    """
+
+    is_owner = models.BooleanField()
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        # A user can be added to a team only once
-        unique_together = ("user", "team")
+        # A user can be added as a collaborator only once
+        unique_together = ("user", "submission")
 
 
 class Page(models.Model):
