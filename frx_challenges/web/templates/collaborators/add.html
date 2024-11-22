@@ -4,7 +4,11 @@
     <div class="container py-2">
         <div class="row py-2">
             <div class="col py-2">
-                <h1>Add collaborator to submission {{ team.name }}</h1>
+                <h1>Add collaborator to submission</h1>
+            </div>
+            <div class="col">
+                <a href="{% url 'submissions-detail' id %}"
+                   class="btn btn-primary m-2 float-end">Back to submission</a>
             </div>
         </div>
         <div class="row py-2">

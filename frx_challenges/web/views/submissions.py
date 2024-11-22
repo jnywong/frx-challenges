@@ -28,6 +28,11 @@ def create(request: HttpRequest) -> HttpResponse:
             submission.metadata = form.cleaned_data["metadata"]
             submission.toc_accepted = form.cleaned_data["toc_accepted"]
             submission.save()
+            collaborator = Collaborators()
+            collaborator.submission_id = submission.id
+            collaborator.user_id = request.user.id
+            collaborator.is_owner = True
+            collaborator.save()
             return HttpResponseRedirect(
                 reverse("submissions-detail", args=[submission.id])
             )
@@ -59,9 +64,11 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
         submission = Submission.objects.get(id=id)
     except Submission.DoesNotExist:
         raise Http404("Submission does not exist")
+    is_collaborator = _validate_collaborator(request, id)
+
     versions = submission.versions.all()
 
-    # Determine if request.user is submission owner
+    # Determine if request.user is a submission collaborator
     if request.user == submission.user:
         is_owner = True
     else:
@@ -91,6 +98,7 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
             "versions": versions,
             "metadata_display": metadata_display,
             "is_owner": is_owner,
+            "is_collaborator": is_collaborator,
         },
     )
 
@@ -131,7 +139,9 @@ def edit(request: HttpRequest, id: int) -> HttpResponse:
         form = SubmissionForm(instance=submission)
 
     return render(
-        request, "submission/edit.html", {"form": form, "html_content": html_content}
+        request,
+        "submission/edit.html",
+        {"form": form, "html_content": html_content, "submission": submission},
     )
 
 
@@ -142,3 +152,16 @@ def detail_evaluation(request: HttpRequest, id: int) -> HttpResponse:
     """
     evaluation = Evaluation.objects.filter(version__user=request.user, id=id)
     return render(request, "submission/evaluation.html", {"evaluation": evaluation})
+
+
+def _validate_collaborator(request: HttpRequest, id: int):
+    """
+    Validate that the user is a collaborator of the submission.
+    """
+    try:
+        Collaborators.objects.get(submission_id=id, user=request.user)
+        is_collaborator = True
+    except Collaborators.DoesNotExist:
+        is_collaborator = False
+
+    return is_collaborator

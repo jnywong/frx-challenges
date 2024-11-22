@@ -59,7 +59,7 @@ def add(request: HttpRequest, id: int) -> HttpResponse:
                 return HttpResponseRedirect(reverse("collaborators-list", args=[id]))
         else:
             form = AddCollaboratorForm()
-        return render(request, "collaborators/add.html", {"form": form})
+        return render(request, "collaborators/add.html", {"form": form, "id": id})
     else:
         raise Http404("You are not allowed to add a collaborator to this submission")
 

@@ -50,10 +50,12 @@
             </div>
         </div>
         <div class="row py-2 border-top">
-            <div class="col">
-                <a href="{% url 'upload' submission.id %}"
-                   class="btn btn-primary mt-2 float-end">Upload</a>
-            </div>
+            {% if is_collaborator %}
+                <div class="col">
+                    <a href="{% url 'upload' submission.id %}"
+                       class="btn btn-primary mt-2 float-end">Upload</a>
+                </div>
+            {% endif %}
         </div>
         <div class="row py-2">
             {% if versions %}
