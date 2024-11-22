@@ -5,7 +5,6 @@ from django.shortcuts import render
 from ..models import Submission, Version
 
 
-
 def leaderboard(request: HttpRequest) -> HttpResponse:
     if settings.CHALLENGE_STATE != "RUNNING":
         return HttpResponse(

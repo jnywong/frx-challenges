@@ -11,6 +11,7 @@ from ..forms import UploadForm
 from ..md import MARKDOWN_RENDERER
 from ..models import Evaluation, Submission, Version
 
+
 @login_required
 def upload(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
@@ -54,11 +55,19 @@ def view(request: HttpRequest, id: int) -> HttpResponse:
     results_display = []
     if evaluation.result:
         for dc in settings.EVALUATION_DISPLAY_CONFIG:
-            results_display.append({
-                "display_name": dc["display_name"],
-                "value": evaluation.result.get(dc["result_key"])
-            })
+            results_display.append(
+                {
+                    "display_name": dc["display_name"],
+                    "value": evaluation.result.get(dc["result_key"]),
+                }
+            )
 
     return render(
-        request, "version.html", {"version": version, "evaluation": evaluation, "results_display": results_display}
+        request,
+        "version.html",
+        {
+            "version": version,
+            "evaluation": evaluation,
+            "results_display": results_display,
+        },
     )

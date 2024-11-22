@@ -1,38 +1,36 @@
 {% extends "page.html" %}
 {% load static %}
 {% block body %}
-<div class="container py-2">
-<h2>Version {{ version.id }} for
-    <a href="{% url 'submissions-detail' version.submission.id %}">{{ version.submission.name }}</a>
-</h2>
-
-<div class="row">
-    <div class="col-sm-6">
-        Status: <strong>{{ evaluation.status }}</strong>
-        {% if evaluation.status != "EVALUATED" and evaluation.status != "FAILED" %}
-        <a href="#" onclick="window.location.reload(); return false;">
-            <img alt="Check for updates" src="{% static 'web/arrow-repeat.svg' %}">
-        </a>
-        {% endif %}
+    <div class="container py-2">
+        <h2>
+            Version {{ version.id }} for
+            <a href="{% url 'submissions-detail' version.submission.id %}">{{ version.submission.name }}</a>
+        </h2>
+        <div class="row">
+            <div class="col-sm-6">
+                Status: <strong>{{ evaluation.status }}</strong>
+                {% if evaluation.status != "EVALUATED" and evaluation.status != "FAILED" %}
+                    <a href="#" onclick="window.location.reload(); return false;">
+                        <img alt="Check for updates" src="{% static 'web/arrow-repeat.svg' %}">
+                    </a>
+                {% endif %}
+            </div>
+            <div class="col-sm-6 text-end">
+                {{ version.user.username }} uploaded <code>{{ version.filename }}</code> {{ version.date_created|timesince }} ago
+            </div>
+        </div>
+        <div class="row py-4">
+            <h4>Result</h4>
+            {% if evaluation.status == 'EVALUATED' %}
+                {% for result_item in results_display %}
+                    <div class="col">
+                        <strong class="d-inline">{{ result_item.display_name }}</strong>
+                        <p>{{ result_item.value }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center">Evaluation results will be displayed here once completed</div>
+            {% endif %}
+        </div>
     </div>
-    <div class="col-sm-6 text-end">{{ version.user.username }} uploaded <code>{{ version.filename }}</code> {{ version.date_created|timesince }} ago</div>
-</div>
-
-<div class="row py-4">
-    <h4>Result</h4>
-    {% if evaluation.status == 'EVALUATED' %}
-    {% for result_item in results_display %}
-    <div class="col">
-        <strong class="d-inline">{{ result_item.display_name }}</strong>
-        <p>{{ result_item.value }}</p>
-    </div>
-    {% endfor %}
-    {% else %}
-    <div class="text-center">
-        Evaluation results will be displayed here once completed
-    </div>
-    {% endif %}
-
-</div>
-</div>
 {% endblock body %}

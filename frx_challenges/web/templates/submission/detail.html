@@ -64,7 +64,9 @@
                     <tbody>
                         {% for v in versions %}
                             <tr>
-                                <td><a href="{% url 'versions-view' v.id %}">{{ v.id }}</a></td>
+                                <td>
+                                    <a href="{% url 'versions-view' v.id %}">{{ v.id }}</a>
+                                </td>
                                 <td>{{ v.filename }}</td>
                                 <td>{{ v.date_created|date:"c" }}</td>
                                 <td>{{ v.latest_evaluation.status }}</td>
