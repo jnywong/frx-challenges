@@ -40,7 +40,6 @@ class DockerEvaluator:
             logger.info(f"Not pulling {self.image}, it already exists")
 
     async def start_evaluation(self, input_uri):
-        await self.pull_image()
 
         os.makedirs(settings.SUBMISSIONS_RESULTS_DIR, exist_ok=True)
         results_dir = tempfile.mkdtemp(prefix=settings.SUBMISSIONS_RESULTS_DIR)
@@ -178,6 +177,8 @@ class Command(BaseCommand):
 
     async def ahandle(self):
         evaluator = DockerEvaluator()
+        # Pull image if needed when the evaluator starts
+        await evaluator.pull_image()
         while True:
             # Get the Evaluations that have not been started yet
             unstarted_evaluations = Evaluation.objects.select_related("version").filter(
