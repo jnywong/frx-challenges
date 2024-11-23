@@ -14,20 +14,14 @@
         <div class="row py-2">
             <div class="col py-2">
                 <div class="row py-2">
-                    <div class="col-6">
+                    <div class="col-8">
                         <h1>{{ submission.name }}</h1>
                         {% if submission.description %}<p>{{ submission.description }}</p>{% endif %}
                     </div>
                     {% if is_owner %}
-                        <div class="col-6">
-                            <div class=" col">
-                                <a href="{% url 'collaborators-list' submission.id %}"
-                                   class="btn btn-secondary m-2 float-end">Manage collaborators</a>
-                            </div>
-                            <div class="col">
-                                <a href="{% url 'submissions-edit' submission.id %}"
-                                   class="btn btn-primary m-2 float-end">Edit submission</a>
-                            </div>
+                        <div class="col-4 text-end">
+                            <a href="{% url 'submissions-edit' submission.id %}"
+                               class="btn btn-secondary mt-2 float-end">Edit submission</a>
                         </div>
                     {% endif %}
                 </div>
@@ -50,12 +44,10 @@
             </div>
         </div>
         <div class="row py-2 border-top">
-            {% if is_collaborator %}
-                <div class="col">
-                    <a href="{% url 'upload' submission.id %}"
-                       class="btn btn-primary mt-2 float-end">Upload</a>
-                </div>
-            {% endif %}
+            <div class="col">
+                <a href="{% url 'upload' submission.id %}"
+                   class="btn btn-primary mt-2 float-end">Upload</a>
+            </div>
         </div>
         <div class="row py-2">
             {% if versions %}
@@ -76,7 +68,7 @@
                                     <a href="{% url 'versions-view' v.id %}">{{ v.id }}</a>
                                 </td>
                                 <td>{{ v.filename }}</td>
-                                <td>{{ v.date_created|date:"c" }}</td>
+                                <td>{{ v.created_at|date:"c" }}</td>
                                 <td>{{ v.latest_evaluation.status }}</td>
                                 {% for r in v.latest_evaluation.ordered_results %}
                                     <td scope="col">

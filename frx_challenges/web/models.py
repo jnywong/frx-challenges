@@ -17,11 +17,12 @@ class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024, default="My model name")
     description = models.CharField(max_length=2048, default="My model description")
-    date_created = models.DateTimeField(auto_now=True)
     metadata = JSONField(
         blank=True, null=True, schema=settings.SITE_SUBMISSION_FORM_SCHEMA
     )
     toc_accepted = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
 
     @property
     def best_version(self) -> Version:
@@ -86,7 +87,6 @@ class Version(models.Model):
     submission = models.ForeignKey(
         Submission, on_delete=models.CASCADE, related_name="versions"
     )
-    date_created = models.DateTimeField(auto_now=True)
     # FIXME: Cascade is probably not quite right?
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     filename = models.CharField(max_length=1024)
@@ -94,6 +94,8 @@ class Version(models.Model):
     data_uri = models.CharField(max_length=4096)
     # FIXME: Figure out max_length or use IntChoices
     status = models.CharField(choices=Status, default=Status.NOT_STARTED, max_length=16)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
 
     @property
     def latest_evaluation(self) -> Evaluation | None:
@@ -125,6 +127,7 @@ class Evaluation(models.Model):
     # FIXME: Figure out max_length or use IntChoices
     status = models.CharField(choices=Status, default=Status.NOT_STARTED, max_length=16)
 
+    created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
     @property
@@ -189,6 +192,8 @@ class Page(models.Model):
     header_content = models.TextField(
         help_text="Content to use as page header", null=True, blank=True
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if not self.is_home:
@@ -211,6 +216,8 @@ class ContentFile(models.Model):
         max_length=128, help_text="Slug used to refer to this image", unique=True
     )
     file = models.FileField(upload_to="content-files/%Y/%m/%d/")
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
