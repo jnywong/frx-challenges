@@ -16,7 +16,7 @@ from ..models import Collaborator, Evaluation, Submission, Version
 def upload(request: HttpRequest, id: int) -> HttpResponse:
     is_collaborator = _validate_collaborator(request, id)
     if not is_collaborator:
-        raise Http404("You are not a collaborator of this submission.")
+        raise Http404("Uploads are only available to submission collaborators.")
     if request.method == "POST":
         form = UploadForm(data=request.POST, files=request.FILES, id=id)
         if form.is_valid():
