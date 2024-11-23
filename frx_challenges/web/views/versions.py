@@ -55,10 +55,6 @@ def view(request: HttpRequest, id: int) -> HttpResponse:
     version = Version.objects.get(id=id)
     evaluation = version.latest_evaluation
 
-    is_collaborator = _validate_collaborator(request, version.submission_id)
-    if not is_collaborator:
-        raise Http404("You are not a collaborator of this submission.")
-
     results_display = []
     if evaluation.result:
         for dc in settings.EVALUATION_DISPLAY_CONFIG:
