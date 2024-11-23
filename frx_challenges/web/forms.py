@@ -5,7 +5,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django_jsonform.forms.fields import JSONFormField
-from web.models import Submission
+from web.models import Collaborator, Submission, User
 
 from .md import MARKDOWN_RENDERER
 
@@ -61,6 +61,7 @@ class AddCollaboratorForm(forms.Form):
     """Form to add a collaborator to a submission"""
 
     def __init__(self, *args, **kwargs):
+        self.submission_id = kwargs.pop("submission_id")
         super().__init__(*args, **kwargs)
 
         self.helper = FormHelper()
@@ -71,3 +72,23 @@ class AddCollaboratorForm(forms.Form):
 
         self.fields["username"] = forms.CharField()
         self.fields["username"].label = "GitHub username"
+
+    def clean(self):
+        """
+        Validate that the user exists and isn't already a collaborator.
+        """
+        cleaned_data = super().clean()
+        if "username" in cleaned_data:
+            try:
+                user = User.objects.get(username__iexact=cleaned_data["username"])
+                if Collaborator.objects.filter(
+                    submission_id=self.submission_id, user_id=user.id
+                ).exists():
+                    raise forms.ValidationError(
+                        "This collaborator is already added to the submission."
+                    )
+            except User.DoesNotExist:
+                raise forms.ValidationError(
+                    "User has not logged into this website with their GitHub account."
+                )
+        return cleaned_data
