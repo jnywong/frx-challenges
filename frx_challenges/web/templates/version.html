@@ -16,7 +16,7 @@
                 {% endif %}
             </div>
             <div class="col-sm-6 text-end">
-                {{ version.user.username }} uploaded <code>{{ version.filename }}</code> {{ version.date_created|timesince }} ago
+                {{ version.user.username }} uploaded <code>{{ version.filename }}</code> {{ version.created_at|timesince }} ago
             </div>
         </div>
         <div class="row py-4">
