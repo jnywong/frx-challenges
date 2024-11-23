@@ -126,6 +126,7 @@ class Evaluation(models.Model):
     result = models.JSONField(blank=True, null=True)
     # FIXME: Figure out max_length or use IntChoices
     status = models.CharField(choices=Status, default=Status.NOT_STARTED, max_length=16)
+    evaluator_logs = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
