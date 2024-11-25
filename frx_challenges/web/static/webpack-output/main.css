@@ -11649,3 +11649,6 @@ nav.navbar {
   background-size: cover;
   background-position: center;
 }
+.btn-primary {
+  --bs-btn-color: white;
+}
