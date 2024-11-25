@@ -11,6 +11,11 @@ def leaderboard(request: HttpRequest) -> HttpResponse:
             "Challenge hasn't started, so leaderboard is not available", status=400
         )
 
+    if settings.SITE_LEADERBOARD_DESCRIPTION:
+        description = settings.SITE_LEADERBOARD_DESCRIPTION
+    else:
+        description = "This is the leaderboard for this challenge."
+
     sorted_display_config = sorted(
         settings.EVALUATION_DISPLAY_CONFIG, key=lambda dc: dc["ordering_priority"]
     )
@@ -39,4 +44,6 @@ def leaderboard(request: HttpRequest) -> HttpResponse:
         return sort_key
 
     results = sorted(results, key=sort_key_func)
-    return render(request, "results.html", {"results": results})
+    return render(
+        request, "results.html", {"results": results, "description": description}
+    )
