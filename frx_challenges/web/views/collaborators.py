@@ -37,31 +37,25 @@ def add(request: HttpRequest, id: int) -> HttpResponse:
 
     if is_submission_owner:
         if request.method == "POST":
-            form = AddCollaboratorForm(request.POST)
+            form = AddCollaboratorForm(request.POST, submission_id=id)
             if form.is_valid():
                 collaborator = Collaborator()
                 collaborator.submission_id = id
-                # Handle missing users
-                try:
-                    user = User.objects.filter(
-                        username=form.cleaned_data["username"]
-                    ).get()
-                except User.DoesNotExist:
-                    raise Http404("The requested user does not exist")
+                user = User.objects.filter(username=form.cleaned_data["username"]).get()
                 collaborator.user = user
                 collaborator.is_owner = False
                 try:
                     collaborator.save()
                 except IntegrityError:
-                    raise Http404(
-                        "The requested user is already a collaborator of this submission"
-                    )
+                    raise Http404("Database integrity error.")
                 return HttpResponseRedirect(reverse("collaborators-list", args=[id]))
         else:
-            form = AddCollaboratorForm()
+            form = AddCollaboratorForm(submission_id=id)
         return render(request, "collaborator/add.html", {"form": form, "id": id})
     else:
-        raise Http404("You are not allowed to add a collaborator to this submission")
+        raise Http404(
+            "You are not the submission owner; you are not allowed to add a collaborator to this submission."
+        )
 
 
 @login_required
@@ -76,11 +70,11 @@ def delete(request: HttpRequest, id: int, collab_id: int) -> HttpResponse:
     if is_submission_owner:
         collaborator = Collaborator.objects.get(pk=collab_id)
         if collaborator.is_owner:
-            raise Http404("The owner of the submission cannot be deleted")
+            raise Http404("The owner of the submission cannot be deleted.")
         collaborator.delete()
     else:
         raise Http404(
-            "You are not allowed to remove a collaborator from this submission"
+            "You are not allowed to remove a collaborator from this submission."
         )
 
     return HttpResponseRedirect(reverse("collaborators-list", args=[id]))

@@ -63,7 +63,7 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
     try:
         submission = Submission.objects.get(id=id)
     except Submission.DoesNotExist:
-        raise Http404("Submission does not exist")
+        raise Http404("Submission does not exist.")
     is_collaborator = _validate_collaborator(request, id)
 
     versions = submission.versions.all()
