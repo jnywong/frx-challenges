@@ -34,11 +34,34 @@ nav.navbar {
   color: white;
 }
 
-.page-header a:hover {
+.page-header a.btn-primary:hover {
+  --bs-btn-hover-color: black;
+}
+
+.page-header a:not(.btn-primary):hover {
   color: #aaa;
 }
 
 .page-header-with-image {
   background-size: cover;
   background-position: center;
+}
+
+.btn-primary {
+  --bs-btn-color: white;
+}
+
+.btn-secondary:hover {
+  --bs-btn-hover-color: white;
+}
+
+.table thead {
+  background-image: linear-gradient(90deg, #058d96 0%, #008a45 100%);
+  background-position: center center;
+  background-size: cover;
+  background-color: #2c5e77;
+}
+
+.table th {
+  color: white;
 }
