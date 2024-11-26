@@ -262,6 +262,8 @@ SITE_SUBMISSION_FORM_SCHEMA = {
             "title": "Repository",
             "helpText": "Link to repository containing code and stuff",
             "format": "uri",
+            "required": False,
+            "leaderboard_display": False,
         }
     },
 }
