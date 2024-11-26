@@ -154,14 +154,14 @@ def detail_evaluation(request: HttpRequest, id: int) -> HttpResponse:
     return render(request, "submission/evaluation.html", {"evaluation": evaluation})
 
 
-def _validate_collaborator(request: HttpRequest, id: int):
+def _validate_collaborator(request: HttpRequest, submission_id: int):
     """
-    Validate that the user is a collaborator of the submission.
+    Check if current user is a collaborator on this submission
     """
+    if request.user.is_anonymous:
+        return False
     try:
-        Collaborator.objects.get(submission_id=id, user=request.user)
-        is_collaborator = True
+        Collaborator.objects.get(submission_id=submission_id, user=request.user)
+        return True
     except Collaborator.DoesNotExist:
-        is_collaborator = False
-
-    return is_collaborator
+        return False
