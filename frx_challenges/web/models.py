@@ -24,9 +24,6 @@ class Submission(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return f"name:{self.name} user:{self.user.username}"
-
     @property
     def best_version(self) -> Version:
         """
@@ -111,7 +108,7 @@ class Version(models.Model):
             return None
 
     def __str__(self):
-        return f"file:{self.filename} submission:{self.submission.name} user:{self.user.username}"
+        return f"({self.status}) {self.data_uri}"
 
 
 class Evaluation(models.Model):
@@ -148,7 +145,7 @@ class Evaluation(models.Model):
         return results_list
 
     def __str__(self):
-        return f"submission:{self.version.submission.name} version:{self.version.id} id:{self.id} status:{self.status}"
+        return f"({self.status}) {self.result} {self.version.data_uri}"
 
 
 class Collaborator(models.Model):
@@ -159,9 +156,6 @@ class Collaborator(models.Model):
     is_owner = models.BooleanField()
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"submission:{self.submission.name} user:{self.user.username}"
 
     class Meta:
         # A user can be added as a collaborator only once
