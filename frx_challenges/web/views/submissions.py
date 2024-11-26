@@ -145,15 +145,6 @@ def edit(request: HttpRequest, id: int) -> HttpResponse:
     )
 
 
-@login_required
-def detail_evaluation(request: HttpRequest, id: int) -> HttpResponse:
-    """
-    View evaluation of a submission version
-    """
-    evaluation = Evaluation.objects.filter(version__user=request.user, id=id)
-    return render(request, "submission/evaluation.html", {"evaluation": evaluation})
-
-
 def _validate_collaborator(request: HttpRequest, submission_id: int):
     """
     Check if current user is a collaborator on this submission
