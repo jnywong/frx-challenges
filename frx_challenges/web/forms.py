@@ -24,9 +24,9 @@ class SubmissionForm(forms.ModelForm):
 
         self.fields["name"] = forms.CharField()
         self.fields["name"].label = "Submission name"
-        self.fields["description"] = forms.CharField(widget=forms.Textarea(
-            attrs={"rows": 4}
-        ), required=False)
+        self.fields["description"] = forms.CharField(
+            widget=forms.Textarea(attrs={"rows": 4}), required=False
+        )
         self.fields["metadata"] = JSONFormField(
             schema=settings.SITE_SUBMISSION_FORM_SCHEMA
         )
