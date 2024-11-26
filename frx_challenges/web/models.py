@@ -16,7 +16,7 @@ class Submission(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024, default="My model name")
-    description = models.CharField(max_length=2048, default="My model description")
+    description = models.TextField()
     metadata = JSONField(
         blank=True, null=True, schema=settings.SITE_SUBMISSION_FORM_SCHEMA
     )

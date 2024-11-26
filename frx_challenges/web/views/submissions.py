@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from ..forms import SubmissionForm
 from ..md import MARKDOWN_RENDERER
-from ..models import Collaborator, Evaluation, Submission
+from ..models import Collaborator, Submission
 
 
 @login_required
@@ -84,7 +84,7 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
                         "display_name": v["title"],
                         "help_string": v.get("helpText"),
                         "value": submission.metadata.get(k),
-                        "format": v["format"],
+                        "format": v.get("format"),
                     }
                 )
             else:
@@ -145,23 +145,14 @@ def edit(request: HttpRequest, id: int) -> HttpResponse:
     )
 
 
-@login_required
-def detail_evaluation(request: HttpRequest, id: int) -> HttpResponse:
+def _validate_collaborator(request: HttpRequest, submission_id: int):
     """
-    View evaluation of a submission version
+    Check if current user is a collaborator on this submission
     """
-    evaluation = Evaluation.objects.filter(version__user=request.user, id=id)
-    return render(request, "submission/evaluation.html", {"evaluation": evaluation})
-
-
-def _validate_collaborator(request: HttpRequest, id: int):
-    """
-    Validate that the user is a collaborator of the submission.
-    """
+    if request.user.is_anonymous:
+        return False
     try:
-        Collaborator.objects.get(submission_id=id, user=request.user)
-        is_collaborator = True
+        Collaborator.objects.get(submission_id=submission_id, user=request.user)
+        return True
     except Collaborator.DoesNotExist:
-        is_collaborator = False
-
-    return is_collaborator
+        return False

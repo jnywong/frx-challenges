@@ -73,14 +73,17 @@ class DockerEvaluator:
             host_config["Memory"] = settings.EVALUATOR_DOCKER_CONTAINER_MEMORY_LIMIT
         if settings.EVALUATOR_DOCKER_DISABLE_NETWORK:
             host_config["NetworkMode"] = "none"
+        cmd = [
+            c.format(
+                submission_path=input_container_path,
+                result_path=f"{output_container_path}/output.json",
+            )
+            for c in settings.EVALUATOR_DOCKER_CMD
+        ]
         container = await self.docker.containers.create(
             config={
                 "Image": self.image,
-                "Cmd": settings.EVALUATOR_DOCKER_CMD
-                + [
-                    f"{input_container_path}",
-                    f"{output_container_path}/output.json",
-                ],
+                "Cmd": cmd,
                 "HostConfig": host_config,
             }
         )
@@ -96,6 +99,8 @@ class DockerEvaluator:
         return {
             "container_id": container.id,
             "results_uri": results_uri,
+            "command": cmd,
+            "image": self.image,
         }
 
     async def is_still_running(self, state: dict) -> bool:
