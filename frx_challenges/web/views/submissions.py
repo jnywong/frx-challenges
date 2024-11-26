@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from ..forms import SubmissionForm
 from ..md import MARKDOWN_RENDERER
-from ..models import Collaborator, Evaluation, Submission
+from ..models import Collaborator, Submission
 
 
 @login_required
