@@ -29,9 +29,9 @@
                     <table id="results" class="table hover">
                         <thead>
                             <tr>
+                                <th scope="col">Date created</th>
                                 <th scope="col">Submission Name</th>
                                 {% for md in metadata_display %}<th scope="col">{{ md }}</th>{% endfor %}
-                                <th scope="col">Date created</th>
                                 {% for dc in evaluation_display_config %}<th scope="col">{{ dc.display_name }}</th>{% endfor %}
                             </tr>
                         </thead>
@@ -62,11 +62,11 @@
           const resultsTable = new DataTable("#results", {
               order: [
                   // Apply reverse chronological ordering by default
-                  [2, "desc"]
+                  [0, "desc"]
               ],
               columnDefs: [
                   {
-                      targets: 2,
+                      targets: 0,
                       render: (data) => {
                           return dayjs(data).fromNow();
                       }
