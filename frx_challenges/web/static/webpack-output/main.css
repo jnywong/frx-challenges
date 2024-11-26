@@ -1767,7 +1767,7 @@ progress {
   --bs-table-color-state: initial;
   --bs-table-bg-state: initial;
   --bs-table-color: var(--bs-emphasis-color);
-  --bs-table-bg: var(--bs-body-bg);
+  --bs-table-bg: rgba(255, 255, 255, 0);
   --bs-table-border-color: var(--bs-border-color);
   --bs-table-accent-bg: transparent;
   --bs-table-striped-color: var(--bs-emphasis-color);
@@ -11651,4 +11651,10 @@ nav.navbar {
 }
 .btn-primary {
   --bs-btn-color: white;
+}
+.table thead {
+  background-image: linear-gradient(90deg, #058d96 0%, #008a45 100%);
+  background-position: center center;
+  background-size: cover;
+  background-color: #2c5e77;
 }
