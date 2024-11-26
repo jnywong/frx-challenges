@@ -84,7 +84,7 @@ def detail(request: HttpRequest, id: int) -> HttpResponse:
                         "display_name": v["title"],
                         "help_string": v.get("helpText"),
                         "value": submission.metadata.get(k),
-                        "format": v.get("format")
+                        "format": v.get("format"),
                     }
                 )
             else:
