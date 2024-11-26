@@ -62,7 +62,6 @@
                 <table id="versions" class="table table-sm hover">
                     <thead>
                         <tr>
-                            <th scope="col">ID</th>
                             <th scope="col">Filename</th>
                             <th scope="col">Date uploaded</th>
                             <th scope="col">Evaluation Status</th>
@@ -72,7 +71,6 @@
                     <tbody>
                         {% for v in versions %}
                             <tr>
-                                <td>{{ v.id }}</td>
                                 <td>
                                     <a href={% url 'versions-view' v.id %}>{{ v.filename }}</a>
                                 </td>
@@ -98,11 +96,11 @@
             const resultsTable = new $('#versions').DataTable({
                 order: [
                     // Apply reverse chronological ordering by default
-                    [2, "desc"]
+                    [1, "desc"]
                 ],
                 columnDefs: [
                     {
-                        targets: 2,
+                        targets: 1,
                         render: (data) => {
                             return dayjs(data).fromNow();
                         }
