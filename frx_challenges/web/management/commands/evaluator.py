@@ -96,6 +96,8 @@ class DockerEvaluator:
         return {
             "container_id": container.id,
             "results_uri": results_uri,
+            "command": cmd,
+            "image": self.image
         }
 
     async def is_still_running(self, state: dict) -> bool:
