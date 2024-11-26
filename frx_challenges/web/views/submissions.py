@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from ..forms import SubmissionForm
 from ..md import MARKDOWN_RENDERER
-from ..models import Collaborator, Evaluation, Submission
+from ..models import Collaborator, Submission
 
 
 @login_required
@@ -143,15 +143,6 @@ def edit(request: HttpRequest, id: int) -> HttpResponse:
         "submission/edit.html",
         {"form": form, "html_content": html_content, "submission": submission},
     )
-
-
-@login_required
-def detail_evaluation(request: HttpRequest, id: int) -> HttpResponse:
-    """
-    View evaluation of a submission version
-    """
-    evaluation = Evaluation.objects.filter(version__user=request.user, id=id)
-    return render(request, "submission/evaluation.html", {"evaluation": evaluation})
 
 
 def _validate_collaborator(request: HttpRequest, submission_id: int):

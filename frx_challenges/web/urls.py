@@ -27,8 +27,5 @@ urlpatterns = [
         name="collaborators-delete",
     ),
     path("versions/<int:id>", versions.view, name="versions-view"),
-    path(
-        "evaluation/<int:id>", submissions.detail_evaluation, name="evaluation-detail"
-    ),
     path("", pages.home, name="home"),
 ]
