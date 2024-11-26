@@ -59,32 +59,34 @@
         </div>
         <div class="row py-2">
             {% if versions %}
-                <table id="versions" class="table table-sm hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Filename</th>
-                            <th scope="col">Date uploaded</th>
-                            <th scope="col">Evaluation Status</th>
-                            {% for dc in evaluation_display_config %}<th scope="col">{{ dc.display_name }}</th>{% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for v in versions %}
+                <div class="table-responsive">
+                    <table id="versions" class="table table-sm hover">
+                        <thead>
                             <tr>
-                                <td>
-                                    <a href={% url 'versions-view' v.id %}>{{ v.filename }}</a>
-                                </td>
-                                <td>{{ v.created_at|date:"c" }}</td>
-                                <td>{{ v.latest_evaluation.status }}</td>
-                                {% for r in v.latest_evaluation.ordered_results %}
-                                    <td scope="col">
-                                        {% if r %}{{ r }}{% endif %}
-                                    </td>
-                                {% endfor %}
+                                <th scope="col">Filename</th>
+                                <th scope="col">Date uploaded</th>
+                                <th scope="col">Evaluation Status</th>
+                                {% for dc in evaluation_display_config %}<th scope="col">{{ dc.display_name }}</th>{% endfor %}
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for v in versions %}
+                                <tr>
+                                    <td>
+                                        <a href={% url 'versions-view' v.id %}>{{ v.filename }}</a>
+                                    </td>
+                                    <td>{{ v.created_at|date:"c" }}</td>
+                                    <td>{{ v.latest_evaluation.status }}</td>
+                                    {% for r in v.latest_evaluation.ordered_results %}
+                                        <td scope="col">
+                                            {% if r %}{{ r }}{% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% else %}
                 <p class="text-center">See your results here after you make an upload!</p>
             {% endif %}
