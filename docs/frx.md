@@ -2,6 +2,7 @@
 abbreviations:
   FRX: Frictionless Research Exchange
 ---
+
 # About Frictionless Data Exchanges
 
 This page describes some of the background and inspiration for this project as defined in [Donoho, 2023](https://doi.org/10.48550/arXiv.2310.00865).
@@ -39,16 +40,12 @@ Donoho describes how the most common "missing piece" of FRX is to leave out the 
 
 We believe that this is in-part because there are no clear tools or standards for enabling this aspect of FRX without a lot of custom work and infrastructure orchestration.
 
-This is the gap that this project aims to fill. The `frx-challenges` project allows a data challenge organizer to enable **[FR-3: Challenges]** by leveraging open datasets ([FR-1]) and computational infrastructure for reproducible execution ([FR-2]). 
+This is the gap that this project aims to fill. The `frx-challenges` project allows a data challenge organizer to enable **[FR-3: Challenges]** by leveraging open datasets ([FR-1]) and computational infrastructure for reproducible execution ([FR-2]).
 
 Enabling all three of these components is a key aspect of realizing Frictionless Data Exchanges:
 
 > Without all three triad legs [FR-1]+[FR-2]+[FR-3], FR is simply blocked.
 >
->Less clear is what we might be missing without [FR-3 – Challenges]. We would be missing the task definition which formalized a specific research problem and made it an object of study; the competitive element which attracted our attention in the first place; and the performance measure- ment which crystallized a specific project’s contribution, boiling down an entire research contribution essentially to a single number, which can be reproduced. The quantification of performance – part of practice [FR-3] – makes researchers everywhere interested in reproducing work by others and gives discussion about earlier work clear focus; it enables a community of researchers to care intensely about a single defined performance number, and in discussing how it can be improved.
+> Less clear is what we might be missing without [FR-3 – Challenges]. We would be missing the task definition which formalized a specific research problem and made it an object of study; the competitive element which attracted our attention in the first place; and the performance measure- ment which crystallized a specific project’s contribution, boiling down an entire research contribution essentially to a single number, which can be reproduced. The quantification of performance – part of practice [FR-3] – makes researchers everywhere interested in reproducing work by others and gives discussion about earlier work clear focus; it enables a community of researchers to care intensely about a single defined performance number, and in discussing how it can be improved.
 
 > -- [Donoho, 2023](https://doi.org/10.48550/arXiv.2310.00865)
-
-
-
-
