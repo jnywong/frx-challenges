@@ -2,7 +2,7 @@
 
 Welcome to the FRX Challenges project! This is an open source repository that provides key software components for running competitive data science challenges.
 
-FRX stands for **F**rictionless **R**eproducibility e**X**change. Inspired by [Donoho, 2023](https://doi.org/10.48550/arXiv.2310.00865). This project enables communities to leverage cloud infrastructure and interactive computing tools to **host data challenges with live computation**.
+FRX stands for **F**rictionless **R**eproducibility e**X**change. Inspired by [Donoho, 2023](https://doi.org/10.48550/arXiv.2310.00865). This project enables communities to **host data challenges with live evaluation**. It is designed to be run either on local infrastructure, or via cloud-hosted infrastructure.
 
 ## Target functionality and goals
 
