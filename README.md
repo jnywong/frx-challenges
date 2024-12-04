@@ -10,10 +10,11 @@ This is a young project that is under active development.
 Below are the core workflows that we wish to support:
 
 - **prompts**: Allow organizers to create a website that describes the data challenge and provides instructions for participants.
-- **submissions**: Allow participants to create one or more submissions for evaluation.
+- **submissions**: Allow one or more participants to create one or more submissions for evaluation.
 - **evaluators**: Leverage cloud infrastructure to run submissions against standardized environments and datasets, and allow organizers to define their own evaluation scripts, criteria, and metrics.
 - **feedback**: Provide information to participants about how their submissions scored relative to others.
-- **teams**: Allow participants to submit and view their results as a team of people.
+
+We aim for this project to work **locally** as well as **via cloud infrastructure**, so that users may prototype and make submissions via their own hardware and environments, or via community-hosted infrastructure like **JupyterHub** and **BinderHub**.
 
 ## About this project and acknowledgements
 

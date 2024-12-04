@@ -28,7 +28,7 @@ Together, these three components provide a powerful framework for sharing and ac
 >
 > -- [Donoho, 2023](https://doi.org/10.48550/arXiv.2310.00865)
 
-However, there's a common missing link that requires an unnecessary amount of work to enable:
+However, there's a common missing link that requires an unnecessary amount of work to enable: providing infrastructure that reduces the friction of hosting data challenges.
 
 ## Enabling Data Challenges is our goal
 
