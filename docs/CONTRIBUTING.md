@@ -10,7 +10,7 @@ To build the documentation:
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/2i2c-org/unnamed-thingity-thing
+   git clone https://github.com/2i2c-org/frx-challenges
    ```
 
 1. Navigate to the docs folder:
