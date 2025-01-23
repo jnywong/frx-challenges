@@ -9,6 +9,9 @@ image:
   tag: "1.0.1"
   pullPolicy: IfNotPresent
 
+web:
+  resources: {}
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -36,7 +39,6 @@ pvc:
   storage: 1Gi
   storageClassName:
 
-resources: {}
 
 nodeSelector: {}
 
@@ -63,8 +65,12 @@ nginx:
 
 extraInitContainers: {}
 
+evaluator:
+  resources: {}
+
 dind:
   rootless: false
+  resources: {}
   image:
     repository: docker
     tag: 27.0.3-dind
