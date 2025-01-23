@@ -39,7 +39,6 @@ pvc:
   storage: 1Gi
   storageClassName:
 
-
 nodeSelector: {}
 
 tolerations: []
