@@ -13,6 +13,50 @@ This page describes how to administer a Frictionless Research Exchange (FRX) Cha
 This guide is currently under active development and presently resembles more of a collection of stubs and notes. If you would like to contribute to improving the documentation, then please see the [Contribution Guide](CONTRIBUTING.md).
 :::
 
+## Authoring website content
+
+The FRX Challenge platform is built on top of the [Django](https://djangoproject.com/) framework. You can author content for your challenge website using Markdown and HTML.
+
+### Django Admin
+
+If your website user account has admin permissions, then the Django Admin interface is available at `https://<challenge-website-name>/admin`. Please contact your Django administrator if you require access.
+
+Under the `Web > Pages` section, you can create and edit multiple pages using the Django Admin interface.
+
+:::{image} images/admin-pages.png
+:alt: Django Admin interface
+:::
+
+**Pages**
+: The `Pages` section contains the necessary fields to author pages on the website.
+
+    title _(string)_
+    : The title of the page.
+
+    slug _(string)_
+    : Slug used to refer to the page's URL.
+
+    Navbar order _(integer)_:
+    : Ordering of this page on the navbar. Leave unset to hide from navbar
+
+    Is home _(boolean)_
+    : Use current page as the home page. Only one page can have this enabled at any given time.
+
+    Mimetype _(TextChoices)_
+    : Mimetype used to render the page.
+
+        HTML _(text/html)_
+        : HTML content.
+
+        Markdown _(text/markdown)_
+        : Markdown content.
+
+    Content _(text)_
+    : The content of the page.
+
+    Header content _(text)_
+    : Content to be displayed in the header of the page.
+
 ## Uploading data to a storage bucket
 
 If your challenge requires access to a large dataset, then you can upload your dataset directly to a cloud storage bucket. The FRX Challenge platform supports using [Google Cloud Storage](https://cloud.google.com/storage/docs) for this purpose.
