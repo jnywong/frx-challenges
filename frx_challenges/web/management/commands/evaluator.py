@@ -1,4 +1,5 @@
 import asyncio
+import collections.abc
 import json
 import logging
 import os
@@ -80,13 +81,22 @@ class DockerEvaluator:
             )
             for c in settings.EVALUATOR_DOCKER_CMD
         ]
-        container = await self.docker.containers.create(
-            config={
-                "Image": self.image,
-                "Cmd": cmd,
-                "HostConfig": host_config,
-            }
-        )
+
+        config={
+            "Image": self.image,
+            "Cmd": cmd,
+            "HostConfig": host_config,
+        }
+
+        if settings.EVALUATOR_DOCKER_CONTAINER_ENV:
+            if isinstance(settings.EVALUATOR_DOCKER_CONTAINER_ENV, collections.abc.Mapping):
+                config["Env"] = [f"{k}={v}" for k, v in settings.EVALUATOR_DOCKER_CONTAINER_ENV.items()]
+            elif isinstance(settings.EVALUATOR_DOCKER_CONTAINER_ENV, list):
+                config["Env"] = settings.EVALUATOR_DOCKER_CONTAINER_ENV
+            else:
+                raise RuntimeError(f"settings.EVALUATOR_DOCKER_CONTAINER_ENV should be a dict or list, found {type( settings.EVALUATOR_DOCKER_CONTAINER_ENV)}")
+
+        container = await self.docker.containers.create(config)
 
         logger.debug(f"Container created with ID: {container.id}")
         try:
