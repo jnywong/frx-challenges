@@ -14,6 +14,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from ...models import Evaluation
+from web.utils import recursive_update
 
 logger = logging.getLogger()
 
@@ -81,6 +82,9 @@ class DockerEvaluator:
             )
             for c in settings.EVALUATOR_DOCKER_CMD
         ]
+
+        if settings.EVALUATOR_DOCKER_EXTRA_HOST_CONFIG:
+            recursive_update(host_config, settings.EVALUATOR_DOCKER_EXTRA_HOST_CONFIG)
 
         config={
             "Image": self.image,
