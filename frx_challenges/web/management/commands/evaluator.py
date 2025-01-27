@@ -12,9 +12,9 @@ import aiodocker.containers
 import fsspec
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from web.utils import recursive_update
 
 from ...models import Evaluation
-from web.utils import recursive_update
 
 logger = logging.getLogger()
 
@@ -86,19 +86,26 @@ class DockerEvaluator:
         if settings.EVALUATOR_DOCKER_EXTRA_HOST_CONFIG:
             recursive_update(host_config, settings.EVALUATOR_DOCKER_EXTRA_HOST_CONFIG)
 
-        config={
+        config = {
             "Image": self.image,
             "Cmd": cmd,
             "HostConfig": host_config,
         }
 
         if settings.EVALUATOR_DOCKER_CONTAINER_ENV:
-            if isinstance(settings.EVALUATOR_DOCKER_CONTAINER_ENV, collections.abc.Mapping):
-                config["Env"] = [f"{k}={v}" for k, v in settings.EVALUATOR_DOCKER_CONTAINER_ENV.items()]
+            if isinstance(
+                settings.EVALUATOR_DOCKER_CONTAINER_ENV, collections.abc.Mapping
+            ):
+                config["Env"] = [
+                    f"{k}={v}"
+                    for k, v in settings.EVALUATOR_DOCKER_CONTAINER_ENV.items()
+                ]
             elif isinstance(settings.EVALUATOR_DOCKER_CONTAINER_ENV, list):
                 config["Env"] = settings.EVALUATOR_DOCKER_CONTAINER_ENV
             else:
-                raise RuntimeError(f"settings.EVALUATOR_DOCKER_CONTAINER_ENV should be a dict or list, found {type( settings.EVALUATOR_DOCKER_CONTAINER_ENV)}")
+                raise RuntimeError(
+                    f"settings.EVALUATOR_DOCKER_CONTAINER_ENV should be a dict or list, found {type( settings.EVALUATOR_DOCKER_CONTAINER_ENV)}"
+                )
 
         container = await self.docker.containers.create(config)
 
