@@ -13,3 +13,20 @@ spec:
   resources:
     requests:
       storage: {{ .Values.pvc.storage }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "frx-challenges.fullname" . }}-dind
+  labels:
+    {{- include "frx-challenges.labels" . | nindent 4 }}
+    app.kubernetes.io/component: dind
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if typeIs "string" .Values.dind.pvc.storageClassName }}
+  storageClassName: {{ .Values.dind.pvc.storageClassName | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.dind.pvc.storage }}
