@@ -34,6 +34,7 @@ class DockerEvaluator:
             else:
                 raise
         if not image_info:
+            logger.info(f"Starting to pull Docker image: {self.image}")
             await self.docker.images.pull(
                 self.image, auth=settings.EVALUATOR_DOCKER_AUTH
             )
