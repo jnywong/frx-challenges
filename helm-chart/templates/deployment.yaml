@@ -113,6 +113,8 @@ spec:
           volumeMounts:
             - name: storage
               mountPath: /opt/state
+            - name: dind-storage
+              mountPath: /var/lib/docker
           securityContext:
             privileged: true
             runAsUser: 0
@@ -160,6 +162,9 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: {{ include "frx-challenges.fullname" . }}
+        - name: dind-storage
+          persistentVolumeClaim:
+            claimName: {{ include "frx-challenges.fullname" . }}-dind
         - name: staticfiles
           emptyDir: {}
         - name: django-yamlconf
