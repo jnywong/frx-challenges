@@ -286,5 +286,8 @@ EVALUATION_DISPLAY_CONFIG = [
     },
 ]
 
+EVALUATOR_DOCKER_EXTRA_HOST_CONFIG = {}
+EVALUATOR_DOCKER_CONTAINER_ENV = {}
+
 django_yamlconf.load()
 django_yamlconf.list_attrs()
