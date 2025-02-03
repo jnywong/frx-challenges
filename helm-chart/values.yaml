@@ -74,5 +74,5 @@ dind:
     repository: docker
     tag: 27.0.3-dind
   pvc:
-    storagerClassName: ""
+    storageClassName: ""
     storage: 100Gi
