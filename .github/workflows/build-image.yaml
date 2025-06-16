@@ -48,7 +48,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.QUAY_ROBOT_TOKEN }}
           DOCKER_REGISTRY: "quay.io"
           LATEST_TAG_OFF: true
-          IMAGE_NAME: "2i2c-org/frx-challenges"
+          IMAGE_NAME: "2i2c/frx-challenges"
 
       - name: Show how much disk space is left
         run: df -h
