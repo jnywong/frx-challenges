@@ -5,6 +5,12 @@ name: Publish chart
 
 # Trigger the workflow on pushed tags or commits to main branch.
 on:
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+      - ".github/workflows/*"
+      - "!.github/workflows/publish-chart.yaml"
   push:
     paths-ignore:
       - "docs/**"
