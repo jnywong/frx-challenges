@@ -38,14 +38,14 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_PASSWORD }}
+          username: ${{ secrets.QUAY_ROBOT_USERNAME }}
+          password: ${{ secrets.QUAY_ROBOT_TOKEN }}
 
       - name: Build the image and push to quay.io
         uses: jupyterhub/repo2docker-action@master
         with:
-          DOCKER_USERNAME: ${{ secrets.QUAY_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.QUAY_ROBOT_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.QUAY_ROBOT_TOKEN }}
           DOCKER_REGISTRY: "quay.io"
           LATEST_TAG_OFF: true
           IMAGE_NAME: "2i2c-org/frx-challenges"
