@@ -6,6 +6,7 @@ on:
       - "docs/**"
       - "**.md"
       - ".github/workflows/*"
+      - "!.github/workflows/build-image.yaml"
       - "!.github/workflows/publish-chart.yaml"
     branches:
       - main
