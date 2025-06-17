@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-sm-6">
                 Status:
-                {% if evaluation.status not in ["EVALUATED", "FAILED"] %}
+                {% if evaluation.status != "EVALUATED" and evaluation.status != "FAILED" %}
                     {% if evaluation.status == "EVALUATING" %}
                         <strong>{{ evaluation.percent_complete }} evaluated</strong>
                     {% else %}
