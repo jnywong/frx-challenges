@@ -22,7 +22,7 @@
 charts:
   - name: frx-challenges
     chartPath: helm-chart
-    imagePrefix: quay.io/2i2c/
+    imagePrefix: quay.io/2i2c/janelia-
     # Set dev version by taking latest tag and incrementing patch
     baseVersion: patch
 
