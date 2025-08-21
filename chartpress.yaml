@@ -28,7 +28,7 @@ charts:
 
     repo:
       git: janelia-cellmap/frx-challenges
-      published: https://janelia.github.io/frx-challenges-helm-chart/
+      published: https://janelia-cellmap.github.io/frx-challenges-helm-chart/
 
     images:
       frx-challenges:
