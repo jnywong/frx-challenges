@@ -27,8 +27,8 @@ charts:
     baseVersion: patch
 
     repo:
-      git: 2i2c-org/frx-challenges-helm-chart
-      published: https://2i2c.org/frx-challenges-helm-chart/
+      git: janelia-cellmap/frx-challenges
+      published: https://janelia.github.io/frx-challenges-helm-chart/
 
     images:
       frx-challenges:
