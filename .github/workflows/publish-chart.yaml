@@ -74,6 +74,8 @@ jobs:
             --platform linux/amd64 --platform linux/arm64
 
       - name: Publish chart with chartpress
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eux
 
